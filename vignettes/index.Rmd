@@ -1,0 +1,78 @@
+---
+title: "COVID-19 Portugal data"
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+devtools::load_all()
+library(pdftools)
+library(rvest)
+library(tidyverse)
+library(anytime)
+library(futile.logger)
+library(glue)
+
+flog.threshold('info')
+flog.layout(layout.format('~m'))
+```
+
+> R package with latest data scrapped from official sources
+
+It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
+
+## Check for new reports
+
+```{r}
+covid19.pt <- tibble()
+tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
+
+url <- 'https://covid19.min-saude.pt/relatorio-de-situacao/'
+
+#Reading the HTML code from the website
+webpage <- read_html(url)
+  
+anytime::addFormats('%d/%m/%Y')
+
+dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
+  rvest::html_text() %>%
+  stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
+  anytime::anydate()
+
+dates.valid <- dates.raw %>% 
+  compact() %>% 
+  purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
+
+what.to.search <- which(dates.valid %in% discard(dates.valid, dates.valid %in% covid19.pt$date))
+```
+
+## Downloads reports if it's missing
+
+```{r}
+covid19.pt.new <- covid19.pt
+if (length(what.to.search) > 0) {
+  for (x in seq_along(dates.valid)) {
+    day <- extract_info(index = x)
+    covid19.pt.new <- covid19.pt.new %>% bind_rows(day)
+  }  
+}  
+```
+
+## Stores in the package
+
+```{r}
+if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
+  usethis::use_data(covid19.pt)
+  readr::write_csv(covid19.pt)
+}
+```
+
+## Data
+
+```{r, echo=FALSE}
+covid19.pt %>% arrange(desc(date)) %>% rmarkdown::paged_table()
+```
+
