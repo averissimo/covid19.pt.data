@@ -15,6 +15,9 @@ library(tidyverse)
 library(anytime)
 library(futile.logger)
 library(glue)
+library(reshape2)
+library(zoo)
+library(usethis)
 
 flog.threshold('info')
 flog.layout(layout.format('~m'))
@@ -26,53 +29,47 @@ It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situac
 
 ## Check for new reports
 
-```{r}
-covid19.pt <- tibble()
-tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
+```{r, message=FALSE}
+dat <- download.updated.pt()
 
-url <- 'https://covid19.min-saude.pt/relatorio-de-situacao/'
-
-#Reading the HTML code from the website
-webpage <- read_html(url)
-  
-anytime::addFormats('%d/%m/%Y')
-
-dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
-  rvest::html_text() %>%
-  stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
-  anytime::anydate()
-
-dates.valid <- dates.raw %>% 
-  compact() %>% 
-  purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
-
-what.to.search <- which(dates.valid %in% discard(dates.valid, dates.valid %in% covid19.pt$date))
-```
-
-## Downloads reports if it's missing
-
-```{r}
-covid19.pt.new <- covid19.pt
-if (length(what.to.search) > 0) {
-  for (x in seq_along(dates.valid)) {
-    day <- extract_info(index = x)
-    covid19.pt.new <- covid19.pt.new %>% bind_rows(day)
-  }  
-}  
+dgs.pt.new     <- dat$dgs.pt
+covid19.pt.new <- dat$cdc.eu
 ```
 
 ## Stores in the package
 
 ```{r}
-if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
-  usethis::use_data(covid19.pt)
-  readr::write_csv(covid19.pt)
+# DGS PT
+if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
+  dgs.pt <- dgs.pt.new
+  usethis::use_data(dgs.pt, overwrite = TRUE)
+  readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
+
+# EU CDC
+covid19.pt <- tibble()
+tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
+
+if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
+  covid19.pt <- covid19.pt.new
+  usethis::use_data(covid19.pt, overwrite = TRUE)
+  readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
+}
+
 ```
 
-## Data
+## Data from DGS
 
 ```{r, echo=FALSE}
-covid19.pt %>% arrange(desc(date)) %>% rmarkdown::paged_table()
+dgs.pt %>% arrange(desc(date)) %>% rmarkdown::paged_table()
 ```
+
+## Data from EU CDC updated
+
+```{r, message=FALSE}
+covid19.pt.new %>% rmarkdown::paged_table()
+```
+
+
+
 

@@ -58,7 +58,7 @@ extract_info <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
 
 
-  info <- list(country = 'Portugal', date = NA, cases = NA, deaths = NA, recoveries = NA)
+  info <- list(country = 'Portugal', date = NA, confirmed = NA, deaths = NA, recoveries = NA)
   if (!is.null(report.pdf)) {
     report.text <- report.pdf$data %>% pdftools::pdf_text()
 
@@ -66,7 +66,7 @@ extract_info <- function(only.date = NULL, index = 1) {
       sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
     page1 <- document[[1]]
 
-    info$cases <- extract_cases(page1)
+    info$confirmed <- extract_cases(page1)
     info$deaths <- extract_deaths(page1)
     info$recoveries <- extract_recoveries(page1)
     info$date <- report.pdf$date
@@ -111,25 +111,93 @@ download.report <- function(only.date = NULL, index = 1) {
 }
 
 download.eucdc.data <- function() {
-  eu.data.raw <- read_csv('https://opendata.ecdc.europa.eu/covid19/casedistribution/csv')
+  eu.data.raw <- readr::read_csv('https://opendata.ecdc.europa.eu/covid19/casedistribution/csv')
 
   eu.data <- eu.data.raw %>%
-    filter(countriesAndTerritories == 'Portugal') %>%
-    mutate(date = anydate(glue::glue('{year}/{month}/{day}')) - 1,
-           country = countriesAndTerritories) %>%
-    select(country, date, cases, deaths, popData2018, country.code = countryterritoryCode) %>%
-    mutate(country = iconv(country, to = 'UTF-8')) %>%
-    arrange(date) %>%
-    group_by(country, country.code, date, popData2018) %>%
-    summarise(cases = sum(cases),
-              deaths = sum(deaths)) %>%
-    group_by(country) %>%
-    mutate(cumul.cases = cumsum(cases),
-           cumul.deaths = cumsum(deaths)) %>%
-    ungroup() %>%
-    mutate(country = gsub('_', ' ', country)) %>%
-    select(country, date, cases, cumul.cases, deaths, cumul.deaths, population = popData2018, country.code)
+    dplyr::filter(countriesAndTerritories == 'Portugal') %>%
+    dplyr::mutate(countriesAndTerritories = iconv(countriesAndTerritories, to = 'UTF-8'))
 
   list(data = eu.data, source = 'EU CDC') %>%
     return()
+}
+
+download_all_reports <- function() {
+  dgs.pt <- tibble()
+  tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
+
+  url <- 'https://covid19.min-saude.pt/relatorio-de-situacao/'
+
+  #Reading the HTML code from the website
+  webpage <- read_html(url)
+
+  anytime::addFormats('%d/%m/%Y')
+
+  dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
+    rvest::html_text() %>%
+    stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
+    anytime::anydate()
+
+  dates.valid <- dates.raw %>%
+    compact() %>%
+    purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
+
+  what.to.search <- which(dates.valid %in% discard(dates.valid, dates.valid %in% dgs.pt$date))
+
+  dgs.pt.new <- dgs.pt
+  if (length(what.to.search) > 0) {
+    for (x in seq_along(dates.valid)) {
+      day <- extract_info(index = x)
+      dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
+    }
+  }
+
+  return(dgs.pt.new)
+}
+
+merge_eu.cdc <- function(dgs.pt.new) {
+  eu.data <- download.eucdc.data()
+
+  from <- eu.data$data$dateRep %>% anydate() %>% max %>% as.Date()
+  now <- Sys.Date()
+  tseq <- seq(from = from, to = now, by = "days")
+
+  covid19.pt.new <- dgs.pt.new %>%
+    arrange(desc(date)) %>%
+    mutate(cases = rollapply(confirmed,
+                             width = 2,
+                             FUN = function(a){ if(length(a) <= 1) {return(a)} else {return(a[1] -a[2])}},
+                             fill = c(0,0,min(confirmed))),
+           deaths = rollapply(deaths,
+                              width = 2,
+                              FUN = function(a){ if(length(a) <= 1) {return(a)} else {return(a[1] -a[2])}},
+                              fill = c(0,0,min(confirmed))),
+           countriesAndTerritories = 'Portugal',
+           geoId = 'PT',
+           countryterritoryCode = 'PRT',
+           popData2018 = eu.data$data %>% pull(popData2018) %>% purrr::pluck(1)) %>%
+    #
+    filter(date %in% tseq) %>%
+    mutate(date = date + 1,
+           day = lubridate::day(date),
+           month = lubridate::month(date),
+           year = lubridate::year(date),
+           dateRep = format(date, '%d/%m/%Y')) %>%
+    #
+    select(dateRep, day, month, year, cases, deaths, countryterritoryCode, geoId, countryterritoryCode, popData2018) %>%
+    #
+    bind_rows(eu.data$data)
+
+  return(covid19.pt.new)
+}
+
+#' Merge EU CDC and PT DGS data
+#'
+#' @return updated data
+#' @export
+download.updated.pt <- function() {
+  dgs.pt.new <- download_all_reports()
+
+  covid19.pt.new <- merge_eu.cdc(dgs.pt.new)
+
+  return(list(dgs.pt = dgs.pt.new, cdc.eu = covid19.pt.new))
 }

@@ -17,6 +17,9 @@ Imports:
     rvest,
     tidyverse,
     anytime,
-    glue
+    glue,
+    reshape2,
+    usethis,
+    zoo
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
