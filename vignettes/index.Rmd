@@ -75,13 +75,13 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 ## Data from DGS
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date))
+dgs.pt %>% arrange(desc(date)) %>% knitr::kable()
 ```
 
 ## Data from EU CDC updated
 
-```{r, message=FALSE}
-covid19.pt.new
+```{r, message=FALSE, echo=FALSE}
+covid19.pt.new %>% knitr::kable()
 ```
 
 
