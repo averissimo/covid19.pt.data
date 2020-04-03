@@ -25,8 +25,6 @@ if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
-#> ✔ Setting active project to '/ssd_home/averissimo/work/rpackages/pt.covid19'
-#> ✔ Saving 'dgs.pt' to 'data/dgs.pt.rda'
 
 # EU CDC
 covid19.pt <- tibble()
@@ -37,7 +35,6 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
-#> ✔ Saving 'covid19.pt' to 'data/covid19.pt.rda'
 ```
 
 ## Data from DGS
