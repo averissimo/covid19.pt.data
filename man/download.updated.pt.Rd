@@ -2,7 +2,7 @@
 % Please edit documentation in R/scrapper.R
 \name{download.updated.pt}
 \alias{download.updated.pt}
-\title{Merge EU CDC and PT DGS data}
+\title{Merge EU CDC and PT DGS data (all in one)}
 \usage{
 download.updated.pt()
 }
@@ -10,5 +10,5 @@ download.updated.pt()
 updated data
 }
 \description{
-Merge EU CDC and PT DGS data
+Merge EU CDC and PT DGS data (all in one)
 }

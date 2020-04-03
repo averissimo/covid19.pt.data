@@ -1,6 +1,14 @@
 ---
 title: "COVID-19 Portugal data"
-output: html_document
+always_allow_html: true
+output: 
+  github_document:
+  html_document:
+  rmarkdown::html_vignette:
+vignette: >
+  %\VignetteIndexEntry{ada}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
@@ -11,16 +19,14 @@ knitr::opts_chunk$set(
 devtools::load_all()
 library(pdftools)
 library(rvest)
-library(tidyverse)
+library(dplyr)
+library(tibble)
 library(anytime)
-library(futile.logger)
 library(glue)
 library(reshape2)
 library(zoo)
+library(xml2)
 library(usethis)
-
-flog.threshold('info')
-flog.layout(layout.format('~m'))
 ```
 
 > R package with latest data scrapped from official sources

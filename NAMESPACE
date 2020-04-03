@@ -2,5 +2,7 @@
 
 export(download.report)
 export(download.updated.pt)
+export(download_all_reports)
 export(extract_info)
+export(merge_eu.cdc)
 importFrom(dplyr,"%>%")
