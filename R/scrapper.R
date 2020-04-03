@@ -190,7 +190,7 @@ download_all_reports <- function() {
 merge_eu.cdc <- function(dgs.pt.new) {
   eu.data <- download.eucdc.data()
 
-  from <- eu.data$data$dateRep %>% anydate() %>% max %>% as.Date()
+  from <- eu.data$data$dateRep %>% anytime::anydate() %>% max %>% as.Date()
   now  <- Sys.Date()
   tseq <- seq(from = from, to = now, by = "days")
 
@@ -216,7 +216,7 @@ merge_eu.cdc <- function(dgs.pt.new) {
            year = lubridate::year(date),
            dateRep = format(date, '%d/%m/%Y')) %>%
     #
-    dplyr::select(dateRep, day, month, year, cases, deaths, countryterritoryCode, geoId, countryterritoryCode, popData2018) %>%
+    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2018) %>%
     #
     dplyr::bind_rows(eu.data$data)
 
