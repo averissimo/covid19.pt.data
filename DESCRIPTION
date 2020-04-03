@@ -18,6 +18,7 @@ Imports:
     rvest,
     anytime,
     dplyr,
+    DT,
     devtools,
     purrr,
     readr,

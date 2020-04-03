@@ -6,7 +6,7 @@ output:
   html_document:
   rmarkdown::html_vignette:
 vignette: >
-  %\VignetteIndexEntry{ada}
+  %\VignetteIndexEntry{COVID19PT}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,6 +21,7 @@ library(pdftools)
 library(rvest)
 library(dplyr)
 library(tibble)
+library(DT)
 library(anytime)
 library(glue)
 library(reshape2)
@@ -67,13 +68,13 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 ## Data from DGS
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% rmarkdown::paged_table()
+dgs.pt %>% arrange(desc(date)) %>% datatable()
 ```
 
 ## Data from EU CDC updated
 
 ```{r, message=FALSE}
-covid19.pt.new %>% rmarkdown::paged_table()
+covid19.pt.new %>% datatable()
 ```
 
 
