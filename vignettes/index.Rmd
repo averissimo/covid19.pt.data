@@ -1,15 +1,22 @@
 ---
 title: "COVID-19 Portugal data"
-always_allow_html: true
 output: 
   github_document:
+    dev: svg
   html_document:
+    dev: svg
   rmarkdown::html_vignette:
 vignette: >
   %\VignetteIndexEntry{COVID19PT}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+```{r, eval=FALSE, include=FALSE}
+rmarkdown::clean_site()
+rmarkdown::render_site(quiet = TRUE)
+```
+
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
@@ -68,13 +75,13 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 ## Data from DGS
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% datatable()
+dgs.pt %>% arrange(desc(date))
 ```
 
 ## Data from EU CDC updated
 
 ```{r, message=FALSE}
-covid19.pt.new %>% datatable()
+covid19.pt.new
 ```
 
 
