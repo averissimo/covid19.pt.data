@@ -25,6 +25,8 @@ if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
+#> ✔ Setting active project to '/ssd_home/averissimo/work/rpackages/pt.covid19'
+#> ✔ Saving 'dgs.pt' to 'data/dgs.pt.rda'
 
 # EU CDC
 covid19.pt <- tibble()
@@ -35,31 +37,44 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
+#> ✔ Saving 'covid19.pt' to 'data/covid19.pt.rda'
 ```
 
 ## Data from DGS
 
 | country  | date       | confirmed | deaths | recoveries |
 | :------- | :--------- | --------: | -----: | ---------: |
+| Portugal | 2020-04-04 |     10524 |    266 |         75 |
+| Portugal | 2020-04-03 |      9886 |    246 |         68 |
 | Portugal | 2020-04-03 |      9886 |    246 |         68 |
 | Portugal | 2020-04-02 |      9034 |    209 |         68 |
 | Portugal | 2020-04-02 |      9034 |    209 |         68 |
+| Portugal | 2020-04-02 |      9034 |    209 |         68 |
+| Portugal | 2020-04-01 |      8251 |    187 |         43 |
 | Portugal | 2020-04-01 |      8251 |    187 |         43 |
 | Portugal | 2020-04-01 |      8251 |    187 |         43 |
 | Portugal | 2020-03-31 |      7443 |    160 |         43 |
 | Portugal | 2020-03-31 |      7443 |    160 |         43 |
+| Portugal | 2020-03-31 |      7443 |    160 |         43 |
+| Portugal | 2020-03-30 |      6408 |    140 |         43 |
 | Portugal | 2020-03-30 |      6408 |    140 |         43 |
 | Portugal | 2020-03-30 |      6408 |    140 |         43 |
 | Portugal | 2020-03-29 |      5962 |    119 |         43 |
 | Portugal | 2020-03-29 |      5962 |    119 |         43 |
+| Portugal | 2020-03-29 |      5962 |    119 |         43 |
+| Portugal | 2020-03-28 |      5170 |    100 |         43 |
 | Portugal | 2020-03-28 |      5170 |    100 |         43 |
 | Portugal | 2020-03-28 |      5170 |    100 |         43 |
 | Portugal | 2020-03-27 |      4268 |     76 |         43 |
 | Portugal | 2020-03-27 |      4268 |     76 |         43 |
+| Portugal | 2020-03-27 |      4268 |     76 |         43 |
+| Portugal | 2020-03-26 |      3544 |     60 |         43 |
 | Portugal | 2020-03-26 |      3544 |     60 |         43 |
 | Portugal | 2020-03-26 |      3544 |     60 |         43 |
 | Portugal | 2020-03-25 |      2995 |     43 |         22 |
 | Portugal | 2020-03-25 |      2995 |     43 |         22 |
+| Portugal | 2020-03-25 |      2995 |     43 |         22 |
+| Portugal | 2020-03-24 |      2362 |     33 |         22 |
 | Portugal | 2020-03-24 |      2362 |     33 |         22 |
 | Portugal | 2020-03-24 |      2362 |     33 |         22 |
 
@@ -67,6 +82,7 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 
 | dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2018 |
 | :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: |
+| 05/04/2020 |   5 |     4 | 2020 |   638 |     20 | Portugal                | PT    | PRT                  |    10281762 |
 | 04/04/2020 |   4 |     4 | 2020 |   852 |     37 | Portugal                | PT    | PRT                  |    10281762 |
 | 03/04/2020 |   3 |     4 | 2020 |   783 |     22 | Portugal                | PT    | PRT                  |    10281762 |
 | 02/04/2020 |   2 |     4 | 2020 |   808 |     27 | Portugal                | PT    | PRT                  |    10281762 |
