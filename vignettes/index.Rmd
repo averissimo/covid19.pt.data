@@ -37,6 +37,8 @@ library(xml2)
 library(usethis)
 ```
 
+
+
 > R package with latest data scrapped from official sources
 
 It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
