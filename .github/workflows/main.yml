@@ -1,4 +1,4 @@
-on: 
+on:
   schedule:
     - cron: '5/10 11-14 * * *'
     - cron:  '13 0-10,15-23 * * *'
@@ -31,7 +31,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add docs README.md data
-        if [ -d README_FILES ]; then git add README_files; fi
+        if [ -d README_files ]; then git add README_files; fi
         git commit -m "Update site" || echo "Nothing to update"
         git status
     - name: Push changes
