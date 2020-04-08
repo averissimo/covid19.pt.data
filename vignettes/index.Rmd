@@ -78,7 +78,7 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 
 ```
 
-Data for Portugal
+## Data for Portugal
 
 ```{r, echo=FALSE}
 dgs.pt %>% 
