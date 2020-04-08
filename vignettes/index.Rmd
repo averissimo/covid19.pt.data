@@ -35,8 +35,8 @@ library(reshape2)
 library(zoo)
 library(xml2)
 library(usethis)
-
 library(ggplot2)
+library(ggrepel)
 
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
@@ -83,7 +83,10 @@ Data for Portugal
 ```{r, echo=FALSE}
 dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>% 
-  mutate(type = gsub('confirmed', 'Confirmed cases', type) %>%  gsub('deaths', 'Deaths', .) %>% gsub('recoveries', 'Recovered', .)) %>% 
+  mutate(type = 
+           gsub('confirmed', 'Confirmed cases', type) %>% 
+           gsub('deaths', 'Deaths', .) %>% 
+           gsub('recoveries', 'Recovered', .)) %>% 
   group_by(country, type) %>% 
   mutate(label = if_else(date == max(date), paste0(type, ': ', format(value, digits = 2, big.mark =',')), NA_character_)) %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
