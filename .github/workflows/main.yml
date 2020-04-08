@@ -1,7 +1,7 @@
 on: 
   schedule:
-    - cron: '10/5 12-14 * * *'
-    - cron:  '13 7/1 * * *'
+    - cron: '5/10 11-14 * * *'
+    - cron:  '13 0-10,15-23 * * *'
   push:
     paths:
     - 'vignettes/index.Rmd'
