@@ -228,7 +228,7 @@ merge_eu.cdc <- function(dgs.pt.new) {
 #' @return updated data
 #' @export
 download.updated.pt <- function() {
-  dgs.pt.new <- download_all_reports()
+  dgs.pt.new <- download_all_reports() %>% distinct()
 
   covid19.pt.new <- merge_eu.cdc(dgs.pt.new)
 

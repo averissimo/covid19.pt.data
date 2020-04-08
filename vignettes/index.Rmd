@@ -52,8 +52,8 @@ It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situac
 ```{r, message=FALSE}
 dat <- download.updated.pt()
 
-dgs.pt.new     <- dat$dgs.pt %>% distinct()
-covid19.pt.new <- dat$cdc.eu %>% distinct()
+dgs.pt.new     <- dat$dgs.pt 
+covid19.pt.new <- dat$cdc.eu
 ```
 
 ## Stores in the package
