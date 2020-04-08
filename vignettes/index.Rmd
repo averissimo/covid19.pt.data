@@ -35,6 +35,10 @@ library(reshape2)
 library(zoo)
 library(xml2)
 library(usethis)
+
+library(ggplot2)
+
+Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
 
 
@@ -67,23 +71,58 @@ covid19.pt <- tibble()
 tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
 
 if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
-  covid19.pt <- covid19.pt.new
+  covid19.pt <- covid19.pt.new %>% distinct()
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
 
 ```
 
-## Data from DGS
+Data for Portugal
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% knitr::kable()
+dgs.pt %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>% 
+  mutate(type = gsub('confirmed', 'Confirmed cases', type) %>%  gsub('deaths', 'Deaths', .) %>% gsub('recoveries', 'Recovered', .)) %>% 
+  group_by(country, type) %>% 
+  mutate(label = if_else(date == max(date), paste0(type, ': ', format(value, digits = 2, big.mark =',')), NA_character_)) %>% 
+  ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
+    geom_line(size = 2) + 
+    geom_point(size = 2.5) +
+    ggrepel::geom_label_repel(color = 'white', 
+                              segment.color = 'black', 
+                              na.rm = TRUE, 
+                              min.segment.length = 0, 
+                              nudge_x = -2,
+                              nudge_y = -.5,
+                              segment.alpha = .8,
+                              size = 3.5) +
+    labs(x = 'Date', 
+         y = 'Number of individuals',
+         title = 'Individuals that were Infected, Recovered and Died',
+         subtitle = 'Showing in logarithm scale (base 2)') +
+    scale_y_continuous(trans = 'log2') +
+    scale_color_viridis_d(end = .85) +
+    scale_fill_viridis_d(end = .85) +
+    theme_minimal() +
+    theme(legend.position = 'none')
+```
+
+
+## Data from DGS
+
+Only showing last 10 days
+
+```{r, echo=FALSE}
+dgs.pt %>% arrange(desc(date)) %>% top_n(10, date) %>% knitr::kable()
 ```
 
 ## Data from EU CDC updated
 
+Only showing last 10 days
+
 ```{r, message=FALSE, echo=FALSE}
-covid19.pt.new %>% knitr::kable()
+covid19.pt.new %>% head(10) %>% knitr::kable()
 ```
 
 
