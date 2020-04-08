@@ -30,6 +30,8 @@ Imports:
     httr,
     zoo,
     lubridate,
-    xml2
+    xml2,
+    ggplot2,
+    ggrebel
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0
