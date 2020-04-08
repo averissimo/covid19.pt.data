@@ -12,7 +12,7 @@ and stores this in data-friendly format under `/data` directory.
 ``` r
 dat <- download.updated.pt()
 
-dgs.pt.new     <- dat$dgs.pt
+dgs.pt.new     <- dat$dgs.pt 
 covid19.pt.new <- dat$cdc.eu
 ```
 
@@ -21,7 +21,7 @@ covid19.pt.new <- dat$cdc.eu
 ``` r
 # DGS PT
 if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
-  dgs.pt <- dgs.pt.new
+  dgs.pt <- dgs.pt.new 
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
@@ -31,7 +31,7 @@ covid19.pt <- tibble()
 tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
 
 if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
-  covid19.pt <- covid19.pt.new %>% distinct()
+  covid19.pt <- covid19.pt.new
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
@@ -49,14 +49,14 @@ Only showing last 10 days
 | :------- | :--------- | --------: | -----: | ---------: |
 | Portugal | 2020-04-08 |     13141 |    380 |        196 |
 | Portugal | 2020-04-07 |     12442 |    345 |        184 |
-| Portugal | 2020-04-07 |     12442 |    345 |        184 |
-| Portugal | 2020-04-06 |     11730 |    311 |        140 |
-| Portugal | 2020-04-06 |     11730 |    311 |        140 |
 | Portugal | 2020-04-06 |     11730 |    311 |        140 |
 | Portugal | 2020-04-05 |     11278 |    295 |         75 |
-| Portugal | 2020-04-05 |     11278 |    295 |         75 |
-| Portugal | 2020-04-05 |     11278 |    295 |         75 |
-| Portugal | 2020-04-05 |     11278 |    295 |         75 |
+| Portugal | 2020-04-04 |     10524 |    266 |         75 |
+| Portugal | 2020-04-03 |      9886 |    246 |         68 |
+| Portugal | 2020-04-02 |      9034 |    209 |         68 |
+| Portugal | 2020-04-01 |      8251 |    187 |         43 |
+| Portugal | 2020-03-31 |      7443 |    160 |         43 |
+| Portugal | 2020-03-30 |      6408 |    140 |         43 |
 
 ## Data from EU CDC updated
 
