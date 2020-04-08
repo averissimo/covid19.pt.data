@@ -52,8 +52,8 @@ It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situac
 ```{r, message=FALSE}
 dat <- download.updated.pt()
 
-dgs.pt.new     <- dat$dgs.pt
-covid19.pt.new <- dat$cdc.eu
+dgs.pt.new     <- dat$dgs.pt %>% distinct()
+covid19.pt.new <- dat$cdc.eu %>% distinct()
 ```
 
 ## Stores in the package
@@ -61,7 +61,7 @@ covid19.pt.new <- dat$cdc.eu
 ```{r}
 # DGS PT
 if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
-  dgs.pt <- dgs.pt.new
+  dgs.pt <- dgs.pt.new 
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
@@ -71,7 +71,7 @@ covid19.pt <- tibble()
 tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
 
 if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
-  covid19.pt <- covid19.pt.new %>% distinct()
+  covid19.pt <- covid19.pt.new
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
