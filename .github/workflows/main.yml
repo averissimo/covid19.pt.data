@@ -5,6 +5,7 @@ on:
   push:
     paths:
     - 'vignettes/index.Rmd'
+    - '.github/workflows/main.yml'
 
 jobs:
   build_rmd_site:
