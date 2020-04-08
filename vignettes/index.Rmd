@@ -107,7 +107,7 @@ dgs.pt %>%
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
-         subtitle = 'Showing in logarithm scale (base 2)') +
+         subtitle = 'Showing in Logarithmic scale (base 2)') +
     scale_y_continuous(trans = 'log2') +
     scale_color_viridis_d(end = .85) +
     scale_fill_viridis_d(end = .85) +
