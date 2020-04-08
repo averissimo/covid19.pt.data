@@ -88,7 +88,11 @@ dgs.pt %>%
            gsub('deaths', 'Deaths', .) %>% 
            gsub('recoveries', 'Recovered', .)) %>% 
   group_by(country, type) %>% 
-  mutate(label = if_else(date == max(date), paste0(type, ': ', format(value, digits = 2, big.mark =',')), NA_character_)) %>% 
+  arrange(date) %>% 
+  mutate(label = if_else(date == last(date), 
+                         paste0(type, ': ', 
+                                format(value, digits = 2, big.mark =',', trim = FALSE)), 
+                         NA_character_)) %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
     geom_line(size = 2) + 
     geom_point(size = 2.5) +

@@ -6,3 +6,7 @@ inst/doc
 *.Rproj
 render_site.sh
 script.sh
+vignettes/*.md
+vignettes/*.html
+vignettes/*_files
+vignettes/site_lib
