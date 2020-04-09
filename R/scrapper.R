@@ -123,7 +123,8 @@ download.report <- function(only.date = NULL, index = 1) {
 
   report.url <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li a') %>%
     rvest::html_attr('href') %>%
-    purrr::pluck(index)
+    purrr::pluck(index) %>%
+    URLencode(report.url)
 
   pdf.content <- httr::GET(report.url) %>% httr::content("raw")
 
