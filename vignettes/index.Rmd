@@ -103,7 +103,8 @@ dgs.pt %>%
                               nudge_x = -2,
                               nudge_y = -.5,
                               segment.alpha = .8,
-                              size = 3.5) +
+                              size = 3.5,
+                              seed = 1985) +
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
