@@ -4,10 +4,38 @@
 #'
 #' @return a number
 extract_tests <- function(page) {
-  extract_generic(page, 'Total de casos', 1) %>%
+  tibble::tibble(tests = extract_generic(page, 'Total de casos', 1)) %>%
     return()
 }
 
+extract_hospitalized <- function(page) {
+  val <- extract_generic.two(page, 'NÚMERO DE CASOS NÚMERO DE CASOS', 1)
+  if (is.list(val)) {
+    names(val) <- c('hospitalized', 'in.icu')
+    return(val %>% dplyr::bind_cols())
+
+  }
+  tibble(hospitalized = NA, in.icu = NA) %>%
+    return()
+}
+
+extract_ages <- function(page, name) {
+  age.ranges <- c('00-09 anos', '10-19 anos', '20-29 anos', '30-39 anos',
+                  '40-49 anos', '50-59 anos', '60-69 anos', '70-79 anos',
+                  '80\\+')
+
+  lapply(age.ranges, function(ix) {
+    val <- extract_generic.two(page, ix, 1)
+    ix.name <- stringr::str_replace(ix, ' anos', '') %>%
+      stringr::str_replace('\\\\', '')
+    if (is.list(val)) {
+      names(val) <- c('{name}_m_{ix.name}' %>% glue::glue(), '{name}_w_{ix.name}' %>% glue::glue())
+    }
+    return(val)
+  }) %>%
+    dplyr::bind_cols() %>%
+      return()
+}
 
 #' Extract number of cases from report
 #'
@@ -16,6 +44,7 @@ extract_tests <- function(page) {
 #' @return a number
 extract_cases <- function(page) {
   extract_generic(page, 'Total de casos', 2) %>%
+    tibble::tibble(confirmed = .) %>%
     return()
 }
 
@@ -25,7 +54,8 @@ extract_cases <- function(page) {
 #'
 #' @return a number
 extract_deaths <- function(page) {
-  extract_generic(page, '\u00D3bitos', 1) %>%
+  extract_generic(page, '\u00D3bitos', 1)%>%
+    tibble::tibble(deaths = .) %>%
     return()
 }
 
@@ -36,7 +66,48 @@ extract_deaths <- function(page) {
 #' @return a number
 extract_recoveries <- function(page) {
   extract_generic(page, 'Casos recuperados', 1) %>%
+    tibble::tibble(recovered = .) %>%
     return()
+}
+
+#' Generic extractor
+#'
+#' @param page page strings from document
+#' @param pattern pattern to look for
+#' @param interesting.hit which one to choose
+#'
+#' @return a number
+extract_generic.two <- function(page, pattern, interesting.hit) {
+
+  hits.ix <- stringr::str_which(page, pattern)
+
+  hits <- page[hits.ix]
+
+  hits.my <- hits[interesting.hit]
+
+  if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
+    tmp <- page[c(hits.ix + 1)][[interesting.hit]] %>%
+      stringr::str_replace('([0-9]+)[ ]+([0-9]+).*', '\\1\t\\2')
+
+    tmp.regexec <- regexec('([0-9]+)[\t ]+([0-9]+)' %>% glue::glue(), tmp)
+    tmp.ret <- regmatches(tmp, tmp.regexec)[[1]]
+
+    retValue <- NA
+    tryCatch({
+      retValue <- list(one = as.integer(tmp.ret[2]), two = as.integer(tmp.ret[3]))
+    })
+    return(retValue)
+  } else {
+    tmp.regexec <- regexec('{pattern}[ ]+([0-9]+)[ ]+([0-9]+)' %>% glue::glue(), hits.my)
+    tmp <- regmatches(hits.my, tmp.regexec)[[1]]
+
+
+    retValue <- NA
+    tryCatch({
+      retValue <- list(one = as.integer(tmp[2]), two = as.integer(tmp[3]))
+    })
+    return(retValue)
+  }
 }
 
 #' Generic extractor
@@ -89,21 +160,27 @@ extract_info <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
 
 
-  info <- list(country = 'Portugal', date = NA, confirmed = NA, deaths = NA, recoveries = NA)
+  info <- tibble::tibble()
   if (!is.null(report.pdf)) {
     report.text <- report.pdf$data %>% pdftools::pdf_text()
 
     document <- stringr::str_split(report.text, '\n') %>%
       sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
     page1 <- document[[1]]
+    page2 <- document[[2]]
+    page4 <- document[[2]]
 
-    info$tests <- extract_tests(page1)
-    info$confirmed <- extract_cases(page1)
-    info$deaths <- extract_deaths(page1)
-    info$recoveries <- extract_recoveries(page1)
-    info$date <- report.pdf$date
+    info <- bind_cols(country = 'Portugal',
+              date = report.pdf$date,
+              extract_cases(page1),
+              extract_deaths(page1),
+              extract_recoveries(page1),
+              extract_tests(page1),
+              extract_ages(page2, 'confirmed'),
+              extract_ages(page4, 'death'))
   }
-  return(info)
+
+  return(info %>% filter(!is.na(country)))
 }
 
 #' Download report
