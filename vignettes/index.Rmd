@@ -59,6 +59,9 @@ covid19.pt.new <- dat$cdc.eu
 ## Stores in the package
 
 ```{r}
+dgs.pt <- tibble()
+tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
+
 # DGS PT
 if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
   dgs.pt <- dgs.pt.new 
@@ -109,7 +112,7 @@ dgs.pt %>%
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in Logarithmic scale (base 2)') +
-    scale_y_continuous(trans = 'log2') +
+    scale_y_continuous(trans = 'log10') +
     scale_color_viridis_d(end = .85) +
     scale_fill_viridis_d(end = .85) +
     theme_minimal() +

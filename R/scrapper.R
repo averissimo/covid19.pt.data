@@ -1,3 +1,14 @@
+#' Extract number of tests from report
+#'
+#' @param page page strings from document
+#'
+#' @return a number
+extract_tests <- function(page) {
+  extract_generic(page, 'Total de casos', 1) %>%
+    return()
+}
+
+
 #' Extract number of cases from report
 #'
 #' @param page page strings from document
@@ -86,6 +97,7 @@ extract_info <- function(only.date = NULL, index = 1) {
       sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
     page1 <- document[[1]]
 
+    info$tests <- extract_tests(page1)
     info$confirmed <- extract_cases(page1)
     info$deaths <- extract_deaths(page1)
     info$recoveries <- extract_recoveries(page1)
