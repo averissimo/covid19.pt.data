@@ -28,6 +28,9 @@ if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
 }
+#> ✔ Setting active project to '/github/workspace/repo'
+#> ✔ Saving 'dgs.pt' to 'data/dgs.pt.rda'
+#> ● Document your data (see 'https://r-pkgs.org/data.html')
 
 # EU CDC
 covid19.pt <- tibble()
@@ -38,6 +41,8 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
+#> ✔ Saving 'covid19.pt' to 'data/covid19.pt.rda'
+#> ● Document your data (see 'https://r-pkgs.org/data.html')
 ```
 
 ## Data for Portugal
@@ -50,6 +55,7 @@ Only showing last 10 days
 
 | country  | date       | confirmed | deaths | recoveries |  tests |
 | :------- | :--------- | --------: | -----: | ---------: | -----: |
+| Portugal | 2020-04-10 |     15472 |    435 |        233 | 123564 |
 | Portugal | 2020-04-09 |     13956 |    409 |        205 | 115158 |
 | Portugal | 2020-04-08 |     13141 |    380 |        196 | 104886 |
 | Portugal | 2020-04-07 |     12442 |    345 |        184 |  99730 |
@@ -59,7 +65,6 @@ Only showing last 10 days
 | Portugal | 2020-04-03 |      9886 |    246 |         68 |  74377 |
 | Portugal | 2020-04-02 |      9034 |    209 |         68 |  66895 |
 | Portugal | 2020-04-01 |      8251 |    187 |         43 |  59457 |
-| Portugal | 2020-03-31 |      7443 |    160 |         43 |  52086 |
 
 ## Data from EU CDC updated
 
@@ -68,6 +73,7 @@ days
 
 | dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2018 |
 | :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: |
+| 11/04/2020 |  11 |     4 | 2020 |  1516 |     26 | Portugal                | PT    | PRT                  |    10281762 |
 | 10/04/2020 |  10 |     4 | 2020 |   815 |     29 | Portugal                | PT    | PRT                  |    10281762 |
 | 09/04/2020 |   9 |     4 | 2020 |   699 |     35 | Portugal                | PT    | PRT                  |    10281762 |
 | 08/04/2020 |   8 |     4 | 2020 |   712 |     34 | Portugal                | PT    | PRT                  |    10281762 |
@@ -77,4 +83,3 @@ days
 | 04/04/2020 |   4 |     4 | 2020 |   852 |     37 | Portugal                | PT    | PRT                  |    10281762 |
 | 03/04/2020 |   3 |     4 | 2020 |   783 |     22 | Portugal                | PT    | PRT                  |    10281762 |
 | 02/04/2020 |   2 |     4 | 2020 |   808 |     27 | Portugal                | PT    | PRT                  |    10281762 |
-| 01/04/2020 |   1 |     4 | 2020 |  1035 |     20 | Portugal                | PT    | PRT                  |    10281762 |
