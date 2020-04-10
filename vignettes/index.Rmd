@@ -85,7 +85,7 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 
 ```{r, echo=FALSE}
 dgs.pt %>% 
-  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
            gsub('confirmed', 'Confirmed cases', type) %>% 
            gsub('deaths', 'Deaths', .) %>% 

@@ -168,7 +168,7 @@ extract_info <- function(only.date = NULL, index = 1) {
       sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
     page1 <- document[[1]]
     page2 <- document[[2]]
-    page4 <- document[[2]]
+    page4 <- document[[4]]
 
     info <- bind_cols(country = 'Portugal',
               date = report.pdf$date,
@@ -176,6 +176,7 @@ extract_info <- function(only.date = NULL, index = 1) {
               extract_deaths(page1),
               extract_recoveries(page1),
               extract_tests(page1),
+              extract_hospitalized(page4),
               extract_ages(page2, 'confirmed'),
               extract_ages(page4, 'death'))
   }
