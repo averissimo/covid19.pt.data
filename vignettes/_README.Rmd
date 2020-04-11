@@ -9,7 +9,7 @@ output:
 ---
 
 ```{r, eval=FALSE, include=FALSE}
-rmarkdown::render('_README.Rmd', output_file = 'README.html')
+rmarkdown::render('_README.Rmd', output_file = 'README.md')
 ```
 
 ```{r, eval=FALSE, include=FALSE}
