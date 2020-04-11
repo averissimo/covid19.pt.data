@@ -37,6 +37,7 @@ library(xml2)
 library(usethis)
 library(ggplot2)
 library(ggrepel)
+library(plotly)
 
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
@@ -54,24 +55,6 @@ download.updated.pt()
 ```{r, echo=FALSE}
 dgs.pt <- tibble()
 tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
-
-# DGS PT
-if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
-  dgs.pt <- dgs.pt.new 
-  usethis::use_data(dgs.pt, overwrite = TRUE)
-  readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
-}
-
-# EU CDC
-covid19.pt <- tibble()
-tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
-
-if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
-  covid19.pt <- covid19.pt.new
-  usethis::use_data(covid19.pt, overwrite = TRUE)
-  readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
-}
-
 ```
 
 ```{r, echo=FALSE}
@@ -137,7 +120,7 @@ death.max <- age.data %>% filter(age_type == 'death') %>%  pull(value) %>% max
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Confirmed cases from {age.ix.f} (latest)" %>% glue,
+    labs(title = "Confirmed cases",
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
@@ -149,7 +132,7 @@ death.max <- age.data %>% filter(age_type == 'death') %>%  pull(value) %>% max
     expand_limits(x =c(-1 * death.max, death.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Deaths from {age.ix.f}  (latest)" %>% glue,
+    labs(title = "Deaths",
          y = 'Age group',
          x = 'Deaths') +
     theme_minimal() + 
