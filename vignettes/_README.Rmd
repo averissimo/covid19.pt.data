@@ -154,7 +154,7 @@ dgs.pt %>% arrange(desc(date)) %>% top_n(10, date) %>% knitr::kable()
 Only showing last 10 days
 
 ```{r, message=FALSE, echo=FALSE}
-covid19.pt.new %>% head(10) %>% knitr::kable()
+covid19.pt %>% head(10) %>% knitr::kable()
 ```
 
 
