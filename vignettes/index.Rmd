@@ -1,16 +1,16 @@
 ---
 title: "COVID-19 Portugal data"
 output: 
+  html_document:
+    toc: true
+    dev: svg
   github_document:
     dev: svg
-  html_document:
-    dev: svg
-  rmarkdown::html_vignette:
-vignette: >
-  %\VignetteIndexEntry{COVID19PT}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
+
+```{r, eval=FALSE, include=FALSE}
+rmarkdown::render('index.Rmd')
+```
 
 ```{r, eval=FALSE, include=FALSE}
 rmarkdown::clean_site()
@@ -41,24 +41,25 @@ library(ggrepel)
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
 
-
-
 > R package with latest data scrapped from official sources
 
 It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
 
-## Check for new reports
+# Check for new reports
 
-```{r, message=FALSE}
+```{r, eval=FALSE}
+download.updated.pt()
+```
+
+
+```{r, message=FALSE, include=FALSE}
 dat <- download.updated.pt()
 
 dgs.pt.new     <- dat$dgs.pt 
 covid19.pt.new <- dat$cdc.eu
 ```
 
-## Stores in the package
-
-```{r}
+```{r, echo=FALSE}
 dgs.pt <- tibble()
 tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
 
@@ -81,9 +82,22 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 
 ```
 
+```{r, echo=FALSE}
+age.data <- dgs.pt %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>% 
+  group_by(country, type) %>% 
+  filter(grepl('(confirmed_|death_)', type)) %>% 
+  arrange(date) %>% 
+  ungroup() %>% 
+  mutate(gender = if_else(grepl('.*_m_*', type), 'men', 'women'),
+         age_type = if_else(grepl('confirmed_', type), 'confirmed', 'death'),
+         type = gsub('.*_(m|w)_', '', type),
+         value = if_else(gender == 'men', value * -1, value %>% as.double))
+```
+
 ## Data for Portugal
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
@@ -119,6 +133,50 @@ dgs.pt %>%
     theme(legend.position = 'none')
 ```
 
+# Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
+
+```{r, results='asis', echo=FALSE,fig.width=4}
+ixs <- unique(age.data %>% arrange(desc(date)) %>% pull(date))
+
+confirmed.max <- age.data %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
+death.max <- age.data %>% filter(age_type == 'death') %>%  pull(value) %>% max
+for (age.ix in seq_along(ixs)) {
+  age.ix.f <- ixs[age.ix]
+  cat('\n')
+  cat('\n')
+  cat('## {age.ix.f}' %>% glue)
+  cat('\n')
+  cat('\n')
+  print(age.data %>% 
+    filter(date == ixs[age.ix] & age_type == 'confirmed') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Confirmed cases from {age.ix.f}" %>% glue,
+         y = 'Age group',
+         x = 'Confirmed Cases') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+  print(age.data %>% 
+    filter(date == ixs[age.ix] & age_type == 'death') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * death.max, death.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Deaths from {age.ix.f}" %>% glue,
+         y = 'Age group',
+         x = 'Deaths') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+  cat('\n')
+  cat('\n')
+}
+```
+
+# Data {.tabset .tabset-fade .tabset-pills}
 
 ## Data from DGS
 

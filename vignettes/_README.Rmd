@@ -1,1 +1,179 @@
-index.Rmd
+---
+title: "COVID-19 Portugal data"
+output: 
+  html_document:
+    toc: true
+    dev: svg
+  github_document:
+    dev: svg
+---
+
+```{r, eval=FALSE, include=FALSE}
+rmarkdown::render('_README.Rmd', output_file = 'README.html')
+```
+
+```{r, eval=FALSE, include=FALSE}
+rmarkdown::clean_site()
+rmarkdown::render_site(quiet = TRUE)
+```
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+devtools::load_all()
+library(pdftools)
+library(rvest)
+library(dplyr)
+library(tibble)
+library(DT)
+library(anytime)
+library(glue)
+library(reshape2)
+library(zoo)
+library(xml2)
+library(usethis)
+library(ggplot2)
+library(ggrepel)
+
+Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
+```
+
+> R package with latest data scrapped from official sources
+
+It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
+
+# Check for new reports
+
+```{r, eval=FALSE}
+download.updated.pt()
+```
+
+```{r, echo=FALSE}
+dgs.pt <- tibble()
+tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
+
+# DGS PT
+if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
+  dgs.pt <- dgs.pt.new 
+  usethis::use_data(dgs.pt, overwrite = TRUE)
+  readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')
+}
+
+# EU CDC
+covid19.pt <- tibble()
+tryCatch(covid19.pt <- covid19.pt.data::covid19.pt, error = function(err) { })
+
+if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
+  covid19.pt <- covid19.pt.new
+  usethis::use_data(covid19.pt, overwrite = TRUE)
+  readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
+}
+
+```
+
+```{r, echo=FALSE}
+age.data <- dgs.pt %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>% 
+  group_by(country, type) %>% 
+  filter(grepl('(confirmed_|death_)', type)) %>% 
+  arrange(date) %>% 
+  ungroup() %>% 
+  mutate(gender = if_else(grepl('.*_m_*', type), 'men', 'women'),
+         age_type = if_else(grepl('confirmed_', type), 'confirmed', 'death'),
+         type = gsub('.*_(m|w)_', '', type),
+         value = if_else(gender == 'men', value * -1, value %>% as.double))
+```
+
+## Data for Portugal
+
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+dgs.pt %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
+  mutate(type = 
+           gsub('confirmed', 'Confirmed cases', type) %>% 
+           gsub('deaths', 'Deaths', .) %>% 
+           gsub('recoveries', 'Recovered', .)) %>% 
+  group_by(country, type) %>% 
+  arrange(date) %>% 
+  mutate(label = if_else(date == last(date), 
+                         paste0(type, ': ', 
+                                format(value, digits = 2, big.mark =',', trim = FALSE)), 
+                         NA_character_)) %>% 
+  ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
+    geom_line(size = 2) + 
+    geom_point(size = 2.5) +
+    ggrepel::geom_label_repel(color = 'white', 
+                              segment.color = 'black', 
+                              na.rm = TRUE, 
+                              min.segment.length = 0, 
+                              nudge_x = -2,
+                              nudge_y = -.5,
+                              segment.alpha = .8,
+                              size = 3.5,
+                              seed = 1985) +
+    labs(x = 'Date', 
+         y = 'Number of individuals',
+         title = 'Individuals that were Infected, Recovered and Died',
+         subtitle = 'Showing in Logarithmic scale (base 2)') +
+    scale_y_continuous(trans = 'log10') +
+    scale_color_viridis_d(end = .85) +
+    scale_fill_viridis_d(end = .85) +
+    theme_minimal() +
+    theme(legend.position = 'none')
+```
+
+# Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
+
+```{r, result='asis', echo=FALSE,fig.width=4}
+confirmed.max <- age.data %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
+death.max <- age.data %>% filter(age_type == 'death') %>%  pull(value) %>% max
+  print(age.data %>% 
+    filter(date == max(date) & age_type == 'confirmed') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Confirmed cases from {age.ix.f} (latest)" %>% glue,
+         y = 'Age group',
+         x = 'Confirmed Cases') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+  print(age.data %>% 
+    filter(date == max(date) & age_type == 'death') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * death.max, death.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Deaths from {age.ix.f}  (latest)" %>% glue,
+         y = 'Age group',
+         x = 'Deaths') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+```
+
+# Data {.tabset .tabset-fade .tabset-pills}
+
+## Data from DGS
+
+Only showing last 10 days
+
+```{r, echo=FALSE}
+dgs.pt %>% arrange(desc(date)) %>% top_n(10, date) %>% knitr::kable()
+```
+
+## Data from EU CDC updated
+
+Only showing last 10 days
+
+```{r, message=FALSE, echo=FALSE}
+covid19.pt.new %>% head(10) %>% knitr::kable()
+```
+
+
+
+
