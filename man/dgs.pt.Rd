@@ -5,7 +5,7 @@
 \alias{dgs.pt}
 \title{PT DGS data}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10 rows and 5 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 20 rows and 44 columns.
 }
 \usage{
 dgs.pt

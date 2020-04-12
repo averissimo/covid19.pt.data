@@ -32,6 +32,8 @@ Imports:
     lubridate,
     xml2,
     ggplot2,
-    ggrepel
+    ggrepel,
+    plotly,
+    viridis
 VignetteBuilder: knitr
 RoxygenNote: 7.1.0

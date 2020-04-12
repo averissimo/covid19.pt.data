@@ -37,6 +37,8 @@ library(xml2)
 library(usethis)
 library(ggplot2)
 library(ggrepel)
+library(plotly)
+library(viridis)
 
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
@@ -98,44 +100,47 @@ age.data <- dgs.pt %>%
 ## Data for Portugal
 
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
-dgs.pt %>% 
+my.plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
+  filter(!is.na(value)) %>% 
   mutate(type = 
            gsub('confirmed', 'Confirmed cases', type) %>% 
            gsub('deaths', 'Deaths', .) %>% 
-           gsub('recoveries', 'Recovered', .)) %>% 
-  group_by(country, type) %>% 
-  arrange(date) %>% 
-  mutate(label = if_else(date == last(date), 
-                         paste0(type, ': ', 
-                                format(value, digits = 2, big.mark =',', trim = FALSE)), 
-                         NA_character_)) %>% 
-  ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
-    geom_line(size = 2) + 
-    geom_point(size = 2.5) +
-    ggrepel::geom_label_repel(color = 'white', 
-                              segment.color = 'black', 
-                              na.rm = TRUE, 
-                              min.segment.length = 0, 
-                              nudge_x = -2,
-                              nudge_y = -.5,
-                              segment.alpha = .8,
-                              size = 3.5,
-                              seed = 1985) +
-    labs(x = 'Date', 
-         y = 'Number of individuals',
+           gsub('recovered', 'Recovered', .) %>% 
+           gsub('hospitalized', 'Hospitalized', .) %>% 
+           gsub('in.icu', 'In ICU', .)) %>% 
+  mutate(text = format(value, big.mark = ',', trim = TRUE)) %>%
+  ungroup() %>% 
+  select(Date = date, Type = type, value = value, text = text) %>% 
+  arrange(Date) 
+
+d <- my.plot.data  %>%  
+  highlight_key(~Type)
+
+pal <- viridis(my.plot.data$Type %>% length, end = .8, option = 'A')
+
+d %>% plot_ly() %>% 
+  add_trace(x = ~Date, 
+            y = ~value, 
+            color = ~Type, 
+            type = 'scatter',
+            mode = 'lines+markers', 
+            colors = pal, 
+            name = ~Type,
+            customdata = ~text,
+            hovertemplate = paste0('<b>%{customdata}</b>', '<br><i>%{text}</i>', '<br><i>%{x}</i>'),
+            text = ~Type
+            ) %>% 
+  layout(legend = list(x = 0.1, y = 1), dragmode = FALSE,
          title = 'Individuals that were Infected, Recovered and Died',
-         subtitle = 'Showing in Logarithmic scale (base 2)') +
-    scale_y_continuous(trans = 'log10') +
-    scale_color_viridis_d(end = .85) +
-    scale_fill_viridis_d(end = .85) +
-    theme_minimal() +
-    theme(legend.position = 'none')
+         xaxis = list(title = 'Date'),
+         yaxis = list(title = 'Number of individuals', type = 'log')) %>% 
+  highlight(on = 'plotly_click', off = 'plotly_doubleclick')
 ```
 
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
-```{r, results='asis', echo=FALSE,fig.width=4}
+```{r, results='asis', echo=FALSE,fig.width=4, warning=FALSE}
 ixs <- unique(age.data %>% arrange(desc(date)) %>% pull(date))
 
 confirmed.max <- age.data %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
