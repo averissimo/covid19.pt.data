@@ -138,6 +138,57 @@ d %>% plot_ly() %>%
   highlight(on = 'plotly_click', off = 'plotly_doubleclick')
 ```
 
+# New Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
+
+```{r, results='asis', echo=FALSE,fig.width=4, warning=FALSE}
+age.data.new <- age.data %>% 
+  mutate(value = abs(value)) %>% 
+  group_by(country, type, gender, age_type) %>% 
+  arrange(desc(date)) %>% 
+  mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
+  filter(value > 0) %>% 
+  mutate(value = if_else(gender == 'men', value * -1, value %>% as.double))
+
+ixs <- unique(age.data.new %>% arrange(desc(date)) %>% pull(date))
+
+confirmed.max <- age.data.new %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
+death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% max
+for (age.ix in seq_along(ixs)) {
+  age.ix.f <- ixs[age.ix]
+  cat('\n')
+  cat('\n')
+  cat('## {age.ix.f}' %>% glue)
+  cat('\n')
+  cat('\n')
+  print(ggplotly(age.data.new %>% 
+    filter(date == ixs[age.ix] & age_type == 'confirmed') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Confirmed cases from {age.ix.f}" %>% glue,
+         y = 'Age group',
+         x = 'Confirmed Cases') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom')))
+  print(age.data.new %>% 
+    filter(date == ixs[age.ix] & age_type == 'death') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * death.max, death.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Deaths from {age.ix.f}" %>% glue,
+         y = 'Age group',
+         x = 'Deaths') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+  cat('\n')
+  cat('\n')
+}
+```
+
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
 ```{r, results='asis', echo=FALSE,fig.width=4, warning=FALSE}
@@ -152,7 +203,7 @@ for (age.ix in seq_along(ixs)) {
   cat('## {age.ix.f}' %>% glue)
   cat('\n')
   cat('\n')
-  print(age.data %>% 
+  print(ggplotly(age.data %>% 
     filter(date == ixs[age.ix] & age_type == 'confirmed') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
@@ -163,7 +214,7 @@ for (age.ix in seq_along(ixs)) {
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
-    theme(legend.position = 'bottom'))
+    theme(legend.position = 'bottom')))
   print(age.data %>% 
     filter(date == ixs[age.ix] & age_type == 'death') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
