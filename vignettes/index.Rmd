@@ -158,18 +158,19 @@ for (age.ix in seq_along(ixs)) {
   cat('## {age.ix.f}' %>% glue)
   cat('\n')
   cat('\n')
-  print(ggplotly(age.data.new %>% 
+  print(age.data.new %>% 
     filter(date == ixs[age.ix] & age_type == 'confirmed') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Confirmed cases from {age.ix.f}" %>% glue,
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
-    theme(legend.position = 'bottom')))
+    theme(legend.position = 'bottom'))
   print(age.data.new %>% 
     filter(date == ixs[age.ix] & age_type == 'death') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
@@ -177,6 +178,7 @@ for (age.ix in seq_along(ixs)) {
     expand_limits(x =c(-1 * death.max, death.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_fill_viridis_d(end = .8) + 
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     labs(title = "Deaths from {age.ix.f}" %>% glue,
          y = 'Age group',
          x = 'Deaths') +
@@ -201,24 +203,26 @@ for (age.ix in seq_along(ixs)) {
   cat('## {age.ix.f}' %>% glue)
   cat('\n')
   cat('\n')
-  print(ggplotly(age.data %>% 
+  print(age.data %>% 
     filter(date == ixs[age.ix] & age_type == 'confirmed') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Confirmed cases from {age.ix.f}" %>% glue,
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
-    theme(legend.position = 'bottom')))
+    theme(legend.position = 'bottom'))
   print(age.data %>% 
     filter(date == ixs[age.ix] & age_type == 'death') %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
     expand_limits(x =c(-1 * death.max, death.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Deaths from {age.ix.f}" %>% glue,
          y = 'Age group',

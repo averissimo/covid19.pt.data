@@ -129,6 +129,7 @@ death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% m
     geom_bar(stat = 'identity') + 
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Confirmed cases",
          y = 'Age group',
@@ -161,6 +162,7 @@ death.max <- age.data %>% filter(age_type == 'death') %>%  pull(value) %>% max
     geom_bar(stat = 'identity') + 
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Confirmed cases",
          y = 'Age group',
