@@ -211,7 +211,7 @@ for (age.ix in seq_along(ixs)) {
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Confirmed cases from {age.ix.f}" %>% glue,
+    labs(title = "Confirmed cases up to {age.ix.f}" %>% glue,
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
@@ -224,7 +224,7 @@ for (age.ix in seq_along(ixs)) {
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Deaths from {age.ix.f}" %>% glue,
+    labs(title = "Deaths up to {age.ix.f}" %>% glue,
          y = 'Age group',
          x = 'Deaths') +
     theme_minimal() + 

@@ -131,7 +131,7 @@ death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% m
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Confirmed cases",
+    labs(title = "Confirmed cases at {max(age.data.new$date)}" %>% glue,
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
@@ -143,7 +143,7 @@ death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% m
     expand_limits(x =c(-1 * death.max, death.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_fill_viridis_d(end = .8) + 
-    labs(title = "Deaths",
+    labs(title = "Deaths at {max(age.data.new$date)}" %>% glue,
          y = 'Age group',
          x = 'Deaths') +
     theme_minimal() + 
