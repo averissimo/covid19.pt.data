@@ -5,8 +5,7 @@ COVID-19 Portugal data
 
 It downloads the [daily
 report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS
-and stores this in data-friendly format under `/data`
-directory.
+and stores this in data-friendly format under `/data` directory.
 
 # Check for new reports
 
@@ -18,9 +17,57 @@ download.updated.pt()
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.svg)<!-- -->
 
+# New cases / deaths by age groups
+
+(latest date)
+
+``` r
+age.data.new <- age.data %>% 
+  mutate(value = abs(value)) %>% 
+  group_by(country, type, gender, age_type) %>% 
+  arrange(desc(date)) %>% 
+  mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
+  filter(value > 0) %>% 
+  mutate(value = if_else(gender == 'men', value * -1, value %>% as.double))
+
+confirmed.max <- age.data.new %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
+death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% max
+  print(age.data.new %>% 
+    filter(date == max(date) & age_type == 'confirmed') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Confirmed cases",
+         y = 'Age group',
+         x = 'Confirmed Cases') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
+
+``` r
+  print(age.data %>% 
+    filter(date == max(date) & age_type == 'death') %>%
+    ggplot(aes(x = value, y = type, fill = gender)) +
+    geom_bar(stat = 'identity') + 
+    expand_limits(x =c(-1 * death.max, death.max)) +
+    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_fill_viridis_d(end = .8) + 
+    labs(title = "Deaths",
+         y = 'Age group',
+         x = 'Deaths') +
+    theme_minimal() + 
+    theme(legend.position = 'bottom'))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-7-2.svg)<!-- -->
+
 # Cases / Deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-7-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-8-2.svg)<!-- -->
 
 # Data
 
