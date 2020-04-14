@@ -86,6 +86,13 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
   hits.my <- hits[interesting.hit]
 
   if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
+    # outliers
+    if (pattern == '20-29 anos' && page[c(hits.ix + 1)] == 'Chile (2) Polónia (1)') {
+        hits.ix <- hits.ix+1
+    } else if (pattern == '60-69 anos' && page[c(hits.ix+1)] == 'Emirados Árabes Unidos (43) Suécia (1)') {
+      hits.ix <- hits.ix+1
+    }
+
     tmp <- page[c(hits.ix + 1)][[interesting.hit]] %>%
       stringr::str_replace('([0-9]+)[ ]+([0-9]+).*', '\\1\t\\2')
 
@@ -155,7 +162,7 @@ extract_generic <- function(page, pattern, interesting.hit) {
 #' @export
 #'
 #' @examples
-#' extract_info(date()) # keep only if it's from today
+#' extract_info(index = 4) # keep only if it's from today
 extract_info <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
 
@@ -170,7 +177,7 @@ extract_info <- function(only.date = NULL, index = 1) {
     page2 <- document[[2]]
     page4 <- document[[4]]
 
-    info <- bind_cols(country = 'Portugal',
+    info <- dplyr::bind_cols(country = 'Portugal',
               date = report.pdf$date,
               extract_cases(page1),
               extract_deaths(page1),
@@ -199,7 +206,7 @@ download.report <- function(only.date = NULL, index = 1) {
 
   dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
     rvest::html_text() %>%
-    stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
+    stringr::str_replace('.*([0-9][0-9])/([0-9][0-9])/([0-9][0-9][0-9][0-9])', '\\3-\\2-\\1') %>%
     anytime::anydate(tz = '%d/%m/%Y')
 
   my.date <- dates.raw %>% purrr::pluck(index)
@@ -319,9 +326,9 @@ merge_eu.cdc <- function(dgs.pt.new) {
 #' @return updated data
 #' @export
 download.updated.pt <- function() {
-  dgs.pt.new <- download_all_reports() %>% distinct()
+  dgs.pt.new <- download_all_reports() %>% distinct() %>% arrange(desc(date))
 
-  covid19.pt.new <- merge_eu.cdc(dgs.pt.new)
+  covid19.pt.new <- merge_eu.cdc(dgs.pt.new) %>% arrange(-year, -month, -day)
 
   return(list(dgs.pt = dgs.pt.new, cdc.eu = covid19.pt.new))
 }
