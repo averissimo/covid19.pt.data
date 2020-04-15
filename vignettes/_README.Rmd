@@ -123,25 +123,39 @@ age.data.new <- age.data %>%
 
 confirmed.max <- age.data.new %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
 death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% max
-  print(age.data.new %>% 
-    filter(date == max(date) & age_type == 'confirmed') %>%
+
+confi.dat <- age.data.new %>% 
+  filter(date == max(date) & age_type == 'confirmed' & value != 0) %>% 
+  mutate(label = if_else(value != 0, format(abs(value), big.mark = ','), NA_character_))
+
+death.dat <- age.data.new %>% 
+  filter(date == max(date) & age_type == 'death' & value != 0) %>% 
+  mutate(label = if_else(value != 0, format(abs(value), big.mark = ','), NA_character_))
+
+  print(confi.dat %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
+    ggrepel::geom_label_repel(aes(label = label, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
+                              nudge_x = ifelse(confi.dat$gender == 'men', -1, 1),
+                              show.legend = FALSE) +
     expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
     scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
-    scale_fill_viridis_d(end = .8) + 
+    scale_fill_viridis_d('', end = .8) + 
     labs(title = "Confirmed cases at {max(age.data.new$date)}" %>% glue,
          y = 'Age group',
          x = 'Confirmed Cases') +
     theme_minimal() + 
     theme(legend.position = 'bottom'))
-  print(age.data %>% 
-    filter(date == max(date) & age_type == 'death') %>%
+  print(death.dat %>%
     ggplot(aes(x = value, y = type, fill = gender)) +
     geom_bar(stat = 'identity') + 
+    ggrepel::geom_label_repel(aes(label = label, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
+                              nudge_x = ifelse(death.dat$gender == 'men', -1, 1),
+                              show.legend = FALSE) +
     expand_limits(x =c(-1 * death.max, death.max)) +
     scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
+    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
     scale_fill_viridis_d(end = .8) + 
     labs(title = "Deaths at {max(age.data.new$date)}" %>% glue,
          y = 'Age group',
