@@ -17,6 +17,8 @@ download.updated.pt()
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.svg)<!-- -->
 
+![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
+
 # New cases / deaths by age groups
 
 (latest date)
@@ -58,7 +60,7 @@ death.dat <- age.data.new %>%
     theme(legend.position = 'bottom'))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
 ``` r
   print(death.dat %>%
@@ -78,11 +80,11 @@ death.dat <- age.data.new %>%
     theme(legend.position = 'bottom'))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-2.svg)<!-- -->
 
 # Cases / Deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-8-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-9-2.svg)<!-- -->
 
 # Data
 
