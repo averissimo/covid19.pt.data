@@ -63,7 +63,7 @@ The source code is at [averissimo/r-analysis-covid19](https://github.com/averiss
 * [Portugal](https://averissimo.github.io/covid19.pt.data/)
 * [Germany](https://averissimo.github.io/covid19.de.data/) *(by state and district)*
 
-# Data
+# Data  {.tabset .tabset-fade .tabset-pills}
 
 Data was retrieved from oficial sources.
 
@@ -120,7 +120,7 @@ age.data <- dgs.pt %>%
          value = if_else(gender == 'men', value * -1, value %>% as.double))
 ```
 
-## Data for Portugal
+## Cumulative data for Portugal
 
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 my.plot.data <- dgs.pt %>% 
@@ -131,7 +131,8 @@ my.plot.data <- dgs.pt %>%
            gsub('deaths', 'Deaths', .) %>% 
            gsub('recovered', 'Recovered', .) %>% 
            gsub('hospitalized', 'Hospitalized', .) %>% 
-           gsub('in.icu', 'In ICU', .)) %>% 
+           gsub('in.icu', 'In ICU', .) %>% 
+           gsub('tests', 'Tests', .)) %>% 
   mutate(text = format(value, big.mark = ',', trim = TRUE)) %>%
   ungroup() %>% 
   select(Date = date, Type = type, value = value, text = text) %>% 
@@ -158,6 +159,52 @@ d %>% plot_ly() %>%
          title = 'Individuals that were Infected, Recovered and Died',
          xaxis = list(title = 'Date'),
          yaxis = list(title = 'Number of individuals', type = 'log')) %>% 
+  highlight(on = 'plotly_click', off = 'plotly_doubleclick')
+```
+
+## Data per day
+
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+my.plot.data <- dgs.pt %>% 
+  reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
+  filter(!is.na(value)) %>% 
+  mutate(type = 
+           gsub('confirmed', 'Confirmed cases', type) %>% 
+           gsub('deaths', 'Deaths', .) %>% 
+           gsub('recovered', 'Recovered', .) %>% 
+           gsub('hospitalized', 'Hospitalized', .) %>% 
+           gsub('in.icu', 'In ICU', .) %>% 
+           gsub('tests', 'Tests', .)) %>% 
+  group_by(country, type) %>% 
+  arrange(desc(date)) %>% 
+  mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
+  mutate(text = format(value, big.mark = ',', trim = TRUE)) %>%
+  ungroup() %>% 
+  #filter(value != 0) %>% 
+  select(Date = date, Type = type, value = value, text = text) %>% 
+  arrange(Date) 
+
+d <- my.plot.data  %>%  
+  highlight_key(~Type)
+
+pal <- viridis(my.plot.data$Type %>% length, end = .8, option = 'A')
+
+d %>% plot_ly() %>% 
+  add_trace(x = ~Date, 
+            y = ~value, 
+            color = ~Type, 
+            type = 'scatter',
+            mode = 'lines+markers', 
+            colors = pal, 
+            name = ~Type,
+            customdata = ~text,
+            hovertemplate = paste0('<b>%{customdata}</b>', '<br><i>%{text}</i>', '<br><i>%{x}</i>'),
+            text = ~Type
+            ) %>% 
+  layout(legend = list(x = 0.1, y = 1), dragmode = FALSE,
+         title = 'Individuals that were Infected, Recovered and Died',
+         xaxis = list(title = 'Date'),
+         yaxis = list(title = 'Number of individuals')) %>% 
   highlight(on = 'plotly_click', off = 'plotly_doubleclick')
 ```
 
