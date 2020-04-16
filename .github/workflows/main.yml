@@ -33,7 +33,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git add docs README.md data
         if [ -d README_files ]; then git add README_files; fi
-        if [[ $(git log --oneline --since="01:00" | wc -l) > 0 && $(git log HEAD^...HEAD --oneline | grep -q 'Update site (automatic)') ]]; then
+        if [ "$(git log --oneline --since='00:01' | wc -l)" -gt 0 ] && $(git log HEAD^...HEAD --oneline | grep -q 'Update site (automatic)'); then
           git commit -m --amend "Update site (automatic)" || echo "Nothing to update"
         else
           git commit -m "Update site (automatic)" || echo "Nothing to update"
