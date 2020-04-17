@@ -286,6 +286,7 @@ print(age.data.all %>%
   scale_fill_viridis_d('', end = .8) + 
   labs(title = "Total number of Deaths by age group",
        subtitle = 'Percentage shows the mortality rate',
+       caption = 'Mortality rate = \'deaths\' / \'confirmed cases\'',
        y = 'Age group',
        x = 'Deaths') +
   theme_minimal() + 
