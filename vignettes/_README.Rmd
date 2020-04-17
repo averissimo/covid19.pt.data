@@ -271,6 +271,7 @@ print(age.data.all %>%
   scale_fill_viridis_d('', end = .8) + 
   labs(title = "Confirmed cases",
        y = 'Age group',
+       caption = '',
        x = 'Confirmed Cases') +
   theme_minimal() + 
   theme(legend.position = 'bottom'))
