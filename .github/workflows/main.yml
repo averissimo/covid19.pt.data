@@ -31,7 +31,7 @@ jobs:
         ls
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add docs README.md data
+        git add README.md data
         if [ -d README_files ]; then git add README_files; fi
         git commit -m "Update site (automatic)" || echo "Nothing to update"
         git status
