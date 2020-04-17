@@ -7,6 +7,9 @@ It downloads the [daily
 report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS
 and stores this in data-friendly format under `/data` directory.
 
+A more detailed analysis of this data is [available
+here](https://averissimo.github.io/covid19-analysis/portugal.html)
+
 # Check for new reports
 
 ``` r
@@ -15,76 +18,20 @@ download.updated.pt()
 
 ## Data for Portugal
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.svg)<!-- -->
-
 ![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
-
-# New cases / deaths by age groups
-
-(latest date)
-
-``` r
-age.data.new <- age.data %>% 
-  mutate(value = abs(value)) %>% 
-  group_by(country, type, gender, age_type) %>% 
-  arrange(desc(date)) %>% 
-  mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
-  filter(value > 0) %>% 
-  mutate(value = if_else(gender == 'men', value * -1, value %>% as.double))
-
-confirmed.max <- age.data.new %>% filter(age_type == 'confirmed') %>%  pull(value) %>% max
-death.max <- age.data.new %>% filter(age_type == 'death') %>%  pull(value) %>% max
-
-confi.dat <- age.data.new %>% 
-  filter(date == max(date) & age_type == 'confirmed' & value != 0) %>% 
-  mutate(label = if_else(value != 0, format(abs(value), big.mark = ','), NA_character_))
-
-death.dat <- age.data.new %>% 
-  filter(date == max(date) & age_type == 'death' & value != 0) %>% 
-  mutate(label = if_else(value != 0, format(abs(value), big.mark = ','), NA_character_))
-
-  print(confi.dat %>%
-    ggplot(aes(x = value, y = type, fill = gender)) +
-    geom_bar(stat = 'identity') + 
-    ggrepel::geom_label_repel(aes(label = label, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
-                              nudge_x = ifelse(confi.dat$gender == 'men', -1, 1),
-                              show.legend = FALSE) +
-    expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
-    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
-    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
-    scale_fill_viridis_d('', end = .8) + 
-    labs(title = "Confirmed cases at {max(age.data.new$date)}" %>% glue,
-         y = 'Age group',
-         x = 'Confirmed Cases') +
-    theme_minimal() + 
-    theme(legend.position = 'bottom'))
-```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
-``` r
-  print(death.dat %>%
-    ggplot(aes(x = value, y = type, fill = gender)) +
-    geom_bar(stat = 'identity') + 
-    ggrepel::geom_label_repel(aes(label = label, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
-                              nudge_x = ifelse(death.dat$gender == 'men', -1, 1),
-                              show.legend = FALSE) +
-    expand_limits(x =c(-1 * death.max, death.max)) +
-    scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
-    scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
-    scale_fill_viridis_d(end = .8) + 
-    labs(title = "Deaths at {max(age.data.new$date)}" %>% glue,
-         y = 'Age group',
-         x = 'Deaths') +
-    theme_minimal() + 
-    theme(legend.position = 'bottom'))
-```
+# New cases / deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-8-2.svg)<!-- -->
+Only showing 1 day *(April
+17)*
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-9-2.svg)<!-- -->
 
 # Cases / Deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-9-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-10-2.svg)<!-- -->
 
 # Data
 
