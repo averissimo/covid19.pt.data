@@ -55,8 +55,11 @@ days
 
 ## Data from EU CDC updated
 
-Only showing last 10
-days
+Only showing last 10 days.
+
+Don’t be alarmed with the first line being in the future, EU CDC date
+always refer to the situation on the previous
+day.
 
 | dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2018 |
 | :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: |
