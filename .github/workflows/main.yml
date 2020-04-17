@@ -39,9 +39,10 @@ jobs:
         else
           echo "new commit"
           git log --oneline --since='00:01'
-          git log --oneline --since='00:01' | wc -l
-          git log HEAD^...HEAD --oneline
-          git log HEAD^...HEAD --oneline | grep -q 'Update site (automatic)'
+          echo "number of commits since 00:01 $(git log --oneline --since='00:01' | wc -l)"
+          git log -n 1 --oneline
+          git log -n 1 --oneline | grep 'Update site (automatic)'
+          echo ""
           git commit -m "Update site (automatic)" || echo "Nothing to update"
         fi
         git status
