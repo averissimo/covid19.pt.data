@@ -35,7 +35,7 @@ jobs:
         if [ -d README_files ]; then git add README_files; fi
         if [ "$(git log --oneline --since='00:01' | wc -l)" -gt 0 ] && $(git log -n 1 --oneline | grep -q 'Update site (automatic)'); then
           echo "ammending"
-          git commit -m --amend "Update site (automatic)" || echo "Nothing to update"
+          git commit --amend -m "Update site (automatic)" || echo "Nothing to update"
         else
           echo "new commit"
           git log --oneline --since='00:01'
