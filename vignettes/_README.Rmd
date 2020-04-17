@@ -307,7 +307,9 @@ dgs.pt %>% arrange(desc(date)) %>% top_n(10, date) %>% knitr::kable()
 
 ## Data from EU CDC updated
 
-Only showing last 10 days
+Only showing last 10 days.
+
+Don't be alarmed with the first line being in the future, EU CDC date always refer to the situation on the previous day.
 
 ```{r, message=FALSE, echo=FALSE}
 covid19.pt %>% head(10) %>% knitr::kable()
