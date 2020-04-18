@@ -180,7 +180,7 @@ plot.data %>%
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
-         subtitle = 'Showing in a (pseudo) Logarithmic scale') +
+         subtitle = 'Showing in a (pseudo) logarithmic scale') +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
@@ -282,7 +282,7 @@ print(age.data.all %>%
   scale_fill_viridis_d('', end = .8) + 
   labs(title = "Confirmed cases",
        y = 'Age group',
-       ssubtitle = '',
+       subtitle = '',
        caption = '',
        x = 'Confirmed Cases') +
   theme_minimal() + 
