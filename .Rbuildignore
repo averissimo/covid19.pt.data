@@ -3,3 +3,6 @@
 ^vignettes/\.nojekyll
 ^data\/.*\.csv
 ^docs\/
+^\.github
+^vignettes/_README\.Rmd
+^README_files

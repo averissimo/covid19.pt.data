@@ -9,7 +9,7 @@ extract_tests <- function(page) {
 }
 
 extract_hospitalized <- function(page) {
-  val <- extract_generic.two(page, 'NÚMERO DE CASOS NÚMERO DE CASOS', 1)
+  val <- extract_generic.two(page, 'N\u00DAMERO DE CASOS N\u00DAMERO DE CASOS', 1)
   if (is.list(val)) {
     names(val) <- c('hospitalized', 'in.icu')
     return(val %>% dplyr::bind_cols())
@@ -87,9 +87,9 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
 
   if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
     # outliers
-    if (pattern == '20-29 anos' && page[c(hits.ix + 1)] == 'Chile (2) Polónia (1)') {
+    if (pattern == '20-29 anos' && page[c(hits.ix + 1)] == 'Chile (2) Pol\u00F3nia (1)') {
         hits.ix <- hits.ix+1
-    } else if (pattern == '60-69 anos' && page[c(hits.ix+1)] == 'Emirados Árabes Unidos (43) Suécia (1)') {
+    } else if (pattern == '60-69 anos' && page[c(hits.ix+1)] == 'Emirados \u00C1rabes Unidos (43) Su\u00E9cia (1)') {
       hits.ix <- hits.ix+1
     }
 
@@ -188,7 +188,7 @@ extract_info <- function(only.date = NULL, index = 1) {
               extract_ages(page4, 'death'))
   }
 
-  return(info %>% filter(!is.na(country)))
+  return(info %>% dplyr::filter(!is.na(country)))
 }
 
 #' Download report

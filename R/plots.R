@@ -1,3 +1,11 @@
+#' Builds labels for plots
+#'
+#' @param input table
+#' @param order.by  what should be ordered (to show max, min and current)
+#' @param name name of grouping variable
+#' @param digits digits on numbers
+#'
+#' @return
 build.labels <- function(input, order.by, name, digits = 2) {
   my.format <- function(val) {
     val %>%

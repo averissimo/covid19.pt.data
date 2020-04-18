@@ -18,5 +18,5 @@ list with information that can be extracted
 Extract information from latest report of DGS
 }
 \examples{
-extract_info(date()) # keep only if it's from today
+extract_info(index = 4) # keep only if it's from today
 }
