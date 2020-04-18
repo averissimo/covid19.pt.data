@@ -138,7 +138,7 @@ dgs.pt %>%
 ```
 
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
-dgs.pt %>% 
+plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
            gsub('confirmed', 'Confirmed cases', type) %>% 
@@ -155,7 +155,16 @@ dgs.pt %>%
   group_by(country, type) %>% 
   arrange(date) %>% 
   filter(date > min(date)) %>%  ## values will not be for that day
-  build.labels('value', 'type') %>% 
+  build.labels('value', 'type') 
+
+roundUp <- function(x) 10^ceiling(log10(x))
+my.breaks <- c(-100, -40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)
+
+my.breaks <- c(my.breaks, max(plot.data$value, na.rm = TRUE) %>% roundUp(), -1 * (abs(min(plot.data$value, na.rm = TRUE)) %>% roundUp())) %>% 
+  unique %>% 
+  sort
+
+plot.data %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
     geom_line(size = 2) + 
     geom_point(size = 2.5) +
@@ -176,7 +185,7 @@ dgs.pt %>%
     scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
                        labels = function(ix) { format(ix, big.mark = ',', scientific = FALSE) },
-                       breaks = c(-40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)) +
+                       breaks =  my.breaks) +
     theme_minimal() +
     theme(legend.position = 'none')
 ```
