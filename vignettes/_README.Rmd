@@ -131,8 +131,8 @@ dgs.pt %>%
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in Logarithmic scale (base 10)') +
     scale_y_continuous(trans = 'log10', labels = function(ix) { format(ix, big.mark = ',', scientific = FALSE) }) +
-    scale_color_viridis_d(end = .85) +
-    scale_fill_viridis_d(end = .85) +
+    scale_color_viridis_d(end = .7) +
+    scale_fill_viridis_d(end = .7) +
     theme_minimal() +
     theme(legend.position = 'none')
 ```
@@ -172,8 +172,8 @@ dgs.pt %>%
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) Logarithmic scale') +
-    scale_color_viridis_d(end = .85) +
-    scale_fill_viridis_d(end = .85) +
+    scale_color_viridis_d(end = .7) +
+    scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
                        labels = function(ix) { format(ix, big.mark = ',', scientific = FALSE) },
                        breaks = c(-40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)) +
