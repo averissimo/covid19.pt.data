@@ -115,17 +115,18 @@ dgs.pt %>%
                                 format(value, digits = 2, big.mark =',', trim = FALSE)), 
                          NA_character_)) %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
-    geom_line(size = 2) + 
+    geom_line(size = 1, alpha = .6) + 
     geom_point(size = 2.5) +
     ggrepel::geom_label_repel(color = 'white', 
                               segment.color = 'black', 
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               nudge_x = -2,
-                              nudge_y = -.5,
+                              #nudge_y = -.5,
                               segment.alpha = .8,
                               size = 3.5,
                               seed = 1985) +
+    scale_x_date(date_labels = '%B %d', date_breaks = "3 day", date_minor_breaks = "1 day") +
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
@@ -166,6 +167,7 @@ my.breaks <- c(my.breaks, max(plot.data$value, na.rm = TRUE) %>% roundUp(), -1 *
 
 plot.data %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
+    geom_hline(aes(yintercept = 0), size = .7, alpha = .3, linetype = 3) +
     geom_line(size = 1, alpha = .6) + 
     geom_point(size = 2.5) +
     ggrepel::geom_label_repel(color = 'white', 
@@ -173,14 +175,15 @@ plot.data %>%
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               nudge_x = -2,
-                              nudge_y = -.5,
+                              #nudge_y = -.5,
                               segment.alpha = .8,
                               size = 3.5,
                               seed = 1985) +
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
-         subtitle = 'Showing in a (pseudo) logarithmic scale') +
+         subtitle = 'Showing in a (pseudo) logarithmic scale',
+         caption = "Label points to the maximum point in time") +
     scale_x_date(date_labels = '%B %d', date_breaks = "3 day", date_minor_breaks = "1 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
