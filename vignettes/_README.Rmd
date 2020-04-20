@@ -166,7 +166,7 @@ my.breaks <- c(my.breaks, max(plot.data$value, na.rm = TRUE) %>% roundUp(), -1 *
 
 plot.data %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
-    geom_line(size = 2) + 
+    geom_line(size = 1, alpha = .6) + 
     geom_point(size = 2.5) +
     ggrepel::geom_label_repel(color = 'white', 
                               segment.color = 'black', 
@@ -181,13 +181,14 @@ plot.data %>%
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale') +
+    scale_x_date(date_labels = '%B %d', date_breaks = "3 day", date_minor_breaks = "1 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
                        labels = function(ix) { format(ix, big.mark = ',', scientific = FALSE) },
                        breaks =  my.breaks) +
     theme_minimal() +
-    theme(legend.position = 'none')
+    theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 
