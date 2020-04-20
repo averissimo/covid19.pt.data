@@ -4,6 +4,7 @@ on:
     - cron:  '13 0-10,15-23 * * *'
   push:
     paths:
+    - 'R/*.R'
     - 'vignettes/*.Rmd'
     - '.github/workflows/main.yml'
 
