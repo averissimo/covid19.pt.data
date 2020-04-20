@@ -270,8 +270,8 @@ download_all_reports <- function() {
 
   dgs.pt.new <- dgs.pt
   if (length(what.to.search) > 0) {
-    for (x in seq_along(dates.valid)) {
-      day <- extract_info(index = x)
+    for (x in seq_along(what.to.search)) {
+      day <- extract_info(index = what.to.search[x])
       dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
     }
   }
