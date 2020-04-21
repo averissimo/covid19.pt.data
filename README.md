@@ -24,52 +24,8 @@ download.updated.pt()
 
 # New cases / deaths by age groups
 
-Only showing 1 day *(April 21)*
-
-``` r
-age.data.all.new <- age.data %>% 
-  group_by(country, type, gender, age_type) %>% 
-  arrange(desc(date)) %>% 
-  mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
-  filter(value != 0) %>% 
-  filter(date == max(date) & value != 0) %>% 
-  ungroup() %>% 
-  select(type, gender, age_type, value) %>% 
-  group_by(type, gender, age_type) %>% 
-  reshape2::dcast(type + gender ~ age_type, mean, fill = 0) %>% 
-  mutate(label.confirmed = if_else(confirmed != 0, format(abs(confirmed), big.mark = ',', trim = TRUE), NA_character_),
-         label.death = if_else(death != 0, 
-                               if_else(is.na(confirmed) | confirmed == 0, format(abs(death), big.mark = ',', trim = TRUE),
-                                       paste0(format(abs(death), big.mark = ',', trim = TRUE))),
-                               NA_character_))
-
-age.data.all <- age.data %>% 
-  filter(date == max(date) & value != 0) %>% 
-  select(type, gender, age_type, value) %>% 
-  reshape2::dcast(type + gender ~ age_type, mean, fill = 0) %>% 
-  mutate(label.confirmed = if_else(confirmed != 0, format(abs(confirmed), big.mark = ',', trim = TRUE), NA_character_),
-         label.death = if_else(death != 0, 
-                               paste0(format(abs(death), big.mark = ',', trim = TRUE),
-                                      ' (',
-                                      scales::percent(abs(death/confirmed), accuracy = 0.01, big.mark = ','),
-                                      ')'), 
-                               NA_character_))
-
-age.data.all.new <- age.data.all.new %>% 
-  inner_join(age.data.all %>% select(-label.confirmed, -label.death), by = c('type', 'gender'), suffix = c('', '.all')) %>% 
-  mutate(predicted.death = if_else(death.all != 0,
-                                   abs(confirmed * death.all / confirmed.all),
-                                   0)) %>% 
-  mutate(label.confirmed = if_else(predicted.death == 0,
-                                   paste0(label.confirmed, ' (0)'),
-                                   if_else(predicted.death < 0.01, 
-                                           paste0(label.confirmed, ' (<0.01)'),
-                                           paste0(label.confirmed, 
-                                                  ' (',
-                                                  format(round(predicted.death, digits = 2), big.mark = ','),
-                                                  ')')))) %>% 
-  select(-confirmed.all, -death.all)
-```
+Only showing 1 day *(April
+21)*
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
 
