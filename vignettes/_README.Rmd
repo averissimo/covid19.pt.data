@@ -205,12 +205,15 @@ plot.data %>%
 Only showing 1 day *(`r format(age.data$date %>% max, "%B %d")`)*
 
 ```{r, echo=FALSE}
+age.ix.f <- age.data$date %>% max
+
+
 age.data.all.new <- age.data %>% 
   group_by(country, type, gender, age_type) %>% 
   arrange(desc(date)) %>% 
   mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
   filter(value != 0) %>% 
-  filter(date == max(date) & value != 0) %>% 
+  filter(date == age.ix.f & value != 0) %>% 
   ungroup() %>% 
   select(type, gender, age_type, value) %>% 
   group_by(type, gender, age_type) %>% 
@@ -265,9 +268,9 @@ print(age.data.all.new %>%
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
   scale_fill_viridis_d('', end = .8) + 
-  labs(title = 'New confirmed cases from {format(age.data$date %>% max, "%B %d")}' %>% glue,
+  labs(title = 'New confirmed cases from {format(age.ix.f, "%B %d")}' %>% glue,
          subtitle = 'Predicted deaths for age groups shown in parenthesis' %>% glue,
-       caption = 'Prediction based on current \'mortality rate\' (total for {format(age.data$date %>% max, "%B %d")}: {sum(age.data.all.new$predicted.death) %>% round(digits = 1)})' %>% glue,
+       caption = 'Prediction based on current \'mortality rate\' ({sum(age.data.all.new$predicted.death) %>% round(digits = 1)} deaths for {format(age.ix.f, "%B %d")})' %>% glue,
        y = 'Age group',
        x = 'Confirmed Cases') +
   theme_minimal() + 
@@ -282,7 +285,7 @@ print(age.data.all.new %>%
   expand_limits(x =c(-1 * death.max, death.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_fill_viridis_d('', end = .8) + 
-  labs(title = 'New deaths from {format(age.data$date %>% max, "%B %d")}' %>% glue,
+  labs(title = 'New deaths from {format(age.ix.f, "%B %d")}' %>% glue,
        subtitle = '',
        caption = '',
        y = 'Age group',
