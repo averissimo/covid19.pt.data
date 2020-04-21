@@ -204,7 +204,7 @@ plot.data %>%
 
 Only showing 1 day *(`r format(age.data$date %>% max, "%B %d")`)*
 
-```{r}
+```{r. echo=FALSE}
 age.data.all.new <- age.data %>% 
   group_by(country, type, gender, age_type) %>% 
   arrange(desc(date)) %>% 
