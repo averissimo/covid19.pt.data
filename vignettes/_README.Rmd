@@ -204,7 +204,7 @@ plot.data %>%
 
 Only showing 1 day *(`r format(age.data$date %>% max, "%B %d")`)*
 
-```{r. echo=FALSE}
+```{r, echo=FALSE}
 age.data.all.new <- age.data %>% 
   group_by(country, type, gender, age_type) %>% 
   arrange(desc(date)) %>% 
@@ -239,18 +239,18 @@ age.data.all.new <- age.data.all.new %>%
                                    abs(confirmed * death.all / confirmed.all),
                                    0)) %>% 
   mutate(label.confirmed = if_else(predicted.death == 0,
-                                   paste0(label.confirmed, ' (0)'),
-                                   if_else(predicted.death < 0.01, 
-                                           paste0(label.confirmed, ' (<0.01)'),
+                                   paste0(label.confirmed),
+                                   if_else(predicted.death < 0.1, 
+                                           paste0(label.confirmed, ' (<0.1)'),
                                            paste0(label.confirmed, 
                                                   ' (',
-                                                  format(round(predicted.death, digits = 2), big.mark = ','),
+                                                  format(round(predicted.death, digits = 1), big.mark = ','),
                                                   ')')))) %>% 
   select(-confirmed.all, -death.all)
 ```
 
 
-```{r, echo=FALSE,fig.width=4}
+```{r, echo=FALSE,fig.width=4.6}
 confirmed.max <- age.data.all.new %>%  pull(confirmed) %>% max
 death.max <- age.data.all.new %>% pull(death) %>% max
 
@@ -266,8 +266,8 @@ print(age.data.all.new %>%
   scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
   scale_fill_viridis_d('', end = .8) + 
   labs(title = 'New confirmed cases from {format(age.data$date %>% max, "%B %d")}' %>% glue,
-       subtitle = 'In parenthesis the predicted deaths based on current mortality rate (total predicted deaths: {sum(age.data.all.new$predicted.death) %>% round(digits = 2)})' %>% glue,
-       caption = 'Mortality rate = \'deaths\' / \'confirmed cases\'',
+         subtitle = 'Predicted deaths for age groups shown in parenthesis' %>% glue,
+       caption = 'Prediction based on current \'mortality rate\' (total for {format(age.data$date %>% max, "%B %d")}: {sum(age.data.all.new$predicted.death) %>% round(digits = 1)})' %>% glue,
        y = 'Age group',
        x = 'Confirmed Cases') +
   theme_minimal() + 
@@ -294,7 +294,7 @@ print(age.data.all.new %>%
 
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
-```{r, result='asis', echo=FALSE,fig.width=4}
+```{r, result='asis', echo=FALSE,fig.width=4.6}
 confirmed.max <- age.data.all %>%  pull(confirmed) %>% max
 death.max <- age.data.all %>% pull(death) %>% max
 
