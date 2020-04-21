@@ -138,6 +138,11 @@ dgs.pt %>%
     theme(legend.position = 'none')
 ```
 
+```{r}
+
+```
+
+
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
@@ -199,7 +204,7 @@ plot.data %>%
 
 Only showing 1 day *(`r format(age.data$date %>% max, "%B %d")`)*
 
-```{r, echo=FALSE,fig.width=4}
+```{r}
 age.data.all.new <- age.data %>% 
   group_by(country, type, gender, age_type) %>% 
   arrange(desc(date)) %>% 
@@ -216,6 +221,36 @@ age.data.all.new <- age.data %>%
                                        paste0(format(abs(death), big.mark = ',', trim = TRUE))),
                                NA_character_))
 
+age.data.all <- age.data %>% 
+  filter(date == max(date) & value != 0) %>% 
+  select(type, gender, age_type, value) %>% 
+  reshape2::dcast(type + gender ~ age_type, mean, fill = 0) %>% 
+  mutate(label.confirmed = if_else(confirmed != 0, format(abs(confirmed), big.mark = ',', trim = TRUE), NA_character_),
+         label.death = if_else(death != 0, 
+                               paste0(format(abs(death), big.mark = ',', trim = TRUE),
+                                      ' (',
+                                      scales::percent(abs(death/confirmed), accuracy = 0.01, big.mark = ','),
+                                      ')'), 
+                               NA_character_))
+
+age.data.all.new <- age.data.all.new %>% 
+  inner_join(age.data.all %>% select(-label.confirmed, -label.death), by = c('type', 'gender'), suffix = c('', '.all')) %>% 
+  mutate(predicted.death = if_else(death.all != 0,
+                                   abs(confirmed * death.all / confirmed.all),
+                                   0)) %>% 
+  mutate(label.confirmed = if_else(predicted.death == 0,
+                                   paste0(label.confirmed, ' (0)'),
+                                   if_else(predicted.death < 0.01, 
+                                           paste0(label.confirmed, ' (<0.01)'),
+                                           paste0(label.confirmed, 
+                                                  ' (',
+                                                  format(round(predicted.death, digits = 2), big.mark = ','),
+                                                  ')')))) %>% 
+  select(-confirmed.all, -death.all)
+```
+
+
+```{r, echo=FALSE,fig.width=4}
 confirmed.max <- age.data.all.new %>%  pull(confirmed) %>% max
 death.max <- age.data.all.new %>% pull(death) %>% max
 
@@ -230,8 +265,9 @@ print(age.data.all.new %>%
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
   scale_fill_viridis_d('', end = .8) + 
-  labs(title = "Confirmed cases",
-       subtitle = 'Only for single day ({format(age.data$date %>% max, "%B %d")})' %>% glue,
+  labs(title = 'New confirmed cases from {format(age.data$date %>% max, "%B %d")}' %>% glue,
+       subtitle = 'In parenthesis the predicted deaths based on current mortality rate (total predicted deaths: {sum(age.data.all.new$predicted.death) %>% round(digits = 2)})' %>% glue,
+       caption = 'Mortality rate = \'deaths\' / \'confirmed cases\'',
        y = 'Age group',
        x = 'Confirmed Cases') +
   theme_minimal() + 
@@ -246,8 +282,9 @@ print(age.data.all.new %>%
   expand_limits(x =c(-1 * death.max, death.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_fill_viridis_d('', end = .8) + 
-  labs(title = "Total number of Deaths by age group",
-       subtitle = 'Only for single day ({format(age.data$date %>% max, "%B %d")})' %>% glue,
+  labs(title = 'New deaths from {format(age.data$date %>% max, "%B %d")}' %>% glue,
+       subtitle = '',
+       caption = '',
        y = 'Age group',
        x = 'Deaths') +
   theme_minimal() + 
@@ -258,18 +295,6 @@ print(age.data.all.new %>%
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
 ```{r, result='asis', echo=FALSE,fig.width=4}
-age.data.all <- age.data %>% 
-  filter(date == max(date) & value != 0) %>% 
-  select(type, gender, age_type, value) %>% 
-  reshape2::dcast(type + gender ~ age_type, mean, fill = 0) %>% 
-  mutate(label.confirmed = if_else(confirmed != 0, format(abs(confirmed), big.mark = ',', trim = TRUE), NA_character_),
-         label.death = if_else(death != 0, 
-                               paste0(format(abs(death), big.mark = ',', trim = TRUE),
-                                      ' (',
-                                      scales::percent(abs(death/confirmed), accuracy = 0.01, big.mark = ','),
-                                      ')'), 
-                               NA_character_))
-
 confirmed.max <- age.data.all %>%  pull(confirmed) %>% max
 death.max <- age.data.all %>% pull(death) %>% max
 
