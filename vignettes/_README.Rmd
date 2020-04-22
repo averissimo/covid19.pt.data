@@ -39,18 +39,6 @@ library(plotly)
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
 
-> R package with latest data scrapped from official sources
-
-It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
-
-A more detailed analysis of this data is [available here](https://averissimo.github.io/covid19-analysis/portugal.html)
-
-# Check for new reports
-
-```{r, eval=FALSE}
-download.updated.pt()
-```
-
 ```{r, message=FALSE, include=FALSE}
 dat <- download.updated.pt()
 
@@ -76,6 +64,18 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
   usethis::use_data(covid19.pt, overwrite = TRUE)
   readr::write_csv(covid19.pt, path = '../data/covid19_pt.csv')
 }
+```
+
+> R package with latest data scrapped from official sources *(last data from `r format(max(dgs.pt.new$date), "%A, %B %d, %Y")`)*
+
+It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
+
+A more detailed analysis of this data is [available here](https://averissimo.github.io/covid19-analysis/portugal.html)
+
+# Check for new reports
+
+```{r, eval=FALSE}
+download.updated.pt()
 ```
 
 ```{r, echo=FALSE}
