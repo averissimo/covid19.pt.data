@@ -27,7 +27,7 @@ build.labels <- function(input, order.by, name, digits = 2) {
                                             min(!!as.name(order.by), na.rm = TRUE) %>% my.format,
                                             ' last: ',
                                             state.data.val.last %>% my.format,
-                                            ')',
+                                            ')'
                                             ))
 
   tmp %>%
