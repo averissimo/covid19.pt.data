@@ -309,7 +309,8 @@ merge_eu.cdc <- function(dgs.pt.new) {
            countriesAndTerritories = 'Portugal',
            geoId = 'PT',
            countryterritoryCode = 'PRT',
-           popData2018 = eu.data$data %>% dplyr::pull(popData2018) %>% purrr::pluck(1)) %>%
+           popData2018 = eu.data$data %>% dplyr::pull(popData2018) %>% purrr::pluck(1),
+           continentExp = 'Europe') %>%
     #
     dplyr::filter(date %in% tseq) %>%
     dplyr::mutate(date = date + 1,
