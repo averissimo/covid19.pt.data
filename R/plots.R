@@ -21,13 +21,14 @@ build.labels <- function(input, order.by, name, digits = 2) {
                   state.data.val.max = max(!!as.name(order.by), na.rm = TRUE),
                   state.data.val.last = first(!!as.name(order.by), default = 0)) %>%
     dplyr::mutate(state.data.label = paste0(state.data,
-                                            ' (today: ',
-                                            state.data.val.last %>% my.format,
-                                            ' max: ',
+                                            ' (max: ',
                                             max(!!as.name(order.by), na.rm = TRUE) %>% my.format,
                                             ' min: ',
                                             min(!!as.name(order.by), na.rm = TRUE) %>% my.format,
-                                            ')'))
+                                            ' last: ',
+                                            state.data.val.last %>% my.format,
+                                            ')',
+                                            ))
 
   tmp %>%
     dplyr::mutate(label = dplyr::if_else(state.data.order == max(state.data.order, na.rm = TRUE), state.data.label, NA_character_),
