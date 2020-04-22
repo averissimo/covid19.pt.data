@@ -70,6 +70,8 @@ if (nrow(covid19.pt.new) != nrow(covid19.pt)) {
 
 It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
 
+If you are here just for the data, this is what you want: [dgs_pt.csv](raw/master/data/dgs_pt.csv) or [covid19_pt.csv](raw/master/data/covid19_pt.csv) *(this dataset is an updated EU CDC data with Portugal only)*
+
 A more detailed analysis of this data is [available here](https://averissimo.github.io/covid19-analysis/portugal.html)
 
 # Check for new reports
