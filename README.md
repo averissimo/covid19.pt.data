@@ -1,7 +1,8 @@
 COVID-19 Portugal data
 ================
 
-> R package with latest data scrapped from official sources
+> R package with latest data scrapped from official sources *(last data
+> from Tuesday, April 21, 2020)*
 
 It downloads the [daily
 report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS
