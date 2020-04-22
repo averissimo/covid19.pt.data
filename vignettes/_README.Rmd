@@ -135,7 +135,7 @@ dgs.pt %>%
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     theme_minimal() +
-    theme(legend.position = 'none')
+    theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r}
