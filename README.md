@@ -9,9 +9,11 @@ report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS
 and stores this in data-friendly format under `/data` directory.
 
 If you are here just for the data, this is what you want:
-[dgs\_pt.csv](raw/master/data/dgs_pt.csv) or
-[covid19\_pt.csv](raw/master/data/covid19_pt.csv) *(this dataset is an
-updated EU CDC data with Portugal only)*
+
+  - [dgs\_pt.csv](raw/master/data/dgs_pt.csv) *(raw data from Portugal’s
+    DGS)*
+  - [covid19\_pt.csv](raw/master/data/covid19_pt.csv) *(updated EU CDC
+    dataset only featuring Portugal)*
 
 A more detailed analysis of this data is [available
 here](https://averissimo.github.io/covid19-analysis/portugal.html)
