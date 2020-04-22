@@ -79,8 +79,7 @@ download.updated.pt()
 ```
 
 ```{r, echo=FALSE}
-dgs.pt <- tibble()
-tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
+dgs.pt <- dgs.pt.new 
 ```
 
 ```{r, echo=FALSE}
