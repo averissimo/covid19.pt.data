@@ -28,18 +28,18 @@ download.updated.pt()
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
 # New cases / deaths by age groups
 
 Only showing 1 day *(April
 24)*
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-10-2.svg)<!-- -->
 
 # Cases / Deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-12-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
 
 # Data
 
