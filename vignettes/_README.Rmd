@@ -142,11 +142,6 @@ dgs.pt %>%
     theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r}
-
-```
-
-
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('tests', 'deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
@@ -261,6 +256,12 @@ age.data.all.new <- age.data.all.new %>%
 confirmed.max <- age.data.all.new %>%  pull(confirmed) %>% max
 death.max <- age.data.all.new %>% pull(death) %>% max
 
+label.death <- list(men = age.data.all.new %>% filter(gender == 'men') %>% pull(death) %>% sum %>% abs,
+                    women = age.data.all.new %>% filter(gender == 'women') %>% pull(death) %>% sum %>% abs)
+
+label.confirmed <- list(men = age.data.all.new %>% filter(gender == 'men') %>% pull(confirmed) %>% sum %>% abs,
+                        women = age.data.all.new %>% filter(gender == 'women') %>% pull(confirmed) %>% sum %>% abs)
+
 print(age.data.all.new %>%
   ggplot(aes(x = confirmed, y = type, fill = gender)) +
   geom_bar(stat = 'identity') + 
@@ -271,9 +272,9 @@ print(age.data.all.new %>%
   expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
-  scale_fill_viridis_d('', end = .8) + 
-  labs(title = 'New confirmed cases from {format(age.ix.f, "%B %d")}' %>% glue,
-         subtitle = 'Predicted deaths for age groups shown in parenthesis' %>% glue,
+  scale_fill_viridis_d('', end = .8, labels = function(ix) { return(paste0(ix, ' (', format(label.confirmed[ix], big.mark = ',', trim = TRUE), ')'))}) + 
+  labs(title = 'New {format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} confirmed cases from {format(age.ix.f, "%B %d")}' %>% glue,
+         subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
        caption = 'Prediction based on current \'mortality rate\' ({sum(age.data.all.new$predicted.death) %>% round(digits = 1)} deaths for {format(age.ix.f, "%B %d")})' %>% glue,
        y = 'Age group',
        x = 'Confirmed Cases') +
@@ -288,8 +289,8 @@ print(age.data.all.new %>%
                             na.rm = TRUE) +
   expand_limits(x =c(-1 * death.max, death.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
-  scale_fill_viridis_d('', end = .8) + 
-  labs(title = 'New deaths from {format(age.ix.f, "%B %d")}' %>% glue,
+  scale_fill_viridis_d('', end = .8, labels = function(ix) { return(paste0(ix, ' (', format(label.death[ix], big.mark = ',', trim = TRUE), ')'))}) + 
+  labs(title = 'New {format(label.death$women + label.death$women, big.mark = ",", trim = TRUE)} deaths from {format(age.ix.f, "%B %d")}' %>% glue,
        subtitle = '',
        caption = '',
        y = 'Age group',
@@ -305,6 +306,12 @@ print(age.data.all.new %>%
 confirmed.max <- age.data.all %>%  pull(confirmed) %>% max
 death.max <- age.data.all %>% pull(death) %>% max
 
+label.death <- list(men = age.data.all %>% filter(gender == 'men') %>% pull(death) %>% sum %>% abs,
+                    women = age.data.all %>% filter(gender == 'women') %>% pull(death) %>% sum %>% abs)
+
+label.confirmed <- list(men = age.data.all %>% filter(gender == 'men') %>% pull(confirmed) %>% sum %>% abs,
+                        women = age.data.all %>% filter(gender == 'women') %>% pull(confirmed) %>% sum %>% abs)
+
 print(age.data.all %>%
   ggplot(aes(x = confirmed, y = type, fill = gender)) +
   geom_bar(stat = 'identity') + 
@@ -315,8 +322,8 @@ print(age.data.all %>%
   expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_y_discrete(limits = age.data$type %>% unique %>% sort) + 
-  scale_fill_viridis_d('', end = .8) + 
-  labs(title = "Confirmed cases",
+  scale_fill_viridis_d('', end = .8, labels = function(ix) { return(paste0(ix, ' (', format(label.confirmed[ix], big.mark = ',', trim = TRUE), ')'))}) + 
+  labs(title = 'Total number of Confirmed cases ({format(label.confirmed$women + label.confirmed$women, big.mark = ",", trim = TRUE)}) by age group' %>% glue,
        y = 'Age group',
        subtitle = '',
        caption = '',
@@ -332,8 +339,8 @@ print(age.data.all %>%
                             na.rm = TRUE) +
   expand_limits(x =c(-1 * death.max, death.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
-  scale_fill_viridis_d('', end = .8) + 
-  labs(title = "Total number of Deaths by age group",
+  scale_fill_viridis_d('', end = .8, labels = function(ix) { return(paste0(ix, ' (', format(label.death[ix], big.mark = ',', trim = TRUE), ')'))}) + 
+  labs(title = 'Total number of Deaths ({format(label.death$women + label.death$women, big.mark = ",", trim = TRUE)}) by age group' %>% glue,
        subtitle = 'Percentage shows the mortality rate',
        caption = 'Mortality rate = \'deaths\' / \'confirmed cases\'',
        y = 'Age group',
