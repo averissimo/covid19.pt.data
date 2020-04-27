@@ -110,7 +110,7 @@ dgs.pt %>%
            gsub('deaths', 'Deaths', .) %>% 
            gsub('hospitalized', 'Hospitalized', .) %>% 
            gsub('recovered', 'Recovered', .) %>% 
-           gsub('tests', 'Tests', .) %>% 
+           gsub('tests', 'Suspected individuals', .) %>% 
            gsub('in.icu', 'In ICU', .)) %>% 
   group_by(country, type) %>% 
   arrange(date) %>% 
@@ -129,6 +129,7 @@ dgs.pt %>%
                               #nudge_y = -.5,
                               segment.alpha = .8,
                               size = 3.5,
+                              max.iter = 4000,
                               seed = 1985) +
     scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
     labs(x = 'Date', 
@@ -150,7 +151,7 @@ plot.data <- dgs.pt %>%
            gsub('deaths', 'Deaths', .) %>% 
            gsub('hospitalized', 'Hospitalized', .) %>% 
            gsub('recovered', 'Recovered', .) %>% 
-           gsub('tests', 'Tests', .) %>% 
+           gsub('tests', 'Suspected individuals', .) %>% 
            gsub('in.icu', 'In ICU', .)) %>% 
   group_by(country, type) %>% 
   arrange(desc(date)) %>% 
