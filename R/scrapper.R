@@ -86,7 +86,9 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
     gsub('\032', '', .)
 
-  if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
+  pattern2 <- stringi::stri_enc_toascii(pattern) %>% gsub('\032', '', .)
+
+  if (grepl('{pattern2}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
     # outliers
     if (pattern == '20-29 anos' && page[c(hits.ix + 1)] == 'Chile (2) Pol\u00F3nia (1)') {
         hits.ix <- hits.ix+1
@@ -102,11 +104,11 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
 
     retValue <- NA
     tryCatch({
-      retValue <- list(one = as.integer(tmp.ret[2]), two = as.integer(tmp.ret[3]))
+        retValue <- list(one = as.integer(tmp.ret[2]), two = as.integer(tmp.ret[3]))
     })
     return(retValue)
   } else {
-    tmp.regexec <- regexec('{pattern}[ ]+([0-9]+)[ ]+([0-9]+)' %>% glue::glue(), hits.my)
+    tmp.regexec <- regexec('{pattern2}[ ]+([0-9]+)[ ]+([0-9]+)' %>% glue::glue(), hits.my)
     tmp <- regmatches(hits.my, tmp.regexec)[[1]]
 
 
@@ -134,7 +136,9 @@ extract_generic <- function(page, pattern, interesting.hit) {
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
     gsub('\032', '', .)
 
-  if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
+  pattern2 <- stringi::stri_enc_toascii(pattern) %>% gsub('\032', '', .)
+
+  if (grepl('{pattern2}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
     tmp <- page[c(hits.ix + 1)][[interesting.hit]] %>%
       stringr::str_replace('([0-9]+).*', '\\1')
 
@@ -144,7 +148,7 @@ extract_generic <- function(page, pattern, interesting.hit) {
     })
     return(retValue)
   } else {
-    tmp.regexec <- regexec('{pattern}[ ]+([0-9]*)' %>% glue::glue(), hits.my)
+    tmp.regexec <- regexec('{pattern2}[ ]+([0-9]*)' %>% glue::glue(), hits.my)
     tmp <- regmatches(hits.my, tmp.regexec)[[1]]
 
     retValue <- NA
