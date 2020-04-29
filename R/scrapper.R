@@ -83,7 +83,8 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
 
   hits <- page[hits.ix]
 
-  hits.my <- hits[interesting.hit]
+  hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
+    gsub('\032', '', .)
 
   if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
     # outliers
@@ -130,7 +131,8 @@ extract_generic <- function(page, pattern, interesting.hit) {
 
   hits <- page[hits.ix]
 
-  hits.my <- hits[interesting.hit]
+  hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
+    gsub('\032', '', .)
 
   if (grepl('{pattern}$' %>% glue::glue(), hits.my, ignore.case = TRUE)) {
     tmp <- page[c(hits.ix + 1)][[interesting.hit]] %>%
@@ -165,7 +167,6 @@ extract_generic <- function(page, pattern, interesting.hit) {
 #' extract_info(index = 4) # keep only if it's from today
 extract_info <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
-
 
   info <- tibble::tibble()
   if (!is.null(report.pdf)) {

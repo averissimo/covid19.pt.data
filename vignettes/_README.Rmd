@@ -293,7 +293,7 @@ print(age.data.all.new %>%
   expand_limits(x =c(-1 * death.max, death.max)) +
   scale_x_continuous('', labels = function(ix) { return(abs(ix)) }) +
   scale_fill_viridis_d('', end = .8, labels = function(ix) { return(paste0(ix, ': ', format(label.death[ix], big.mark = ',', trim = TRUE), ''))}) + 
-  labs(title = 'New {format(label.death$women + label.death$women, big.mark = ",", trim = TRUE)} deaths from {format(age.ix.f, "%B %d")}' %>% glue,
+  labs(title = 'New {format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)} deaths from {format(age.ix.f, "%B %d")}' %>% glue,
        subtitle = '',
        caption = '',
        y = 'Age group',
