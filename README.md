@@ -26,25 +26,27 @@ download.updated.pt()
 
 ## Data for Portugal
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-19-1.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
 # New cases / deaths by age groups
 
-Only showing 1 day *(April 29)*
+Only showing 1 day *(April
+29)*
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-21-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-10-2.svg)<!-- -->
 
 # Cases / Deaths by age groups
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-22-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
 
 # Data
 
 ## Data from DGS
 
-Only showing last 10 days
+Only showing last 10
+days
 
 | country  | date       | confirmed | deaths | recovered |  tests | hospitalized | in.icu | confirmed\_m\_00-09 | confirmed\_w\_00-09 | confirmed\_m\_10-19 | confirmed\_w\_10-19 | confirmed\_m\_20-29 | confirmed\_w\_20-29 | confirmed\_m\_30-39 | confirmed\_w\_30-39 | confirmed\_m\_40-49 | confirmed\_w\_40-49 | confirmed\_m\_50-59 | confirmed\_w\_50-59 | confirmed\_m\_60-69 | confirmed\_w\_60-69 | confirmed\_m\_70-79 | confirmed\_w\_70-79 | confirmed\_m\_80+ | confirmed\_w\_80+ | death\_m\_00-09 | death\_w\_00-09 | death\_m\_10-19 | death\_w\_10-19 | death\_m\_20-29 | death\_w\_20-29 | death\_m\_30-39 | death\_w\_30-39 | death\_m\_40-49 | death\_w\_40-49 | death\_m\_50-59 | death\_w\_50-59 | death\_m\_60-69 | death\_w\_60-69 | death\_m\_70-79 | death\_w\_70-79 | death\_m\_80+ | death\_w\_80+ |
 | :------- | :--------- | --------: | -----: | --------: | -----: | -----------: | -----: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ----------------: | ----------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | ------------: | ------------: |
@@ -64,7 +66,8 @@ Only showing last 10 days
 Only showing last 10 days.
 
 Don’t be alarmed with the first line being in the future, EU CDC date
-always refer to the situation on the previous day.
+always refer to the situation on the previous
+day.
 
 | dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2018 | continentExp |
 | :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: | :----------- |
