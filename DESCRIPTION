@@ -12,7 +12,8 @@ Depends: R (>= 3.6.0)
 LazyData: true
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    usethis
 Imports:
     pdftools,
     rvest,
@@ -26,7 +27,6 @@ Imports:
     tibble,
     glue,
     reshape2,
-    usethis,
     httr,
     zoo,
     lubridate,
