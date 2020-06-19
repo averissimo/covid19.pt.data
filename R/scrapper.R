@@ -4,8 +4,11 @@
 #'
 #' @return a number
 extract_tests <- function(page) {
-  tibble::tibble(tests = extract_generic(page, 'Total de casos', 1)) %>%
-    return()
+  suppressWarnings(first.try <- extract_generic(page, 'Total de casos', 1))
+  if (is.na(first.try)) {
+    first.try <- extract_generic(page, 'suspeitos [(]desde 1 de janeiro', 1)
+  }
+  return(tibble::tibble(tests = first.try))
 }
 
 extract_hospitalized <- function(page) {
@@ -280,6 +283,7 @@ download_all_reports <- function() {
   dgs.pt.new <- dgs.pt
   if (length(what.to.search) > 0) {
     for (x in seq_along(what.to.search)) {
+      cat('Report being downloaded:',  paste0('(', x , '/', length(what.to.search),')'), '--', format.Date(dates.valid[what.to.search[x]]), '\n')
       day <- extract_info(index = what.to.search[x])
       dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
     }
@@ -314,7 +318,7 @@ merge_eu.cdc <- function(dgs.pt.new) {
            countriesAndTerritories = 'Portugal',
            geoId = 'PT',
            countryterritoryCode = 'PRT',
-           popData2018 = eu.data$data %>% dplyr::pull(popData2018) %>% purrr::pluck(1),
+           popData2019 = eu.data$data %>% dplyr::pull(popData2019) %>% purrr::pluck(1),
            continentExp = 'Europe') %>%
     #
     dplyr::filter(date %in% tseq) %>%
@@ -324,7 +328,7 @@ merge_eu.cdc <- function(dgs.pt.new) {
            year = lubridate::year(date),
            dateRep = format(date, '%d/%m/%Y')) %>%
     #
-    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2018) %>%
+    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2019) %>%
     #
     dplyr::bind_rows(eu.data$data)
 
