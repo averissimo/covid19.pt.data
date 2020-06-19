@@ -301,6 +301,8 @@ download_all_reports <- function() {
 merge_eu.cdc <- function(dgs.pt.new) {
   eu.data <- download.eucdc.data()
 
+  anytime::addFormats('%d/%m/%Y')
+
   from <- eu.data$data$dateRep %>% anytime::anydate() %>% max %>% as.Date()
   now  <- Sys.Date()
   tseq <- seq(from = from, to = now, by = "days")
