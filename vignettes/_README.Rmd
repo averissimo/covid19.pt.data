@@ -252,7 +252,7 @@ age.data.all.new <- age.data.all.new %>%
 ```
 
 
-```{r, echo=FALSE,fig.width=4.6}
+```{r, echo=FALSE,fig.width=4.4}
 confirmed.max <- age.data.all.new %>%  pull(confirmed) %>% max
 death.max <- age.data.all.new %>% pull(death) %>% max
 
@@ -305,7 +305,7 @@ print(age.data.all.new %>%
 
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
-```{r, result='asis', echo=FALSE,fig.width=4.6}
+```{r, result='asis', echo=FALSE,fig.width=4.4}
 confirmed.max <- age.data.all %>%  pull(confirmed) %>% max
 death.max <- age.data.all %>% pull(death) %>% max
 
