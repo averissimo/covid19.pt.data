@@ -260,7 +260,7 @@ tryCatch({
 ```
 
 
-```{r, echo=FALSE,fig.width=4.4}
+```{r, echo=FALSE,fig.width=4.1}
 if (nrow(age.data.all.new) > 0) {
   confirmed.max <- age.data.all.new %>%  pull(confirmed) %>% max
   death.max <- age.data.all.new %>% pull(death) %>% max
@@ -283,7 +283,8 @@ if (nrow(age.data.all.new) > 0) {
                          x = 'Confirmed Cases')
   confirmed.status <- sum(abs(age.data.all.new$confirmed)) != covid19.pt %>% filter(dateRep == strftime(anydate(age.ix.f)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum
   if (confirmed.status) {
-    confirmed.labs$title <- 'ERROR: no DGS data for demographics of new confirmed cases'
+    confirmed.labs$title <- 'ERROR on DGS data for demographics'
+    confirmed.labs$subtitle <- ' for new confirmed cases'
     confirmed.labs$caption <- ''
   }
   #
@@ -294,8 +295,8 @@ if (nrow(age.data.all.new) > 0) {
                          x = 'Deaths')
   death.status <- sum(abs(age.data.all.new$death)) != covid19.pt %>% filter(dateRep == strftime(anydate(age.ix.f)+1, '%d/%m/%Y')) %>% pull(deaths) %>% sum
   if (death.status) {
-    death.labs$title <- 'ERROR:: no DGS data for demographics of deaths'
-    death.labs$caption <- ''
+    death.labs$title <- 'ERROR on DGS data for demographics'
+    death.labs$caption <- ' for new deaths'
   }
   #
   #
@@ -366,7 +367,8 @@ if (nrow(age.data.all) > 0) {
                          x = 'Confirmed Cases')
   confirmed.status <- sum(abs(age.data.all.new$confirmed)) != covid19.pt %>% filter(dateRep == strftime(anydate(age.ix.f)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum
   if (confirmed.status) {
-    confirmed.labs$title <- 'ERROR:: no DGS data for demographics of total confirmed cases'
+    confirmed.labs$title <- 'ERROR on DGS data for demographics'
+    confirmed.labs$subtitle <- ' for total confirmed cases'
     confirmed.labs$caption <- ''
   }
   #
@@ -377,7 +379,8 @@ if (nrow(age.data.all) > 0) {
                          x = 'Deaths')
   death.status <- sum(abs(age.data.all.new$death)) != covid19.pt %>% filter(dateRep == strftime(anydate(age.ix.f)+1, '%d/%m/%Y')) %>% pull(deaths) %>% sum
   if (death.status) {
-    death.labs$title <- 'ERROR:: no DGS data for demographics of total deaths'
+    death.labs$title <- 'ERROR on DGS data for demographics'
+    death.labs$subtitle <- ' for total deaths'
     death.labs$caption <- ''
   }
   #
