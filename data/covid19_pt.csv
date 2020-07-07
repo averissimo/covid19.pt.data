@@ -1,5 +1,10 @@
 dateRep,day,month,year,cases,deaths,countriesAndTerritories,geoId,countryterritoryCode,popData2019,continentExp
-03/07/2020,3,7,2020,328,8,Portugal,PT,PRT,10276617,NA
+08/07/2020,8,7,2020,287,9,Portugal,PT,PRT,10276617,NA
+07/07/2020,7,7,2020,232,6,Portugal,PT,PRT,10276617,Europe
+06/07/2020,6,7,2020,328,9,Portugal,PT,PRT,10276617,Europe
+05/07/2020,5,7,2020,413,7,Portugal,PT,PRT,10276617,Europe
+04/07/2020,4,7,2020,374,11,Portugal,PT,PRT,10276617,Europe
+03/07/2020,3,7,2020,328,8,Portugal,PT,PRT,10276617,Europe
 02/07/2020,2,7,2020,313,3,Portugal,PT,PRT,10276617,Europe
 01/07/2020,1,7,2020,229,8,Portugal,PT,PRT,10276617,Europe
 30/06/2020,30,6,2020,266,4,Portugal,PT,PRT,10276617,Europe
