@@ -347,7 +347,7 @@ if (nrow(age.data.all.new) > 0) {
 
 # Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
 
-```{r, result='asis', echo=FALSE,fig.width=4.4}
+```{r, result='asis', echo=FALSE,fig.width=4.1}
 if (nrow(age.data.all) > 0) {
   confirmed.max <- age.data.all %>%  pull(confirmed) %>% max
   death.max <- age.data.all %>% pull(death) %>% max
