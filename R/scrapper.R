@@ -330,7 +330,7 @@ merge_eu.cdc <- function(dgs.pt.new) {
            year = lubridate::year(date),
            dateRep = format(date, '%d/%m/%Y')) %>%
     #
-    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2019) %>%
+    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2019, continentExp) %>%
     #
     dplyr::bind_rows(eu.data$data)
 
