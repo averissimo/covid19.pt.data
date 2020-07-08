@@ -95,14 +95,20 @@ get.age.new.data <- function(input.data, input.data.with.labels, date.ix) {
 #'
 #' @param input.data output of get.age.data.with.labels()
 #' @param date.ix date to filter to
+#' @param confirmed.max positive number to control x-axis
+#' @param death.max positive number to control y-axis
 #'
 #' @return list with 2 plots
 #' @export
-get.plot.for.all <- function(input.data, date.ix) {
+get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.max = NULL) {
   my.plots <- list()
 
-  confirmed.max <- input.data %>%  pull(confirmed) %>% max
-  death.max <- input.data %>% pull(death) %>% max
+  if (is.null(confirmed.max)) {
+    confirmed.max <- input.data %>%  pull(confirmed) %>% max
+  }
+  if (is.null(death.max)) {
+    death.max     <- input.data %>% pull(death) %>% max
+  }
 
   label.death <- list(men = input.data %>% filter(gender == 'men') %>% pull(death) %>% sum %>% abs,
                       women = input.data %>% filter(gender == 'women') %>% pull(death) %>% sum %>% abs)

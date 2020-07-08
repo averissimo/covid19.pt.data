@@ -4,12 +4,16 @@
 \alias{get.plot.for.all}
 \title{Get demographics plots for all confirmed cases and deaths}
 \usage{
-get.plot.for.all(input.data, date.ix)
+get.plot.for.all(input.data, date.ix, confirmed.max = NULL, death.max = NULL)
 }
 \arguments{
 \item{input.data}{output of get.age.data.with.labels()}
 
 \item{date.ix}{date to filter to}
+
+\item{confirmed.max}{positive number to control x-axis}
+
+\item{death.max}{positive number to control y-axis}
 }
 \value{
 list with 2 plots
