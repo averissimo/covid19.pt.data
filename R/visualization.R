@@ -157,7 +157,7 @@ get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.ma
           ggplot(aes(x = confirmed, y = type, fill = gender)) +
           geom_bar(stat = 'identity') +
           ggrepel::geom_label_repel(aes(label = label.confirmed, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
-                                    nudge_x = ifelse(input.data$gender == 'men', -1, 1),
+                                    nudge_x = ifelse(input.data %>% filter(!is.na(label.confirmed)) %>% pull(gender) == 'men', -1, 1),
                                     show.legend = FALSE,
                                     na.rm = TRUE) +
           expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
@@ -268,7 +268,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
           ggplot(aes(x = confirmed, y = type, fill = gender)) +
           geom_bar(stat = 'identity') +
           ggrepel::geom_label_repel(aes(label = label.confirmed, fill = gender), color = 'white', direction = 'x', seed = 1985, size = 3.5,
-                                    nudge_x = ifelse(input.data$gender == 'men', -1, 1),
+                                    nudge_x = ifelse(input.data %>% filter(!is.na(label.confirmed)) %>% pull(gender) == 'men', -1, 1),
                                     show.legend = FALSE,
                                     na.rm = TRUE) +
           expand_limits(x =c(-1 * confirmed.max, confirmed.max)) +
