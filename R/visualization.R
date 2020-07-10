@@ -166,7 +166,7 @@ get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.ma
           scale_fill_viridis_d('', end = .8, labels = function(ix) { if (confirmed.status) return(ix) else return(paste0(ix, ': ', format(label.confirmed[ix], big.mark = ',', trim = TRUE), ''))}) +
           labs(title = confirmed.labs$title,
                subtitle = confirmed.labs$subtitle,
-               caption = confirmed.labs$captions,
+               caption = confirmed.labs$caption,
                y = confirmed.labs$y,
                x = confirmed.labs$x) +
           theme_minimal() +
@@ -243,7 +243,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
   }
   #
   death.labs <- list(title = 'New {format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)} deaths from {format(date.ix, "%B %d")}' %>% glue,
-                     subtitle = '',
+                     subtitle = ' ',
                      caption = '',
                      y = 'Age group',
                      x = 'Deaths')
@@ -277,7 +277,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
           scale_fill_viridis_d('', end = .8, labels = function(ix) { if (confirmed.status) return(ix) else return(paste0(ix, ': ', format(label.confirmed[ix], big.mark = ',', trim = TRUE), ' (', format(label.predicted[ix], big.mark = ',', trim = TRUE), ')'))}) +
           labs(title = confirmed.labs$title,
                subtitle = confirmed.labs$subtitle,
-               caption = confirmed.labs$captions,
+               caption = confirmed.labs$caption,
                y = confirmed.labs$y,
                x = confirmed.labs$x) +
           theme_minimal() +
