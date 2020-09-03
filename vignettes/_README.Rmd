@@ -192,31 +192,7 @@ plot.data %>%
 
 # New cases / deaths by age groups
 
-Only showing 1 day *(`r format(age.data$date %>% max, "%B %d")`)*
-
-```{r, echo=FALSE}
-age.ix.f <- age.data$date %>% max
-
-age.data.all <- get.age.data.with.labels(age.data, age.ix.f)
-
-age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
-```
-
-
-```{r, echo=FALSE,fig.width=4.1}
-my.plots.new <- get.plot.for.new(age.data.all.new, age.ix.f)
-my.plots.new$confirmed
-my.plots.new$deaths
-```
-
-
-# Cases / Deaths by age groups {.tabset .tabset-fade .tabset-pills}
-
-```{r, result='asis', echo=FALSE,fig.width=4.1}
-my.plots.all <- get.plot.for.all(age.data.all, age.ix.f)
-my.plots.all$confirmed
-my.plots.all$deaths
-```
+(removed as it was removed from official data)
 
 # Data {.tabset .tabset-fade .tabset-pills}
 
@@ -225,7 +201,7 @@ my.plots.all$deaths
 Only showing last 10 days
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% top_n(10, date) %>% knitr::kable()
+dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% knitr::kable()
 ```
 
 ## Data from EU CDC updated

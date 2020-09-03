@@ -40,6 +40,10 @@ extract_ages <- function(page, name) {
       return()
 }
 
+extract_ages2 <- function(page, pattern) {
+  return(tibble::tibble())
+}
+
 #' Extract number of cases from report
 #'
 #' @param page page strings from document
@@ -51,7 +55,29 @@ extract_cases <- function(page) {
     return()
 }
 
-#' Extrac number of deaths from report
+#' Extract number of hospitalized from report (from 2020/08/17)
+#'
+#' @param page page strings from document
+#'
+#' @return a number
+extract_hospitalized2 <- function(page) {
+  dplyr::bind_cols(extract_generic2(page, 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO', 1, 1) %>%
+                     tibble::tibble(hospitalized = .),
+                   extract_generic2(page, 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO', 1, 2, TRUE) %>%
+                     tibble::tibble(in.icu = .)) %>%
+    return()
+}
+
+#' Extract number of cases from report (from 2020/08/17)
+#'
+#' @param page page strings from document
+#'
+#' @return a number
+extract_cases2 <- function(page) {
+  return(extract_generic2(page, 'EM VIGIL\u00C2NCIA', 1, 1) %>% tibble::tibble(confirmed = .))
+}
+
+#' Extract number of deaths from report
 #'
 #' @param page page strings from document
 #'
@@ -62,13 +88,38 @@ extract_deaths <- function(page) {
     return()
 }
 
-#' Extrac number of recoveries from report
+#' Extract number of deaths from report  (from 2020/08/17)
+#'
+#' @param page page strings from document
+#'
+#' @return a number
+extract_deaths2 <- function(page) {
+  tmp <- extract_generic2(page, 'RECUPERADOS', 1, 2) %>% tibble::tibble(deaths = .)
+
+  if (is.na(tmp[1,1])) {
+    tmp <- extract_generic2(page, 'RECUPERADOS', 1, 3) %>% tibble::tibble(deaths = .)
+  }
+  return(tmp)
+}
+
+#' Extract number of recoveries from report
 #'
 #' @param page page strings from document
 #'
 #' @return a number
 extract_recoveries <- function(page) {
   extract_generic(page, 'Casos recuperados', 1) %>%
+    tibble::tibble(recovered = .) %>%
+    return()
+}
+
+#' Extract number of recoveries from report (from 2020/08/17)
+#'
+#' @param page page strings from document
+#'
+#' @return a number
+extract_recoveries2 <- function(page) {
+  extract_generic2(page, 'ATIVOS', 1, 1) %>%
     tibble::tibble(recovered = .) %>%
     return()
 }
@@ -130,14 +181,22 @@ extract_generic.two <- function(page, pattern, interesting.hit) {
 #' @param interesting.hit which one to choose
 #'
 #' @return a number
-extract_generic <- function(page, pattern, interesting.hit) {
+extract_generic <- function(page, pattern, interesting.hit, add.me = 0) {
 
   hits.ix <- stringr::str_which(page, pattern)
 
-  hits <- page[hits.ix]
+  hits <- page[hits.ix + add.me]
 
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
     gsub('\032', '', .)
+
+  if (add.me > 0) {
+    tmp <- page[c(hits.ix + 1)][[interesting.hit]] %>%
+      stringr::str_replace(' ', '') %>%
+      stringr::str_replace('([0-9]+).*', '\\1') %>%
+      as.integer()
+    return(tmp)
+  }
 
   pattern2 <- stringi::stri_enc_toascii(pattern) %>% gsub('\032', '', .)
 
@@ -160,6 +219,40 @@ extract_generic <- function(page, pattern, interesting.hit) {
     })
     return(retValue)
   }
+}
+
+#' Generic extractor
+#'
+#' @param page page strings from document
+#' @param pattern pattern to look for
+#' @param interesting.hit which one to choose
+#'
+#' @return a number
+extract_generic2 <- function(page, pattern, interesting.hit, add.me = 0, last = FALSE) {
+
+  hits.ix <- stringr::str_which(page, pattern)
+
+  hits <- page[hits.ix + add.me]
+
+  hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
+    gsub('\032', '', .)
+
+  if (hits.my == 'INTERNAMENTO INTERNAMENTO') {
+    return(extract_generic2(page, pattern, interesting.hit, add.me - 1, last))
+  }
+
+  if (last) {
+    tmp <- page[c(hits.ix + add.me)][[interesting.hit]] %>%
+      stringr::str_replace(' ([0-9][0-9][0-9])', '\\1') %>%
+      stringr::str_replace('.* ([0-9]+)( -)?$', '\\1') %>%
+      as.integer()
+  } else {
+    tmp <- page[c(hits.ix + add.me)][[interesting.hit]] %>%
+      stringr::str_replace(' ([0-9][0-9][0-9])', '\\1') %>%
+      stringr::str_replace('([0-9]+).*', '\\1') %>%
+      as.integer()
+  }
+  return(tmp)
 }
 
 #' Extract information from latest report of DGS
@@ -197,6 +290,46 @@ extract_info <- function(only.date = NULL, index = 1) {
   }
 
   return(info %>% dplyr::filter(!is.na(country)))
+}
+
+#' Extract information from latest report of DGS from 2020/08/17
+#'
+#' @param index index of report to extract (1 is the latest)
+#' @param only.date filter out if date isn't the same (NULL for keep whatever report it is)
+#'
+#' @return list with information that can be extracted
+#' @export
+#'
+#' @examples
+#' extract_info(index = 4) # keep only if it's from today
+extract_info2 <- function(only.date = NULL, index = 1) {
+  report.pdf <- download.report(only.date, index)
+
+  info <- tibble::tibble()
+  if (!is.null(report.pdf)) {
+    report.text <- report.pdf$data %>% pdftools::pdf_text()
+
+    document <- stringr::str_split(report.text, '\n') %>%
+      sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
+
+    page1 <- NULL
+    tryCatch({(page1 <- document[,1])}, error = function(err) {})
+    if (is.null(page1)) {
+      page1 <- document[[1]]
+    }
+
+    info <- dplyr::bind_cols(country = 'Portugal',
+                             date = report.pdf$date,
+                             extract_cases2(page1),
+                             extract_deaths2(page1),
+                             extract_recoveries2(page1),
+                             extract_tests(page1),
+                             extract_hospitalized2(page1),
+                             extract_ages2(page1, 'obsolete'),
+                             extract_ages2(page1, 'obsolete'))
+  }
+  info.out <- info %>% dplyr::filter(!is.na(country))
+  return(info.out)
 }
 
 #' Download report
@@ -284,7 +417,12 @@ download_all_reports <- function() {
   if (length(what.to.search) > 0) {
     for (x in seq_along(what.to.search)) {
       cat('Report being downloaded:',  paste0('(', x , '/', length(what.to.search),')'), '--', format.Date(dates.valid[what.to.search[x]]), '\n')
-      day <- extract_info(index = what.to.search[x])
+      index <- what.to.search[x]
+      if (dates.valid[what.to.search[x]] >= '2020-08-17') {
+        day <- extract_info2(NULL, index)
+      } else {
+        day <- extract_info(NULL, index)
+      }
       dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
     }
   }
