@@ -72,6 +72,7 @@ always refer to the situation on the previous day.
 
 | dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2019 | continentExp | Cumulative\_number\_for\_14\_days\_of\_COVID-19\_cases\_per\_100000 |
 | :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: | :----------- | ------------------------------------------------------------------: |
+| 22/10/2020 |  22 |    10 | 2020 |  2535 |     16 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            243.4167 |
 | 21/10/2020 |  21 |    10 | 2020 |  1876 |     15 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            227.9349 |
 | 20/10/2020 |  20 |    10 | 2020 |  1949 |     17 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            213.8350 |
 | 19/10/2020 |  19 |    10 | 2020 |  1856 |     19 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            210.8087 |
@@ -81,4 +82,3 @@ always refer to the situation on the previous day.
 | 15/10/2020 |  15 |    10 | 2020 |  2072 |      7 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            152.2972 |
 | 14/10/2020 |  14 |    10 | 2020 |  1208 |     16 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            140.1629 |
 | 13/10/2020 |  13 |    10 | 2020 |  1249 |     14 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            135.1028 |
-| 12/10/2020 |  12 |    10 | 2020 |  1090 |     13 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            127.0846 |
