@@ -32,9 +32,9 @@ my.pattern <- function(index) {
 #'
 #' @return a number
 extract_hospitalized2 <- function(page) {
-  dplyr::bind_cols(extract_generic2(page, 'hospitalized', 1, 1) %>%
+  dplyr::bind_cols(extract_generic2(page, 'hospitalized', 1, 1, FALSE) %>%
                      tibble::tibble(hospitalized = .),
-                   extract_generic2(page, 'icu', 1, 1, TRUE) %>%
+                   extract_generic2(page, 'icu', 1, 2, FALSE) %>%
                      tibble::tibble(in.icu = .)) %>%
     return()
 }
@@ -51,7 +51,7 @@ extract_hospitalized2 <- function(page) {
 #'
 #' @return a number
 extract_cases2 <- function(page) {
-  return(extract_generic2(page, 'cases', 1, 1) %>% tibble::tibble(confirmed = .))
+  return(extract_generic2(page, 'cases', 1, 1, FALSE) %>% tibble::tibble(confirmed = .))
 }
 
 #      _            _   _
@@ -66,10 +66,10 @@ extract_cases2 <- function(page) {
 #'
 #' @return a number
 extract_deaths2 <- function(page) {
-  tmp <- extract_generic2(page, 'deaths', 1, 2) %>% tibble::tibble(deaths = .)
+  tmp <- extract_generic2(page, 'deaths', 1, 6, FALSE) %>% tibble::tibble(deaths = .)
 
   if (is.na(tmp[1,1])) {
-    tmp <- extract_generic2(page, 'deaths', 1, 3) %>% tibble::tibble(deaths = .)
+    tmp <- extract_generic2(page, 'deaths', 1, 3, FALSE) %>% tibble::tibble(deaths = .)
   }
   return(tmp)
 }
@@ -86,7 +86,7 @@ extract_deaths2 <- function(page) {
 #'
 #' @return a number
 extract_recoveries2 <- function(page) {
-  extract_generic2(page, 'recoveries', 1, 1) %>%
+  extract_generic2(page, 'recoveries', 1, 1, FALSE) %>%
     tibble::tibble(recovered = .) %>%
     return()
 }
@@ -110,11 +110,18 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
 
   hits.ix <- stringr::str_which(page, pattern)
 
-  hits <- page[hits.ix + add.me]
+  page.sub <- page[seq(from = hits.ix, to = length(page))]
+  hits <- page.sub[1 + add.me]
 
-  if (pattern.name == 'icu' && grepl('^[0-9]+$', hits)) {
-    add.me <- 2
-    hits <- page[hits.ix + add.me]
+  if (pattern.name %in% c('deaths') && grepl('^[0-9]+$', hits)) {
+    death.pattern <- '^[0-9]+( [0-9]+)? ([+]|[-])( [0-9]+( [0-9]+)?)?$'
+    if (grepl(death.pattern, page.sub[1 + add.me - 1])) {
+      return(extract_generic2(page, pattern.name, interesting.hit, add.me - 1, last))
+    } else if (grepl(death.pattern, page.sub[1 + add.me + 1])) {
+      return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
+    } else {
+      # it will fail! shrugs
+    }
   }
 
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
@@ -126,6 +133,10 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
 
   page.line <- page[c(hits.ix + add.me)][[interesting.hit]]
 
+  return(extract.page.line(pattern.name, page.line))
+}
+
+extract.page.line <- function(pattern.name, page.line) {
   # correct for + and -
   page.line <- page.line %>%
     stringr::str_replace_all('[+-]$', '-0') %>%
@@ -137,6 +148,7 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
     # correct for complex icu and hospitalized numbers
     page.line <- page.line %>% stringr::str_replace_all('([-+]) ?([0-9]+) ', '\\1\\2  ')
   }
+
   # correct for thousands operator
   page.line <- page.line %>% stringr::str_replace_all(' ([0-9][0-9][0-9])', '\\1')
 
@@ -186,7 +198,23 @@ extract_info2 <- function(only.date = NULL, index = 1) {
 
   info <- tibble::tibble()
   if (!is.null(report.pdf)) {
-    report.text <- report.pdf$data %>% pdftools::pdf_text()
+
+    if (TRUE) {
+      report.text <- report.pdf$data %>%
+        pdftools::pdf_data() %>%
+        sapply(FUN = function(my.input) {
+          my.input %>%
+            dplyr::arrange(y,x) %>%
+            dplyr::select(text, space) %>%
+            dplyr::mutate(space = if_else(space, ' ', '\n'),
+                          string = paste0(text, space)) %>%
+            purrr::pluck(3) %>%
+            paste(sep = '', collapse = '')
+        })
+
+    } else {
+      report.text <- report.pdf$data %>% pdftools::pdf_text()
+    }
 
     document <- stringr::str_split(report.text, '\n') %>%
       sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
