@@ -121,16 +121,17 @@ dgs.pt %>%
                               size = 3.5,
                               max.iter = 4000,
                               seed = 1985) +
-    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
+    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "5 day", date_minor_breaks = "1 day") +
     labs(x = 'Date', 
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
-         subtitle = 'Showing in Logarithmic scale (base 10)') +
+         subtitle = 'Showing in Logarithmic scale (base 10)',
+         caption = "{format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
     scale_y_continuous(trans = 'log10', labels = function(ix) { format(ix, big.mark = ',', scientific = FALSE) }) +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     theme_minimal() +
-    theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+    theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
@@ -178,7 +179,7 @@ plot.data %>%
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale',
-         caption = "Label points to the maximum point in time") +
+         caption = "{format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
     scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
@@ -235,7 +236,7 @@ plot.data %>%
          y = 'Number of individuals',
          title = '7-day average of Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale',
-         caption = "Label points to the maximum point in time") +
+         caption = "{format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
     scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
