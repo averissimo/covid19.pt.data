@@ -133,10 +133,10 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
 
   page.line <- page[c(hits.ix + add.me)][[interesting.hit]]
 
-  return(extract.page.line(pattern.name, page.line))
+  return(extract.page.line(pattern.name, page.line, last))
 }
 
-extract.page.line <- function(pattern.name, page.line) {
+extract.page.line <- function(pattern.name, page.line, last) {
   # correct for + and -
   page.line <- page.line %>%
     stringr::str_replace_all('[+-]$', '-0') %>%
