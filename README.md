@@ -15,8 +15,8 @@ If you are here just for the data, this is what you want:
   - [covid19\_pt.csv](raw/master/data/covid19_pt.csv) *(updated EU CDC
     dataset only featuring Portugal)*
 
-A more detailed analysis of this data is [available
-here](https://averissimo.github.io/covid19-analysis/portugal.html)
+A mortality analysis of Portugal is [available
+here](https://averissimo.github.io/covid19-analysis/mortality.html)
 
 # Check for new reports
 
