@@ -122,6 +122,8 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
     } else {
       # it will fail! shrugs
     }
+  } else if (pattern.name %in% c('icu') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
+    return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
   }
 
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
@@ -206,7 +208,7 @@ extract_info2 <- function(only.date = NULL, index = 1) {
           my.input %>%
             dplyr::arrange(y,x) %>%
             dplyr::select(text, space) %>%
-            dplyr::mutate(space = if_else(space, ' ', '\n'),
+            dplyr::mutate(space = dplyr::if_else(space, ' ', '\n'),
                           string = paste0(text, space)) %>%
             purrr::pluck(3) %>%
             paste(sep = '', collapse = '')
