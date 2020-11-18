@@ -124,6 +124,8 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
     }
   } else if (pattern.name %in% c('icu') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
     return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
+  } else if (pattern.name %in% c('icu') && grepl('^[+]$', hits)) {
+    return(extract_generic2(page, pattern.name, interesting.hit, add.me + 2, last))
   }
 
   hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
