@@ -1,0 +1,39 @@
+get_json_esri <- function() {
+  url <- 'https://services.arcgis.com/CCZiGSEQbAxxFVh3/arcgis/rest/services/COVID_Concelhos_ARS_View2/FeatureServer/0/query?f=json&where=ARSNome%3D%27Nacional%27&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&resultOffset=0&resultRecordCount=50&resultType=standard&cacheHint=true'
+  #Reading the HTML code from the website
+  json <- RCurl::getURL(url) %>%
+    jsonlite::fromJSON()
+
+  return(json$features$attributes)
+}
+
+get_ages <- function(features) {
+  age.ranges <- c('00-09 anos', '10-19 anos', '20-29 anos', '30-39 anos',
+                  '40-49 anos', '50-59 anos', '60-69 anos', '70-79 anos',
+                  '80\\+') %>%
+    stringr::str_replace(' anos', '') %>%
+    stringr::str_replace('\\\\', '')
+
+  age.ranges.input <- c('0009', '1019', '2029', '3039', '4049', '5059', '6069', '7079', '80')
+
+  find_index <- function(dat, prefix, suffix, ix.cols) {
+    out.ix <- list(conf = 'confirmed', obitos = 'death', m_ARS = 'm', f_ARS = 'w')
+
+    raw.ix <- paste(prefix, age.ranges.input, suffix, sep = '')
+    raw.tibble <- dat[raw.ix] %>% tibble::tibble()
+    colnames(raw.tibble) <- paste(out.ix[[prefix]], out.ix[[suffix]], ix.cols, sep = '_')
+    return(raw.tibble)
+  }
+
+  my.date <- (features$Data_ARS / 1000) %>% anytime::anydate()
+
+  out <- cbind(date = my.date,
+               find_index(features, 'conf', 'm_ARS', age.ranges),
+               find_index(features, 'conf', 'f_ARS', age.ranges),
+               find_index(features, 'obitos', 'm_ARS', age.ranges),
+               find_index(features, 'obitos', 'f_ARS', age.ranges)) %>%
+    tibble::tibble() %>%
+    select("date", "confirmed_m_00-09", "confirmed_w_00-09", "confirmed_m_10-19", "confirmed_w_10-19", "confirmed_m_20-29", "confirmed_w_20-29", "confirmed_m_30-39", "confirmed_w_30-39", "confirmed_m_40-49", "confirmed_w_40-49", "confirmed_m_50-59", "confirmed_w_50-59", "confirmed_m_60-69", "confirmed_w_60-69", "confirmed_m_70-79", "confirmed_w_70-79", "confirmed_m_80+", "confirmed_w_80+", "death_m_00-09", "death_w_00-09", "death_m_10-19", "death_w_10-19", "death_m_20-29", "death_w_20-29", "death_m_30-39", "death_w_30-39", "death_m_40-49", "death_w_40-49", "death_m_50-59", "death_w_50-59", "death_m_60-69", "death_w_60-69", "death_m_70-79", "death_w_70-79", "death_m_80+", "death_w_80+")
+
+  return(out)
+}

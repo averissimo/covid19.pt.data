@@ -48,7 +48,7 @@ dgs.pt <- tibble()
 tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
 
 # DGS PT
-if (nrow(dgs.pt.new) != nrow(dgs.pt)) {
+if (nrow(dgs.pt.new) != nrow(dgs.pt) || any(is.na(dgs.pt.new[1,]) != is.na(dgs.pt[1,]), na.rm = FALSE)) {
   dgs.pt <- dgs.pt.new 
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, path = '../data/dgs_pt.csv')

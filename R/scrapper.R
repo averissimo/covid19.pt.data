@@ -201,6 +201,9 @@ extract_info2 <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
 
   info <- tibble::tibble()
+
+  esri <- get_json_esri()
+  ages <- get_ages(esri)
   if (!is.null(report.pdf)) {
 
     if (TRUE) {
@@ -238,6 +241,10 @@ extract_info2 <- function(only.date = NULL, index = 1) {
                              extract_recoveries2(page1),
                              extract_tests(page1),
                              extract_hospitalized2(page1))
+    if (ages %>% pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
+      info <- cbind(info, ages %>% select(-date))
+    }
+
   }
   info.out <- info %>% dplyr::filter(!is.na(country))
   return(info.out)
@@ -336,6 +343,12 @@ download_all_reports <- function() {
       }
       dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
     }
+  } else if (length(what.to.search) == 0) {
+    # will force the esri download and join per date (just in case esri is behind schedule when updating)
+    esri <- get_json_esri()
+    ages <- get_ages(esri)
+    #dgs.pt.new <-
+    dgs.pt.new <- rows_update(dgs.pt.new, ages, by = 'date')
   }
 
   return(dgs.pt.new)
