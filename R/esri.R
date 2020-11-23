@@ -1,7 +1,8 @@
 get_json_esri <- function() {
   url <- 'https://services.arcgis.com/CCZiGSEQbAxxFVh3/arcgis/rest/services/COVID_Concelhos_ARS_View2/FeatureServer/0/query?f=json&where=ARSNome%3D%27Nacional%27&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&resultOffset=0&resultRecordCount=50&resultType=standard&cacheHint=true'
   #Reading the HTML code from the website
-  json <- RCurl::getURL(url) %>%
+  json <- httr::GET(url) %>%
+    httr::content('text', encoding = 'UTF-8') %>%
     jsonlite::fromJSON()
 
   return(json$features$attributes)
