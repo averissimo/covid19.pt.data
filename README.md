@@ -34,13 +34,10 @@ download.updated.pt()
 
 # New cases / deaths by age groups
 
-``` r
-age.ix.f <- dgs.pt %>% filter(!is.na(`confirmed_m_00-09`)) %>% pull(date) %>% max
-age.data.all <- get.age.data.with.labels(age.data, age.ix.f)
-age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
-```
-
 ![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
+\# All cases / deaths by age groups
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-12-2.svg)<!-- -->
 
 # Data
 
