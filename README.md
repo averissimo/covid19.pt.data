@@ -35,7 +35,8 @@ download.updated.pt()
 # New cases / deaths by age groups
 
 ![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
-\# All cases / deaths by age groups
+
+# All cases / deaths by age groups
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-12-2.svg)<!-- -->
 
