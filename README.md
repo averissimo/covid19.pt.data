@@ -26,11 +26,11 @@ download.updated.pt()
 
 ## Data for Portugal
 
+![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
+
 ![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->
-
-![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->
 
 # New cases / deaths by age groups
 
