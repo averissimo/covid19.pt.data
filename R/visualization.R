@@ -129,6 +129,7 @@ get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.ma
                          y = 'Age group',
                          x = 'Confirmed Cases')
   confirmed.status <- sum(abs(input.data$confirmed)) != dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum
+  confirmed.status <- sum(abs(input.data$confirmed)) < .8 * (dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum)
   if (confirmed.status) {
     confirmed.labs$title <- 'ERROR on DGS data for demographics'
     confirmed.labs$subtitle <- ' for total confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} not {format(dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum, big.mark = ",", trim = TRUE)})' %>% glue
