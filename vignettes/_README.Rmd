@@ -247,7 +247,6 @@ plot.data %>%
     theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
-
 # New cases / deaths by age groups
 
 ```{r, echo=FALSE}
@@ -265,6 +264,7 @@ if(!is.null(age.data.all.new)) {
  cat('Missing age grouping information for this day:', format(age.ix.f)) 
 }
 ```
+
 # All cases / deaths by age groups
 
 ```{r, echo=FALSE,fig.width=4.1}
