@@ -55,13 +55,18 @@ get.age.data.with.labels <- function(input.data, date.ix) {
 #' @return
 #' @export
 get.age.new.data <- function(input.data, input.data.with.labels, date.ix) {
-  age.data.all.new <- input.data %>%
+  age.data.all.new.tmp <- input.data %>%
     group_by(country, type, gender, age_type) %>%
     arrange(desc(date)) %>%
     mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
     filter(value != 0) %>%
     filter(date == date.ix & value != 0) %>%
-    ungroup() %>%
+    ungroup()
+
+  if (nrow(age.data.all.new.tmp) == 0) {
+    return(NULL)
+  }
+  age.data.all.new <- age.data.all.new.tmp %>%
     select(type, gender, age_type, value) %>%
     group_by(type, gender, age_type) %>%
     reshape2::dcast(type + gender ~ age_type, mean, fill = 0) %>%
@@ -211,23 +216,31 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
     death.max     <- input.data %>% pull(death) %>% max
   }
 
-  label.death <- list(men = input.data %>% filter(gender == 'men') %>% pull(death) %>% sum %>% abs,
-                      women = input.data %>% filter(gender == 'women') %>% pull(death) %>% sum %>% abs)
+  confirmed.status <- TRUE
 
-  label.predicted <- list(men = input.data %>% filter(gender == 'men') %>% pull(predicted.death) %>% sum %>% abs %>% round(digits = 1),
-                          women = input.data %>% filter(gender == 'women') %>% pull(predicted.death) %>% sum %>% abs %>% round(digits = 1))
+  if (FALSE) {
+    # will check here for NA
+  } else {
+    label.death <- list(men = input.data %>% filter(gender == 'men') %>% pull(death) %>% sum %>% abs,
+                        women = input.data %>% filter(gender == 'women') %>% pull(death) %>% sum %>% abs)
 
-  label.confirmed <- list(men = input.data %>% filter(gender == 'men') %>% pull(confirmed) %>% sum %>% abs,
-                          women = input.data %>% filter(gender == 'women') %>% pull(confirmed) %>% sum %>% abs)
-  #
-  #
-  #
-  confirmed.labs <- list(title = 'New {format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} confirmed cases from {format(date.ix, "%B %d")}' %>% glue,
-                         subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
-                         caption = 'Prediction based on current \'mortality rate\' ({sum(input.data$predicted.death) %>% round(digits = 1)} deaths for {format(date.ix, "%B %d")})' %>% glue,
-                         y = 'Age group',
-                         x = 'Confirmed Cases')
-  confirmed.status <- sum(abs(input.data$confirmed)) != covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum
+    label.predicted <- list(men = input.data %>% filter(gender == 'men') %>% pull(predicted.death) %>% sum %>% abs %>% round(digits = 1),
+                            women = input.data %>% filter(gender == 'women') %>% pull(predicted.death) %>% sum %>% abs %>% round(digits = 1))
+
+    label.confirmed <- list(men = input.data %>% filter(gender == 'men') %>% pull(confirmed) %>% sum %>% abs,
+                            women = input.data %>% filter(gender == 'women') %>% pull(confirmed) %>% sum %>% abs)
+    #
+    #
+    #
+    confirmed.labs <- list(title = 'New {format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} confirmed cases from {format(date.ix, "%B %d")}' %>% glue,
+                           subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
+                           caption = 'Prediction based on current \'mortality rate\' ({sum(input.data$predicted.death) %>% round(digits = 1)} deaths for {format(date.ix, "%B %d")})' %>% glue,
+                           y = 'Age group',
+                           x = 'Confirmed Cases')
+    confirmed.status <- sum(abs(input.data$confirmed)) != covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum
+    confirmed.status <- sum(abs(input.data$confirmed)) < .8 * (covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum)
+  }
+
   if (confirmed.status) {
     confirmed.labs$title <- 'ERROR on DGS data for demographics'
     confirmed.labs$subtitle <- ' for new confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} not {format(covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, \'%d/%m/%Y\')) %>% pull(cases) %>% sum, big.mark = ",", trim = TRUE)})' %>% glue
