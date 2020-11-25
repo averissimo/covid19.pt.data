@@ -250,7 +250,7 @@ plot.data %>%
 
 # New cases / deaths by age groups
 
-```{r}
+```{r, echo=FALSE}
 age.ix.f <- dgs.pt %>% filter(!is.na(`confirmed_m_00-09`)) %>% pull(date) %>% max
 age.data.all <- get.age.data.with.labels(age.data, age.ix.f)
 age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
@@ -260,8 +260,8 @@ age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
 ```{r, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
  my.plots.new <- get.plot.for.new(age.data.all.new, age.ix.f)
- print(my.plots.new$confirmed)
- print(my.plots.new$deaths)
+ print(my.plots.new$confirmed + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
+ print(my.plots.new$deaths + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
 } else {
  cat('Missing age grouping information for this day:', format(age.ix.f)) 
 }
