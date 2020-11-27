@@ -105,7 +105,7 @@ get.age.new.data <- function(input.data, input.data.with.labels, date.ix) {
 #'
 #' @return list with 2 plots
 #' @export
-get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.max = NULL) {
+get.plot.for.all <- function(input.data, date.ix, dgs.pt, confirmed.max = NULL, death.max = NULL) {
   my.plots <- list()
 
   if (is.null(confirmed.max)) {
@@ -125,14 +125,14 @@ get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.ma
   #
   confirmed.labs <- list(title = 'Total number of Confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)}) by age group' %>% glue,
                          subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
-                         caption = '',
+                         caption = "data from {format(date.ix, '%A, %B %d, %Y')}" %>% glue::glue(),
                          y = 'Age group',
                          x = 'Confirmed Cases')
   confirmed.status <- sum(abs(input.data$confirmed)) != dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum
   confirmed.status <- sum(abs(input.data$confirmed)) < .8 * (dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum)
   if (confirmed.status) {
     confirmed.labs$title <- 'ERROR on DGS data for demographics'
-    confirmed.labs$subtitle <- ' for total confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} not {format(dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum, big.mark = ",", trim = TRUE)})' %>% glue
+    confirmed.labs$subtitle <- ' for total confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} not {format(dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum, big.mark = ",", trim = TRUE)})' %>% glue::glue()
     confirmed.labs$caption <- ''
     input.data <- input.data %>% mutate(confirmed = 0,
                                         label.death = gsub(' [(].*[)]', '', label.death),
@@ -142,13 +142,15 @@ get.plot.for.all <- function(input.data, date.ix, confirmed.max = NULL, death.ma
   #
   death.labs <- list(title = 'Total number of Deaths ({format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)}) by age group' %>% glue,
                      subtitle = 'Percentage shows the mortality rate',
-                     caption = 'Mortality rate = \'deaths\' / \'confirmed cases\'',
+                     caption = "data from {format(date.ix, '%A, %B %d, %Y')}\nMortality rate = 'deaths' / 'confirmed cases'"  %>% glue::glue(),
                      y = 'Age group',
                      x = 'Deaths')
   death.status <- sum(abs(input.data$death)) != dgs.pt %>% filter(date == date.ix) %>% pull(deaths) %>% sum
+  death.status <- sum(abs(input.data$death)) < .8 * (dgs.pt %>% filter(date == date.ix) %>% pull(deaths) %>% sum)
   if (death.status) {
     death.labs$title <- 'ERROR on DGS data for demographics'
-    confirmed.labs$subtitle <- ' for total deaths ({format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)} not {format(dgs.pt %>% filter(date == date.ix) %>% pull(deaths) %>% sum}, big.mark = ",", trim = TRUE))' %>% glue
+    death.labs$subtitle <- paste0(' for total deaths ({format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)}',
+                                      ' not {format(dgs.pt %>% filter(date == date.ix) %>% pull(deaths) %>% sum, big.mark = ",", trim = TRUE)})') %>% glue
     death.labs$caption <- ''
     input.data <- input.data %>% mutate(death = 0,
                                         label.death = NA_character_,
@@ -235,7 +237,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
     #
     confirmed.labs <- list(title = 'New {format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)} confirmed cases from {format(date.ix, "%B %d")}' %>% glue,
                            subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
-                           caption = 'Prediction based on current \'mortality rate\' ({sum(input.data$predicted.death) %>% round(digits = 1)} deaths for {format(date.ix, "%B %d")})' %>% glue,
+                           caption = "data from {format(date.ix, '%A, %B %d, %Y')}\nPrediction based on current 'mortality rate' ({sum(input.data$predicted.death) %>% round(digits = 1)} deaths for {format(date.ix, '%B %d')})" %>% glue::glue(),
                            y = 'Age group',
                            x = 'Confirmed Cases')
     confirmed.status <- sum(abs(input.data$confirmed)) != covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, '%d/%m/%Y')) %>% pull(cases) %>% sum
@@ -258,7 +260,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
   #
   death.labs <- list(title = 'New {format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)} deaths from {format(date.ix, "%B %d")}' %>% glue,
                      subtitle = ' ',
-                     caption = '',
+                     caption = "data from {format(date.ix, '%A, %B %d, %Y')}\n" %>% glue::glue(),
                      y = 'Age group',
                      x = 'Deaths')
   death.status <- sum(abs(input.data$death)) != covid19.pt %>% filter(dateRep == strftime(anydate(date.ix)+1, '%d/%m/%Y')) %>% pull(deaths) %>% sum

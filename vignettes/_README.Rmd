@@ -179,7 +179,7 @@ plot.data %>%
          y = 'Number of individuals',
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale',
-         caption = "{format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
+         caption = "data from {format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
     scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
@@ -269,7 +269,7 @@ if(!is.null(age.data.all.new)) {
 
 ```{r, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
- my.plots.all <- get.plot.for.all(age.data.all, age.ix.f)
+ my.plots.all <- get.plot.for.all(age.data.all, age.ix.f, dgs.pt = dgs.pt)
  print(my.plots.all$confirmed + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
  print(my.plots.all$deaths + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
 } else {
