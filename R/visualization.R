@@ -129,7 +129,7 @@ get.plot.for.all <- function(input.data, date.ix, dgs.pt, confirmed.max = NULL, 
                          y = 'Age group',
                          x = 'Confirmed Cases')
 
-  confirmed.status <- abs((dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum) - sum(abs(input.data$confirmed))) > 1000
+  confirmed.status <- abs((dgs.pt %>% filter(date == date.ix) %>% pull(confirmed) %>% sum) - sum(abs(input.data$confirmed))) > 7000
 
   if (confirmed.status) {
     confirmed.labs$title <- 'ERROR on DGS data for demographics'
