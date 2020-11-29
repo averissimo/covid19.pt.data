@@ -243,7 +243,7 @@ extract_info2 <- function(only.date = NULL, index = 1) {
                              extract_hospitalized2(page1))
 
     if (ages %>% pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
-      info <- rows_update(info, ages, by = 'date')
+      info <- bind_cols(info, ages)
     }
 
   }
