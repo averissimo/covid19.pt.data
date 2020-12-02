@@ -249,15 +249,19 @@ plot.data %>%
 
 # New cases / deaths by age groups
 
-*note: data may be delayed from absolute number by a couple of hours*
-
-Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
-
 ```{r, echo=FALSE}
 age.ix.f <- dgs.pt %>% filter(!is.na(`confirmed_m_00-09`)) %>% pull(date) %>% max
 age.data.all <- get.age.data.with.labels(age.data, age.ix.f)
 age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
 ```
+
+```{r, results='asis', echo=FALSE}
+if(age.ix.f != dgs.pt %>% pull(date) %>% max) {
+  cat('*note: data update may be delayed by a couple of hours (as age data has been removed from daily report)*')
+}
+```
+
+Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
 
 ```{r, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {

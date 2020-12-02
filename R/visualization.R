@@ -124,7 +124,7 @@ get.plot.for.all <- function(input.data, date.ix, dgs.pt, confirmed.max = NULL, 
   #
   #
   confirmed.labs <- list(title = 'Total number of Confirmed cases ({format(label.confirmed$women + label.confirmed$men, big.mark = ",", trim = TRUE)}) by age group' %>% glue,
-                         subtitle = 'predicted deaths for age groups shown in parenthesis' %>% glue,
+                         subtitle = '' %>% glue,
                          caption = "data from {format(date.ix, '%A, %B %d, %Y')}" %>% glue::glue(),
                          y = 'Age group',
                          x = 'Confirmed Cases')

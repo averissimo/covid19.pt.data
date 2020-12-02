@@ -243,6 +243,7 @@ extract_info2 <- function(only.date = NULL, index = 1) {
                              extract_hospitalized2(page1))
 
     if (ages %>% pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
+      message('Updating age data from esri..')
       info <- bind_cols(info, ages %>% select(-date))
     }
 
@@ -348,6 +349,9 @@ download_all_reports <- function() {
     # will force the esri download and join per date (just in case esri is behind schedule when updating)
     esri <- get_json_esri()
     ages <- get_ages(esri)
+    if (ages %>% dplyr::pull(date) %>% purrr::pluck(1) == dgs.pt %>% pull(date) %>% max()) {
+      message('Updating age data from esri...')
+    }
     #dgs.pt.new <-
     dgs.pt.new <- rows_update(dgs.pt.new, ages, by = 'date')
   }
