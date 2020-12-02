@@ -249,6 +249,10 @@ plot.data %>%
 
 # New cases / deaths by age groups
 
+*note: data may be delayed from absolute number by a couple of hours*
+
+Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
+
 ```{r, echo=FALSE}
 age.ix.f <- dgs.pt %>% filter(!is.na(`confirmed_m_00-09`)) %>% pull(date) %>% max
 age.data.all <- get.age.data.with.labels(age.data, age.ix.f)
@@ -267,11 +271,13 @@ if(!is.null(age.data.all.new)) {
 
 # All cases / deaths by age groups
 
+Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
+
 ```{r, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
  my.plots.all <- get.plot.for.all(age.data.all, age.ix.f, dgs.pt = dgs.pt)
- print(my.plots.all$confirmed + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
- print(my.plots.all$deaths + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
+ print(my.plots.all$confirmed + theme(plot.title = element_text(size=9), plot.subtitle = element_text(size=8)))
+ print(my.plots.all$deaths + theme(plot.title = element_text(size=9), plot.subtitle = element_text(size=8)))
 } else {
  cat('Missing age grouping information for this day:', format(age.ix.f)) 
 }
