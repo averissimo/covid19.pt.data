@@ -257,7 +257,7 @@ age.data.all.new <- get.age.new.data(age.data, age.data.all, age.ix.f)
 
 ```{r, results='asis', echo=FALSE}
 if(age.ix.f != dgs.pt %>% pull(date) %>% max) {
-  cat('*note: data update may be delayed by a couple of hours (as age data has been removed from daily report and we retrieve it from DGS\'s covid19 dashboard)*')
+  cat('*note: data update may be delayed by a couple of hours (since age data was been removed from daily report and we\'ve been retrieving it from DGS\'s covid19 dashboard, which may have a delay)*')
 }
 ```
 

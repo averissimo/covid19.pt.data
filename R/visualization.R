@@ -262,7 +262,7 @@ get.plot.for.new <- function(input.data, date.ix, confirmed.max = NULL, death.ma
   #
   death.labs <- list(title = 'New {format(label.death$women + label.death$men, big.mark = ",", trim = TRUE)} deaths from {format(date.ix, "%B %d")}' %>% glue,
                      subtitle = ' ',
-                     caption = "data from {format(date.ix, '%A, %B %d, %Y')}\n" %>% glue::glue(),
+                     caption = "data from {format(date.ix, '%A, %B %d, %Y')}" %>% glue::glue(),
                      y = 'Age group',
                      x = 'Deaths')
 
