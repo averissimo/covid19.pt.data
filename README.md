@@ -34,9 +34,19 @@ download.updated.pt()
 
 # New cases / deaths by age groups
 
+*note: data may be delayed from absolute number by a couple of hours*
+
+Age data may show different numbers from absolutes in the daily report.
+This is out of our control and dependent on the data source *(DGS
+covid19 dashboard)*.
+
 ![](README_files/figure-gfm/unnamed-chunk-11-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-11-2.svg)<!-- -->
 
 # All cases / deaths by age groups
+
+Age data may show different numbers from absolutes in the daily report.
+This is out of our control and dependent on the data source *(DGS
+covid19 dashboard)*.
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-12-2.svg)<!-- -->
 
