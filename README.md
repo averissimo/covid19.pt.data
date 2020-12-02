@@ -35,7 +35,8 @@ download.updated.pt()
 # New cases / deaths by age groups
 
 *note: data update may be delayed by a couple of hours (as age data has
-been removed from daily report)*
+been removed from daily report and we retrieve it from DGS’s covid19
+dashboard)*
 
 Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
