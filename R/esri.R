@@ -34,7 +34,7 @@ get_ages <- function(features) {
                find_index(features, 'obitos', 'm_ARS', age.ranges),
                find_index(features, 'obitos', 'f_ARS', age.ranges)) %>%
     tibble::tibble() %>%
-    select("date", "confirmed_m_00-09", "confirmed_w_00-09", "confirmed_m_10-19", "confirmed_w_10-19", "confirmed_m_20-29", "confirmed_w_20-29", "confirmed_m_30-39", "confirmed_w_30-39", "confirmed_m_40-49", "confirmed_w_40-49", "confirmed_m_50-59", "confirmed_w_50-59", "confirmed_m_60-69", "confirmed_w_60-69", "confirmed_m_70-79", "confirmed_w_70-79", "confirmed_m_80+", "confirmed_w_80+", "death_m_00-09", "death_w_00-09", "death_m_10-19", "death_w_10-19", "death_m_20-29", "death_w_20-29", "death_m_30-39", "death_w_30-39", "death_m_40-49", "death_w_40-49", "death_m_50-59", "death_w_50-59", "death_m_60-69", "death_w_60-69", "death_m_70-79", "death_w_70-79", "death_m_80+", "death_w_80+")
+    dplyr::select("date", "confirmed_m_00-09", "confirmed_w_00-09", "confirmed_m_10-19", "confirmed_w_10-19", "confirmed_m_20-29", "confirmed_w_20-29", "confirmed_m_30-39", "confirmed_w_30-39", "confirmed_m_40-49", "confirmed_w_40-49", "confirmed_m_50-59", "confirmed_w_50-59", "confirmed_m_60-69", "confirmed_w_60-69", "confirmed_m_70-79", "confirmed_w_70-79", "confirmed_m_80+", "confirmed_w_80+", "death_m_00-09", "death_w_00-09", "death_m_10-19", "death_w_10-19", "death_m_20-29", "death_w_20-29", "death_m_30-39", "death_w_30-39", "death_m_40-49", "death_w_40-49", "death_m_50-59", "death_w_50-59", "death_m_60-69", "death_w_60-69", "death_m_70-79", "death_w_70-79", "death_m_80+", "death_w_80+")
 
   return(out)
 }

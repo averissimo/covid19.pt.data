@@ -122,6 +122,8 @@ extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, la
     } else {
       # it will fail! shrugs
     }
+  } else if (pattern.name %in% c('deaths') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
+    return(extract_generic2(page, pattern.name, interesting.hit, add.me - 1, last))
   } else if (pattern.name %in% c('icu') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
     return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
   } else if (pattern.name %in% c('icu') && grepl('^[+]$', hits)) {
@@ -242,9 +244,9 @@ extract_info2 <- function(only.date = NULL, index = 1) {
                              extract_tests(page1),
                              extract_hospitalized2(page1))
 
-    if (ages %>% pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
+    if (ages %>% dplyr::pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
       message('Updating age data from esri..')
-      info <- bind_cols(info, ages %>% select(-date))
+      info <- dplyr::bind_cols(info, ages %>% dplyr::select(-date))
     }
 
   }
