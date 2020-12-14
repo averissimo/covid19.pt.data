@@ -1,5 +1,6 @@
 dateRep,day,month,year,cases,deaths,countriesAndTerritories,geoId,countryterritoryCode,popData2019,continentExp,Cumulative_number_for_14_days_of_COVID-19_cases_per_100000
-14/12/2020,14,12,2020,4044,98,Portugal,PT,PRT,10276617,Europe,NA
+15/12/2020,15,12,2020,2194,90,Portugal,PT,PRT,10276617,Europe,NA
+14/12/2020,14,12,2020,4044,98,Portugal,PT,PRT,10276617,Europe,524.9295561
 13/12/2020,13,12,2020,4413,88,Portugal,PT,PRT,10276617,Europe,525.40636671
 12/12/2020,12,12,2020,5080,95,Portugal,PT,PRT,10276617,Europe,529.83389378
 11/12/2020,11,12,2020,3134,86,Portugal,PT,PRT,10276617,Europe,533.37591544
