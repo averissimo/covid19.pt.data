@@ -84,15 +84,15 @@ Only showing last 10 days.
 Don’t be alarmed with the first line being in the future, EU CDC date
 always refer to the situation on the previous day.
 
-| dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2019 | continentExp | Cumulative\_number\_for\_14\_days\_of\_COVID-19\_cases\_per\_100000 |
-| :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: | :----------- | ------------------------------------------------------------------: |
-| 17/12/2020 |  17 |    12 | 2020 |  4720 |     82 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                                  NA |
-| 16/12/2020 |  16 |    12 | 2020 |  2638 |     84 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                                  NA |
-| 15/12/2020 |  15 |    12 | 2020 |  2194 |     90 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                                  NA |
-| 14/12/2020 |  14 |    12 | 2020 |  4044 |     98 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            524.9296 |
-| 13/12/2020 |  13 |    12 | 2020 |  4413 |     88 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            525.4064 |
-| 12/12/2020 |  12 |    12 | 2020 |  5080 |     95 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            529.8339 |
-| 11/12/2020 |  11 |    12 | 2020 |  3134 |     86 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            533.3759 |
-| 10/12/2020 |  10 |    12 | 2020 |  4097 |     70 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            564.9914 |
-| 09/12/2020 |   9 |    12 | 2020 |  2905 |     81 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            576.6003 |
-| 08/12/2020 |   8 |    12 | 2020 |  2597 |     78 | Portugal                | PT    | PRT                  |    10276617 | Europe       |                                                            586.4673 |
+| dateRep    | day | month | year | cases | deaths | countriesAndTerritories | geoId | countryterritoryCode | popData2019 | continentExp | year\_week | cases\_weekly | deaths\_weekly | notification\_rate\_per\_100000\_population\_14-days |
+| :--------- | --: | ----: | ---: | ----: | -----: | :---------------------- | :---- | :------------------- | ----------: | :----------- | :--------- | ------------: | -------------: | ---------------------------------------------------: |
+| 17/12/2020 |  17 |    12 | 2020 |  4720 |     82 | Portugal                | PT    | PRT                  |    10276617 | Europe       | NA         |            NA |             NA |                                                   NA |
+| 16/12/2020 |  16 |    12 | 2020 |  2638 |     84 | Portugal                | PT    | PRT                  |    10276617 | Europe       | NA         |            NA |             NA |                                                   NA |
+| 15/12/2020 |  15 |    12 | 2020 |  2194 |     90 | Portugal                | PT    | PRT                  |    10276617 | Europe       | NA         |            NA |             NA |                                                   NA |
+| 14/12/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-50    |         26270 |            596 |                                               524.93 |
+| 07/12/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-49    |         27675 |            536 |                                               600.55 |
+| 30/11/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-48    |         34041 |            530 |                                               754.12 |
+| 23/11/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-47    |         43457 |            516 |                                               792.42 |
+| 16/11/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-46    |         37977 |            485 |                                               709.96 |
+| 09/11/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-45    |         34983 |            352 |                                               590.06 |
+| 02/11/2020 |  NA |    NA |   NA |    NA |     NA | Portugal                | PT    | PRT                  |    10276617 | Europe       | 2020-44    |         25655 |            228 |                                               432.34 |
