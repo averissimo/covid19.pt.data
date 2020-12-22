@@ -34,10 +34,6 @@ download.updated.pt()
 
 # New cases / deaths by age groups
 
-*note: data update may be delayed by a couple of hours (since age data
-was been removed from daily report and we’ve been retrieving it from
-DGS’s covid19 dashboard, which may have a delay)*
-
 Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
@@ -50,12 +46,7 @@ Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.svg)<!-- -->
-
-    #> Warning in x + params$x: longer object length is not a multiple of shorter
-    #> object length
-
-![](README_files/figure-gfm/unnamed-chunk-13-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-13-2.svg)<!-- -->
 
 # Data
 
@@ -65,7 +56,7 @@ Only showing last 10 days
 
 | country  | date       | confirmed | deaths | recovered | tests | hospitalized | in.icu | confirmed\_m\_00-09 | confirmed\_w\_00-09 | confirmed\_m\_10-19 | confirmed\_w\_10-19 | confirmed\_m\_20-29 | confirmed\_w\_20-29 | confirmed\_m\_30-39 | confirmed\_w\_30-39 | confirmed\_m\_40-49 | confirmed\_w\_40-49 | confirmed\_m\_50-59 | confirmed\_w\_50-59 | confirmed\_m\_60-69 | confirmed\_w\_60-69 | confirmed\_m\_70-79 | confirmed\_w\_70-79 | confirmed\_m\_80+ | confirmed\_w\_80+ | death\_m\_00-09 | death\_w\_00-09 | death\_m\_10-19 | death\_w\_10-19 | death\_m\_20-29 | death\_w\_20-29 | death\_m\_30-39 | death\_w\_30-39 | death\_m\_40-49 | death\_w\_40-49 | death\_m\_50-59 | death\_w\_50-59 | death\_m\_60-69 | death\_w\_60-69 | death\_m\_70-79 | death\_w\_70-79 | death\_m\_80+ | death\_w\_80+ |
 | :------- | :--------- | --------: | -----: | --------: | ----: | -----------: | -----: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ----------------: | ----------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | ------------: | ------------: |
-| Portugal | 2020-12-22 |      2156 |      0 |      5222 |    NA |            0 |      6 |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                  NA |                NA |                NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |              NA |            NA |            NA |
+| Portugal | 2020-12-22 |      2156 |      0 |      5222 |    NA |            0 |      6 |               10176 |                9778 |               16869 |               17272 |               27212 |               31164 |               25713 |               31002 |               27317 |               35539 |               24021 |               31454 |               17593 |               19098 |               11218 |               12673 |              9916 |             20504 |               0 |               1 |               1 |               1 |               2 |               3 |               6 |               6 |              38 |              19 |             115 |              48 |             366 |             148 |             794 |             477 |          1936 |          2293 |
 | Portugal | 2020-12-21 |    376220 |   6191 |    299603 |    NA |         3158 |    502 |               10110 |                9734 |               16774 |               17171 |               27076 |               30974 |               25576 |               30799 |               27132 |               35309 |               23865 |               31235 |               17452 |               18952 |               11132 |               12599 |              9832 |             20361 |               0 |               1 |               1 |               1 |               2 |               3 |               6 |               6 |              36 |              19 |             115 |              46 |             366 |             146 |             785 |             473 |          1912 |          2273 |
 | Portugal | 2020-12-20 |    374121 |   6134 |    297233 |    NA |         3027 |    483 |               10051 |                9683 |               16676 |               17068 |               26958 |               30813 |               25451 |               30637 |               26991 |               35126 |               23730 |               31065 |               17337 |               18838 |               11064 |               12513 |              9774 |             20210 |               0 |               1 |               1 |               1 |               2 |               3 |               6 |               6 |              36 |              19 |             113 |              46 |             365 |             146 |             779 |             470 |          1890 |          2250 |
 | Portugal | 2020-12-19 |    370787 |   6063 |    294814 |    NA |         2973 |    485 |                9962 |                9557 |               16528 |               16913 |               26766 |               30571 |               25259 |               30365 |               26770 |               34803 |               23503 |               30801 |               17180 |               18662 |               10967 |               12394 |              9675 |             19975 |               0 |               1 |               1 |               1 |               2 |               3 |               6 |               6 |              36 |              19 |             113 |              46 |             363 |             142 |             769 |             464 |          1867 |          2224 |
