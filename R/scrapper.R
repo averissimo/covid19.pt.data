@@ -295,20 +295,6 @@ download.report <- function(only.date = NULL, index = 1) {
   return(list(date = my.date, data = pdf.content))
 }
 
-#' Downloads EU CDC data
-#'
-#' @return data
-download.eucdc.data <- function() {
-  eu.data.raw <- readr::read_csv('https://opendata.ecdc.europa.eu/covid19/casedistribution/csv')
-
-  eu.data <- eu.data.raw %>%
-    dplyr::filter(countriesAndTerritories == 'Portugal') %>%
-    dplyr::mutate(countriesAndTerritories = iconv(countriesAndTerritories, to = 'UTF-8'))
-
-  list(data = eu.data, source = 'EU CDC') %>%
-    return()
-}
-
 #' Downloads all reports that are not in cache
 #'
 #' @return data from dgs
@@ -361,51 +347,6 @@ download_all_reports <- function() {
   return(dgs.pt.new)
 }
 
-#' Merge DGS and EU CDC data (that is downloaded inside function)
-#'
-#' @param dgs.pt.new dgs data
-#'
-#' @return consolidated data for Portugal
-#' @export
-merge_eu.cdc <- function(dgs.pt.new) {
-  eu.data <- download.eucdc.data()
-
-  anytime::addFormats('%d/%m/%Y')
-
-  from <- eu.data$data$dateRep %>% anytime::anydate() %>% max %>% as.Date()
-  now  <- Sys.Date()
-  tseq <- seq(from = from, to = now, by = "days")
-
-  covid19.pt.new <- dgs.pt.new %>%
-    dplyr::arrange(desc(date)) %>%
-    dplyr::mutate(cases = zoo::rollapply(confirmed,
-                                         width = 2,
-                                         FUN = function(a){ if(length(a) <= 1) {return(a)} else {return(a[1] -a[2])}},
-                                         fill = c(0,0,min(confirmed))),
-                   deaths = zoo::rollapply(deaths,
-                                           width = 2,
-                                           FUN = function(a){ if(length(a) <= 1) {return(a)} else {return(a[1] -a[2])}},
-                                           fill = c(0,0,min(confirmed))),
-           countriesAndTerritories = 'Portugal',
-           geoId = 'PT',
-           countryterritoryCode = 'PRT',
-           popData2019 = eu.data$data %>% dplyr::pull(popData2019) %>% purrr::pluck(1),
-           continentExp = 'Europe') %>%
-    #
-    dplyr::filter(date %in% tseq) %>%
-    dplyr::mutate(date = date + 1,
-           day = lubridate::day(date),
-           month = lubridate::month(date),
-           year = lubridate::year(date),
-           dateRep = format(date, '%d/%m/%Y')) %>%
-    #
-    dplyr::select(dateRep, day, month, year, cases, deaths, countriesAndTerritories, geoId, countryterritoryCode, popData2019, continentExp) %>%
-    #
-    dplyr::bind_rows(eu.data$data)
-
-  return(covid19.pt.new)
-}
-
 #' Merge EU CDC and PT DGS data (all in one)
 #'
 #' @return updated data
@@ -413,7 +354,5 @@ merge_eu.cdc <- function(dgs.pt.new) {
 download.updated.pt <- function() {
   dgs.pt.new <- download_all_reports() %>% distinct() %>% arrange(desc(date))
 
-  covid19.pt.new <- merge_eu.cdc(dgs.pt.new) %>% arrange(-year, -month, -day)
-
-  return(list(dgs.pt = dgs.pt.new, cdc.eu = covid19.pt.new))
+  return(list(dgs.pt = dgs.pt.new))
 }
