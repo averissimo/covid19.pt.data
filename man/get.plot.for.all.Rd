@@ -4,7 +4,13 @@
 \alias{get.plot.for.all}
 \title{Get demographics plots for all confirmed cases and deaths}
 \usage{
-get.plot.for.all(input.data, date.ix, confirmed.max = NULL, death.max = NULL)
+get.plot.for.all(
+  input.data,
+  date.ix,
+  dgs.pt,
+  confirmed.max = NULL,
+  death.max = NULL
+)
 }
 \arguments{
 \item{input.data}{output of get.age.data.with.labels()}

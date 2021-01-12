@@ -12,83 +12,32 @@
 #'
 #' @return a number
 my.pattern <- function(index) {
-  patterns <- list(hospitalized = 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO',
-                   icu = 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO',
-                   cases = 'EM VIGIL\u00C2NCIA',
-                   deaths = 'RECUPERADOS',
-                   recoveries = 'ATIVOS')
+  patterns <- list(hospitalized = list(pattern = 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO', interesting.hits = 1, add.me = 1, last = FALSE),
+                   icu = list(pattern = 'DISTRIBUI\u00C7\u00C3O DOS CASOS EM INTERNAMENTO', interesting.hits = 1, add.me = 2, last = FALSE),
+                   cases = list(pattern = 'EM VIGIL\u00C2NCIA', interesting.hits = 1, add.me = 1 , last = FALSE),
+                   deaths = list(pattern = 'RECUPERADOS', interesting.hits = 1, add.me = 6, last = FALSE),
+                   recoveries = list(pattern = 'ATIVOS', interesting.hits = 1, add.me = 1, last = FALSE))
   return(patterns[[index]])
 }
 
-#  _                     _ _        _ _             _
-# | |__   ___  ___ _ __ (_) |_ __ _| (_)_______  __| |
-# | '_ \ / _ \/ __| '_ \| | __/ _` | | |_  / _ \/ _` |
-# | | | | (_) \__ \ |_) | | || (_| | | |/ /  __/ (_| |
-# |_| |_|\___/|___/ .__/|_|\__\__,_|_|_/___\___|\__,_|
-#                 |_|
-#' Extract number of hospitalized from report (from 2020/08/17)
+#              _   _
+#  _ __   __ _| |_| |_ ___ _ __ _ __
+# | '_ \ / _` | __| __/ _ \ '__| '_ \
+# | |_) | (_| | |_| ||  __/ |  | | | |
+# | .__/ \__,_|\__|\__\___|_|  |_| |_|
+# |_|
+#' Patterns to look at for individual data
 #'
-#' @param page page strings from document
-#'
-#' @return a number
-extract_hospitalized2 <- function(page) {
-  dplyr::bind_cols(extract_generic2(page, 'hospitalized', 1, 1, FALSE) %>%
-                     tibble::tibble(hospitalized = .),
-                   extract_generic2(page, 'icu', 1, 2, FALSE) %>%
-                     tibble::tibble(in.icu = .)) %>%
-    return()
-}
-
-#
-#   ___ __ _ ___  ___  ___
-#  / __/ _` / __|/ _ \/ __|
-# | (_| (_| \__ \  __/\__ \
-#  \___\__,_|___/\___||___/
-#
-#' Extract number of cases from report (from 2020/08/17)
-#'
-#' @param page page strings from document
+#' @param index name of pattern to extract
 #'
 #' @return a number
-extract_cases2 <- function(page) {
-  return(extract_generic2(page, 'cases', 1, 1, FALSE) %>% tibble::tibble(confirmed = .))
-}
-
-#      _            _   _
-#   __| | ___  __ _| |_| |__  ___
-#  / _` |/ _ \/ _` | __| '_ \/ __|
-# | (_| |  __/ (_| | |_| | | \__ \
-#  \__,_|\___|\__,_|\__|_| |_|___/
-#
-#' Extract number of deaths from report  (from 2020/08/17)
-#'
-#' @param page page strings from document
-#'
-#' @return a number
-extract_deaths2 <- function(page) {
-  tmp <- extract_generic2(page, 'deaths', 1, 6, FALSE) %>% tibble::tibble(deaths = .)
-
-  if (is.na(tmp[1,1])) {
-    tmp <- extract_generic2(page, 'deaths', 1, 3, FALSE) %>% tibble::tibble(deaths = .)
-  }
-  return(tmp)
-}
-
-#                                   _
-#  _ __ ___  ___ _____   _____ _ __(_) ___  ___
-# | '__/ _ \/ __/ _ \ \ / / _ \ '__| |/ _ \/ __|
-# | | |  __/ (_| (_) \ V /  __/ |  | |  __/\__ \
-# |_|  \___|\___\___/ \_/ \___|_|  |_|\___||___/
-#
-#' Extract number of recoveries from report (from 2020/08/17)
-#'
-#' @param page page strings from document
-#'
-#' @return a number
-extract_recoveries2 <- function(page) {
-  extract_generic2(page, 'recoveries', 1, 1, FALSE) %>%
-    tibble::tibble(recovered = .) %>%
-    return()
+my.pattern_2020_12_22 <- function(index) {
+  patterns <- list(hospitalized = list(xmin = 42, xmax = 54, ymin = 699, ymax = 699),
+                   icu          = list(xmin = 156, xmax = 191, ymin = 698, ymax = 698),
+                   cases        = list(xmin = 30, xmax = 66, ymin = 467, ymax = 481),
+                   deaths       = list(xmin = 39, xmax = 59, ymin = 343, ymax = 346),
+                   recoveries   = list(xmin = 30, xmax = 66, ymin = 273, ymax = 276))
+  return(patterns[[index]])
 }
 
 #            _                  _
@@ -104,57 +53,34 @@ extract_recoveries2 <- function(page) {
 #' @param interesting.hit which one to choose
 #'
 #' @return a number
-extract_generic2 <- function(page, pattern.name, interesting.hit, add.me = 0, last = FALSE) {
+#' @examples
+#' extract_generic_2020_12_22(page1, 'cases')
+#' extract_generic_2020_12_22(page1, 'deaths')
+#' extract_generic_2020_12_22(page1, 'recoveries')
+#' extract_generic_2020_12_22(page1, 'hospitalized')
+#' extract_generic_2020_12_22(page1, 'icu')
+extract_generic_2020_12_22 <- function(page, pattern.name, pattern.list.override = NULL) {
 
-  pattern <- my.pattern(pattern.name)
-
-  hits.ix <- stringr::str_which(page, pattern)
-
-  page.sub <- page[seq(from = hits.ix, to = length(page))]
-  hits <- page.sub[1 + add.me]
-
-  if (pattern.name %in% c('deaths') && grepl('^[0-9]+$', hits)) {
-    death.pattern <- '^[0-9]+( [0-9]+)? ([+]|[-])( [0-9]+( [0-9]+)?)?$'
-    if (grepl(death.pattern, page.sub[1 + add.me - 1])) {
-      return(extract_generic2(page, pattern.name, interesting.hit, add.me - 1, last))
-    } else if (grepl(death.pattern, page.sub[1 + add.me + 1])) {
-      return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
-    } else {
-      # it will fail! shrugs
-    }
-  } else if (pattern.name %in% c('deaths') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
-    return(extract_generic2(page, pattern.name, interesting.hit, add.me - 1, last))
-  } else if (pattern.name %in% c('icu') && grepl('^([ ]*)?[+-]([ ]*)?[0-9]+', hits)) {
-    return(extract_generic2(page, pattern.name, interesting.hit, add.me + 1, last))
-  } else if (pattern.name %in% c('icu') && grepl('^[+]$', hits)) {
-    return(extract_generic2(page, pattern.name, interesting.hit, add.me + 2, last))
+  if (is.null(pattern.list.override)) {
+    pattern.list <- my.pattern_2020_12_22(pattern.name)
+  } else {
+    pattern.list <- pattern.list.override
   }
 
-  hits.my <- hits[interesting.hit] %>% stringi::stri_enc_toascii() %>%
-    gsub('\032', '', .)
+  pattern.list$xmin <- pattern.list$xmin - 2
+  pattern.list$xmax <- pattern.list$xmax + 2
+  pattern.list$ymin <- pattern.list$ymin - 2
+  pattern.list$ymax <- pattern.list$ymax + 2
 
-  if (hits.my == 'INTERNAMENTO INTERNAMENTO') {
-    return(extract_generic2(page, pattern, interesting.hit, add.me - 1, last))
-  }
+  page.line <- page %>%
+    dplyr::filter(x >= pattern.list$xmin & x <= pattern.list$xmax & y >= pattern.list$ymin & y <= pattern.list$ymax) %>%
+    dplyr::pull(text) %>%
+    paste(collapse = ' ')
 
-  page.line <- page[c(hits.ix + add.me)][[interesting.hit]]
-
-  return(extract.page.line(pattern.name, page.line, last))
+  return(extract.page.line.simple(page.line))
 }
 
-extract.page.line <- function(pattern.name, page.line, last) {
-  # correct for + and -
-  page.line <- page.line %>%
-    stringr::str_replace_all('[+-]$', '-0') %>%
-    stringr::str_replace_all('([+-]) ([0-9]+)', '\\1 \\2  ')
-
-  if (pattern.name %in% c('icu')) {
-    page.line <- page.line %>% stringr::str_replace_all('([0-9]) [-] ([0-9])', '\\1 -0 \\2')
-
-    # correct for complex icu and hospitalized numbers
-    page.line <- page.line %>% stringr::str_replace_all('([-+]) ?([0-9]+) ', '\\1\\2  ')
-  }
-
+extract.page.line.simple <- function(page.line, last = FALSE) {
   # correct for thousands operator
   page.line <- page.line %>% stringr::str_replace_all(' ([0-9][0-9][0-9])', '\\1')
 
@@ -181,7 +107,24 @@ extract.page.line <- function(pattern.name, page.line, last) {
       stringr::str_replace(' ?([0-9]+).*', '\\1') %>%
       as.integer()
   }
+
   return(tmp)
+}
+
+extract.page.line <- function(pattern.name, page.line, last) {
+  # correct for + and -
+  page.line <- page.line %>%
+    stringr::str_replace_all('[+-]$', '-0') %>%
+    stringr::str_replace_all('([+-]) ([0-9]+)', '\\1 \\2  ')
+
+  if (pattern.name %in% c('icu')) {
+    page.line <- page.line %>% stringr::str_replace_all('([0-9]) [-] ([0-9])', '\\1 -0 \\2')
+
+    # correct for complex icu and hospitalized numbers
+    page.line <- page.line %>% stringr::str_replace_all('([-+]) ?([0-9]+) ', '\\1\\2  ')
+  }
+
+  return(extract.page.line.simple(page.line, last))
 }
 
 # (_)_ __  / _| ___
@@ -198,7 +141,9 @@ extract.page.line <- function(pattern.name, page.line, last) {
 #' @export
 #'
 #' @examples
-#' extract_info(index = 4) # keep only if it's from today
+#' extract_info2(index = 11) # keep only if it's from today
+#' index <- 15
+#' extract_info2(index = index) # keep only if it's from today
 extract_info2 <- function(only.date = NULL, index = 1) {
   report.pdf <- download.report(only.date, index)
 
@@ -208,7 +153,7 @@ extract_info2 <- function(only.date = NULL, index = 1) {
   ages <- get_ages(esri)
   if (!is.null(report.pdf)) {
 
-    if (TRUE) {
+    if (report.pdf$date < "2020-12-22") {
       report.text <- report.pdf$data %>%
         pdftools::pdf_data() %>%
         sapply(FUN = function(my.input) {
@@ -221,28 +166,39 @@ extract_info2 <- function(only.date = NULL, index = 1) {
             paste(sep = '', collapse = '')
         })
 
+      document <- stringr::str_split(report.text, '\n') %>%
+        sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
+
+      page1 <- NULL
+      tryCatch({(page1 <- document[,1])}, error = function(err) {})
+      if (is.null(page1)) {
+        page1 <- document[[1]]
+      }
+
+      page1 <- page1[!grepl('^([+-])?$', page1)]
+
+      info <- dplyr::bind_cols(country = 'Portugal',
+                               date = report.pdf$date,
+                               extract_cases2(page1),
+                               extract_deaths2(page1),
+                               extract_recoveries2(page1),
+                               extract_tests(page1),
+                               extract_hospitalized2(page1))
     } else {
-      report.text <- report.pdf$data %>% pdftools::pdf_text()
+      report.text <- report.pdf$data %>% pdftools::pdf_data()
+
+      page1 <- report.text[[1]]
+
+      info <- dplyr::bind_cols(country = 'Portugal',
+                               date = report.pdf$date,
+                               extract_generic_2020_12_22(page1, 'cases') %>% tibble::tibble(confirmed = .),
+                               extract_generic_2020_12_22(page1, 'deaths') %>% tibble::tibble(deaths = .),
+                               extract_generic_2020_12_22(page1, 'recoveries') %>% tibble::tibble(recovered = .),
+                               tibble::tibble(tests = NA_integer_),
+                               extract_generic_2020_12_22(page1, 'hospitalized') %>% tibble::tibble(hospitalized = .),
+                               extract_generic_2020_12_22(page1, 'icu') %>% tibble::tibble(in.icu = .))
     }
 
-    document <- stringr::str_split(report.text, '\n') %>%
-      sapply(function(ix) {stringr::str_trim(gsub('  [ ]+', ' ', ix))})
-
-    page1 <- NULL
-    tryCatch({(page1 <- document[,1])}, error = function(err) {})
-    if (is.null(page1)) {
-      page1 <- document[[1]]
-    }
-
-    page1 <- page1[page1 != ""]
-
-    info <- dplyr::bind_cols(country = 'Portugal',
-                             date = report.pdf$date,
-                             extract_cases2(page1),
-                             extract_deaths2(page1),
-                             extract_recoveries2(page1),
-                             extract_tests(page1),
-                             extract_hospitalized2(page1))
 
     if (ages %>% dplyr::pull('date') %>%  purrr::pluck(1) == report.pdf$date) {
       message('Updating age data from esri..')
