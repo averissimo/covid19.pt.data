@@ -82,6 +82,18 @@ age.data <- get.age.data(dgs.pt)
 
 ## Data for Portugal
 
+Last 5 days _(how each column is changing over these days)_
+
+```{r, echo=FALSE}
+dgs.pt %>% arrange(desc(date)) %>% top_n(6, date) %>%
+  dplyr::mutate_if(is.integer, function(my.input) {return(zoo::rollapply(data = my.input, width = 2, FUN = function(a) {return(a[1] - mean(a[-1]))}, align = 'left', partial = TRUE))}) %>% 
+  dplyr::filter(!is.nan(confirmed)) %>% 
+  select(-tests) %>% 
+  knitr::kable()
+```
+
+
+
 ```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
@@ -281,7 +293,7 @@ if(!is.null(age.data.all.new)) {
 
 ## Data from DGS
 
-Only showing last 10 days
+Only showing last 20 days
 
 ```{r, echo=FALSE}
 dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% knitr::kable()
