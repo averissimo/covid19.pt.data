@@ -41,7 +41,6 @@ Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 dat <- download.updated.pt()
 
 dgs.pt.new     <- dat$dgs.pt 
-covid19.pt.new <- dat$cdc.eu
 
 dgs.pt <- tibble()
 tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
@@ -62,7 +61,8 @@ It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situac
 If you are here just for the data, this is what you want: 
 
 * [dgs_pt.csv](raw/master/data/dgs_pt.csv) *(raw data from Portugal's DGS)*
-* [covid19_pt.csv](raw/master/data/covid19_pt.csv) *(updated EU CDC dataset only featuring Portugal)*
+
+The EU CDC data has been removed as the daily reports from EU have been discontinued in favor of weekly counts.
 
 A mortality analysis of Portugal is [available here](https://averissimo.github.io/covid19-analysis/mortality.html)
 
