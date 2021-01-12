@@ -12,8 +12,9 @@ If you are here just for the data, this is what you want:
 
   - [dgs\_pt.csv](raw/master/data/dgs_pt.csv) *(raw data from Portugal’s
     DGS)*
-  - [covid19\_pt.csv](raw/master/data/covid19_pt.csv) *(updated EU CDC
-    dataset only featuring Portugal)*
+
+The EU CDC data has been removed as the daily reports from EU have been
+discontinued in favor of weekly counts.
 
 A mortality analysis of Portugal is [available
 here](https://averissimo.github.io/covid19-analysis/mortality.html)
