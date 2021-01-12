@@ -27,11 +27,21 @@ download.updated.pt()
 
 ## Data for Portugal
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.svg)<!-- -->
+Last 5 days *(how each column is changing over these days)*
+
+| country  | date       | confirmed | deaths | recovered | hospitalized | in.icu | confirmed\_m\_00-09 | confirmed\_w\_00-09 | confirmed\_m\_10-19 | confirmed\_w\_10-19 | confirmed\_m\_20-29 | confirmed\_w\_20-29 | confirmed\_m\_30-39 | confirmed\_w\_30-39 | confirmed\_m\_40-49 | confirmed\_w\_40-49 | confirmed\_m\_50-59 | confirmed\_w\_50-59 | confirmed\_m\_60-69 | confirmed\_w\_60-69 | confirmed\_m\_70-79 | confirmed\_w\_70-79 | confirmed\_m\_80+ | confirmed\_w\_80+ | death\_m\_00-09 | death\_w\_00-09 | death\_m\_10-19 | death\_w\_10-19 | death\_m\_20-29 | death\_w\_20-29 | death\_m\_30-39 | death\_w\_30-39 | death\_m\_40-49 | death\_w\_40-49 | death\_m\_50-59 | death\_w\_50-59 | death\_m\_60-69 | death\_w\_60-69 | death\_m\_70-79 | death\_w\_70-79 | death\_m\_80+ | death\_w\_80+ |
+| :------- | :--------- | --------: | -----: | --------: | -----------: | -----: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ----------------: | ----------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | ------------: | ------------: |
+| Portugal | 2021-01-12 |      7259 |    155 |      6028 |           60 |     32 |                 178 |                 148 |                 340 |                 339 |                 483 |                 598 |                 468 |                 552 |                 503 |                 641 |                 492 |                 574 |                 412 |                 435 |                 255 |                 288 |               195 |               355 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               1 |               0 |               4 |               0 |              11 |               6 |              13 |              12 |            43 |            65 |
+| Portugal | 2021-01-11 |      5604 |    122 |      2948 |          213 |      9 |                 167 |                 137 |                 255 |                 272 |                 393 |                 447 |                 337 |                 434 |                 395 |                 490 |                 345 |                 449 |                 272 |                 316 |                 165 |                 195 |               172 |               364 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               1 |               0 |               2 |               0 |              10 |               4 |              17 |              14 |            30 |            44 |
+| Portugal | 2021-01-10 |      7502 |    102 |      3028 |          215 |     18 |                 233 |                 197 |                 358 |                 356 |                 537 |                 574 |                 493 |                 571 |                 528 |                 617 |                 488 |                 603 |                 360 |                 419 |                 228 |                 269 |               191 |               479 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               1 |               0 |               1 |               2 |               4 |               2 |              17 |               6 |            34 |            35 |
+| Portugal | 2021-01-09 |      9478 |    111 |      5899 |          104 |      4 |                 232 |                 223 |                 447 |                 479 |                 681 |                 744 |                 630 |                 699 |                 643 |                 858 |                 594 |                 724 |                 468 |                 524 |                 306 |                 351 |               281 |               588 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               2 |               1 |               1 |               8 |               4 |              19 |               8 |            30 |            38 |
+| Portugal | 2021-01-08 |     10176 |    118 |      4480 |          118 |     22 |                 259 |                 256 |                 499 |                 514 |                 780 |                 853 |                 708 |                 783 |                 714 |                 881 |                 651 |                 823 |                 501 |                 535 |                 279 |                 357 |               241 |               543 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               3 |               2 |               2 |               2 |               6 |               0 |              19 |               6 |            34 |            44 |
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->
+
+![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->
 
 # New cases / deaths by age groups
 
@@ -39,7 +49,7 @@ Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-12-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-13-2.svg)<!-- -->
 
 # All cases / deaths by age groups
 
@@ -47,13 +57,13 @@ Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-13-2.svg)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-14-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-2.svg)<!-- -->
 
 # Data
 
 ## Data from DGS
 
-Only showing last 10 days
+Only showing last 20 days
 
 | country  | date       | confirmed | deaths | recovered | tests | hospitalized | in.icu | confirmed\_m\_00-09 | confirmed\_w\_00-09 | confirmed\_m\_10-19 | confirmed\_w\_10-19 | confirmed\_m\_20-29 | confirmed\_w\_20-29 | confirmed\_m\_30-39 | confirmed\_w\_30-39 | confirmed\_m\_40-49 | confirmed\_w\_40-49 | confirmed\_m\_50-59 | confirmed\_w\_50-59 | confirmed\_m\_60-69 | confirmed\_w\_60-69 | confirmed\_m\_70-79 | confirmed\_w\_70-79 | confirmed\_m\_80+ | confirmed\_w\_80+ | death\_m\_00-09 | death\_w\_00-09 | death\_m\_10-19 | death\_w\_10-19 | death\_m\_20-29 | death\_w\_20-29 | death\_m\_30-39 | death\_w\_30-39 | death\_m\_40-49 | death\_w\_40-49 | death\_m\_50-59 | death\_w\_50-59 | death\_m\_60-69 | death\_w\_60-69 | death\_m\_70-79 | death\_w\_70-79 | death\_m\_80+ | death\_w\_80+ |
 | :------- | :--------- | --------: | -----: | --------: | ----: | -----------: | -----: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ------------------: | ----------------: | ----------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | --------------: | ------------: | ------------: |
