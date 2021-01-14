@@ -159,7 +159,7 @@ plot.data <- dgs.pt %>%
   group_by(country, type) %>% 
   arrange(date) %>% 
   filter(date > min(date)) %>%  ## values will not be for that day
-  build.labels('value', 'type') 
+  build.labels('value', 'type', show_plus = TRUE) 
 
 roundUp <- function(x) 10^ceiling(log10(x))
 my.breaks <- c(-100, -40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)
@@ -221,7 +221,7 @@ plot.data <- dgs.pt %>%
   group_by(country, type) %>% 
   arrange(date) %>% 
   filter(date > min(date)) %>%  ## values will not be for that day
-  build.labels('value', 'type', digits = 0) 
+  build.labels('value', 'type', digits = 0, show_plus = TRUE) 
 
 roundUp <- function(x) 10^ceiling(log10(x))
 my.breaks <- c(-100, -40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)
