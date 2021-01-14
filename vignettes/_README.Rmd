@@ -121,7 +121,7 @@ dgs.pt %>%
                               #nudge_y = -.5,
                               segment.alpha = .8,
                               max.time = 5,
-                              alpha = .8,
+                              alpha = .85,
                               max.iter = 100000,
                               force = 40,
                               force_pull = 0,
@@ -174,14 +174,14 @@ plot.data %>%
     geom_line(size = 1, alpha = .6) + 
     geom_point(size = 1) +
     ggrepel::geom_label_repel(color = 'white', 
-                              segment.color = 'red', 
+                              segment.color = 'black', 
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               #nudge_x = -2,
                               #nudge_y = -.5,
                               segment.alpha = .8,
                               max.time = 5,
-                              alpha = .8,
+                              alpha = .85,
                               max.iter = 100000,
                               force = 40,
                               force_pull = 0,
@@ -235,8 +235,8 @@ plot.data %>%
     geom_hline(aes(yintercept = 0), size = .7, alpha = .3, linetype = 3) +
     geom_line(size = 1, alpha = .6) + 
     geom_point(size = 1) +
-    ggrepel::geom_label_repel(color = 'white', 
-                              segment.color = 'red', 
+    ggrepel::geom_label_repel(color = 'white',
+                              segment.color = 'black', 
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               #nudge_x = -2,
