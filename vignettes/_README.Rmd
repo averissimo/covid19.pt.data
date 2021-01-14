@@ -167,15 +167,20 @@ plot.data %>%
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
     geom_hline(aes(yintercept = 0), size = .7, alpha = .3, linetype = 3) +
     geom_line(size = 1, alpha = .6) + 
-    geom_point(size = 2.5) +
+    geom_point(size = 1) +
     ggrepel::geom_label_repel(color = 'white', 
-                              segment.color = 'black', 
+                              segment.color = 'red', 
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               #nudge_x = -2,
                               #nudge_y = -.5,
                               segment.alpha = .8,
-                              size = 3.5,
+                              max.time = 5,
+                              alpha = .8,
+                              max.iter = 100000,
+                              force = 40,
+                              force_pull = 0,
+                              size = 3,
                               seed = 1985) +
     labs(x = 'Date', 
          y = 'Number of individuals',
@@ -211,7 +216,7 @@ plot.data <- dgs.pt %>%
   group_by(country, type) %>% 
   arrange(date) %>% 
   filter(date > min(date)) %>%  ## values will not be for that day
-  build.labels('value', 'type') 
+  build.labels('value', 'type', digits = 0) 
 
 roundUp <- function(x) 10^ceiling(log10(x))
 my.breaks <- c(-100, -40, -20, -10, -5, -2, 0, 2, 5, 10, 30, 100, 300, 1000, 3000, 10000, 20000)
@@ -224,15 +229,21 @@ plot.data %>%
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
     geom_hline(aes(yintercept = 0), size = .7, alpha = .3, linetype = 3) +
     geom_line(size = 1, alpha = .6) + 
-    geom_point(size = 2.5) +
+    geom_point(size = 1) +
     ggrepel::geom_label_repel(color = 'white', 
-                              segment.color = 'black', 
+                              segment.color = 'red', 
                               na.rm = TRUE, 
                               min.segment.length = 0, 
                               #nudge_x = -2,
                               #nudge_y = -.5,
                               segment.alpha = .8,
-                              size = 3.5,
+                              size = 3,
+                              alpha = .85,
+                              max.time = 5,
+                              max.iter = 1000000,
+                              max.overlaps = 5,
+                              force = 40,
+                              force_pull = 0,
                               seed = 1985) +
     labs(x = 'Date', 
          y = 'Number of individuals',

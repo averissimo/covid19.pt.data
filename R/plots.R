@@ -25,8 +25,8 @@ build.labels <- function(input, order.by, name, digits = 2) {
                                             state.data.val.last %>% my.format,
                                             ' max: ',
                                             max(!!as.name(order.by), na.rm = TRUE) %>% my.format,
-                                            ' min: ',
-                                            min(!!as.name(order.by), na.rm = TRUE) %>% my.format,
+                                            #' min: ',
+                                            #min(!!as.name(order.by), na.rm = TRUE) %>% my.format,
                                             ')'
                                             ))
 
