@@ -94,7 +94,7 @@ dgs.pt %>% arrange(desc(date)) %>% top_n(6, date) %>%
 
 
 
-```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+```{r totals, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
@@ -112,7 +112,7 @@ dgs.pt %>%
                          NA_character_)) %>% 
   ggplot(aes(x = date, y = value, color = type, label = label, fill = type)) +
     geom_line(size = 1, alpha = .6) + 
-    geom_point(size = 2.5) +
+    geom_point(size = 1) +
     ggrepel::geom_label_repel(color = 'white', 
                               segment.color = 'black', 
                               na.rm = TRUE, 
@@ -120,8 +120,13 @@ dgs.pt %>%
                               #nudge_x = -2,
                               #nudge_y = -.5,
                               segment.alpha = .8,
-                              size = 3.5,
-                              max.iter = 4000,
+                              max.time = 5,
+                              alpha = .8,
+                              max.iter = 100000,
+                              force = 40,
+                              force_pull = 0,
+                              max.overlaps = 3,
+                              size = 3,
                               seed = 1985) +
     scale_x_date(date_labels = '%B %d (%a)', date_breaks = "5 day", date_minor_breaks = "1 day") +
     labs(x = 'Date', 
@@ -136,7 +141,7 @@ dgs.pt %>%
     theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+```{r differential, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
@@ -197,7 +202,7 @@ plot.data %>%
     theme(legend.position = 'none', axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 ```
 
-```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+```{r differential_7days, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
 plot.data <- dgs.pt %>% 
   reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type', measure.vars = c('deaths', 'confirmed', 'hospitalized', 'in.icu', 'recovered')) %>% 
   mutate(type = 
@@ -276,7 +281,7 @@ if(age.ix.f != dgs.pt %>% pull(date) %>% max) {
 
 Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
 
-```{r, echo=FALSE,fig.width=4.1}
+```{r new_cases_deaths, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
  my.plots.new <- get.plot.for.new(age.data.all.new, age.ix.f)
  print(my.plots.new$confirmed + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
@@ -290,7 +295,7 @@ if(!is.null(age.data.all.new)) {
 
 Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
 
-```{r, echo=FALSE,fig.width=4.1}
+```{r total_cases_deaths, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
  my.plots.all <- get.plot.for.all(age.data.all, age.ix.f, dgs.pt = dgs.pt)
  print(my.plots.all$confirmed + theme(plot.title = element_text(size=9), plot.subtitle = element_text(size=8)))
