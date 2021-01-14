@@ -37,11 +37,11 @@ Last 5 days *(how each column is changing over these days)*
 | Portugal | 2021-01-10 |      7502 |    102 |      3028 |          215 |     18 |                 233 |                 197 |                 358 |                 356 |                 537 |                 574 |                 493 |                 571 |                 528 |                 617 |                 488 |                 603 |                 360 |                 419 |                 228 |                 269 |               191 |               479 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               1 |               0 |               1 |               2 |               4 |               2 |              17 |               6 |            34 |            35 |
 | Portugal | 2021-01-09 |      9478 |    111 |      5899 |          104 |      4 |                 232 |                 223 |                 447 |                 479 |                 681 |                 744 |                 630 |                 699 |                 643 |                 858 |                 594 |                 724 |                 468 |                 524 |                 306 |                 351 |               281 |               588 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               0 |               2 |               1 |               1 |               8 |               4 |              19 |               8 |            30 |            38 |
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.svg)<!-- -->
+![](README_files/figure-gfm/totals-1.svg)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.svg)<!-- -->
+![](README_files/figure-gfm/differential-1.svg)<!-- -->
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.svg)<!-- -->
+![](README_files/figure-gfm/differential_7days-1.svg)<!-- -->
 
 # New cases / deaths by age groups
 
@@ -49,7 +49,7 @@ Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-13-2.svg)<!-- -->
+![](README_files/figure-gfm/new_cases_deaths-1.svg)<!-- -->![](README_files/figure-gfm/new_cases_deaths-2.svg)<!-- -->
 
 # All cases / deaths by age groups
 
@@ -57,7 +57,7 @@ Age data may show different numbers from absolutes in the daily report.
 This is out of our control and dependent on the data source *(DGS
 covid19 dashboard)*.
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.svg)<!-- -->![](README_files/figure-gfm/unnamed-chunk-14-2.svg)<!-- -->
+![](README_files/figure-gfm/total_cases_deaths-1.svg)<!-- -->![](README_files/figure-gfm/total_cases_deaths-2.svg)<!-- -->
 
 # Data
 
