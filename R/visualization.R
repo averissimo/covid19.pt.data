@@ -93,6 +93,17 @@ get.age.new.data <- function(input.data, input.data.with.labels, date.ix) {
                                                     ')')))) %>%
     select(-confirmed.all, -death.all)
 
+  age.data.all.new <- age.data.all.new %>%
+    mutate(label.confirmed = if_else(gender == 'men' & confirmed > 0, paste('Error with DGS data for', type), label.confirmed),
+           confirmed       = if_else(gender == 'men' & confirmed > 0, 0, confirmed),
+           label.confirmed = if_else(gender == 'women' & confirmed < 0, paste('Error with DGS data for ', type), label.confirmed),
+           confirmed       = if_else(gender == 'women' & confirmed < 0, 0, confirmed),
+           #
+           label.death = if_else(gender == 'men' & death > 0, paste('Error with DGS data for ', type), label.death),
+           death       = if_else(gender == 'men' & death > 0, 0, death),
+           label.death = if_else(gender == 'women' & death < 0, paste('Error with DGS data for ', type), label.death),
+           death       = if_else(gender == 'women' & death < 0, 0, death))
+
   return(age.data.all.new)
 }
 
