@@ -281,7 +281,7 @@ if(age.ix.f != dgs.pt %>% pull(date) %>% max) {
 
 Age data may show different numbers from absolutes in the daily report. This is out of our control and dependent on the data source _(DGS covid19 dashboard)_.
 
-```{r new_cases_deaths, echo=FALSE}
+```{r new_cases_deaths, echo=FALSE,fig.width=4.1}
 if(!is.null(age.data.all.new)) {
  my.plots.new <- get.plot.for.new(age.data.all.new, age.ix.f)
  print(my.plots.new$confirmed + theme(plot.title = element_text(size=10), plot.subtitle = element_text(size=8)))
