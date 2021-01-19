@@ -56,13 +56,13 @@ if (nrow(dgs.pt.new) != nrow(dgs.pt) || any(is.na(dgs.pt.new[1,]) != is.na(dgs.p
 
 > R package with latest data scrapped from official sources *(last data from `r format(max(dgs.pt.new$date), "%A, %B %d, %Y")`)*
 
-It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory.
+It downloads the [daily report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS and stores this in data-friendly format under `/data` directory. It also retrieves age data from the DGS' [ESRI dashboard](https://covid19.min-saude.pt/ponto-de-situacao-atual-em-portugal/)
 
 If you are here just for the data, this is what you want: 
 
 * [dgs_pt.csv](raw/master/data/dgs_pt.csv) *(raw data from Portugal's DGS)*
 
-The EU CDC data has been removed as the daily reports from EU have been discontinued in favor of weekly counts.
+note: The EU CDC data has been removed as the daily reports from EU have been discontinued in favor of weekly counts.
 
 A mortality analysis of Portugal is [available here](https://averissimo.github.io/covid19-analysis/mortality.html)
 
