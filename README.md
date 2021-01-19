@@ -6,15 +6,17 @@ COVID-19 Portugal data
 
 It downloads the [daily
 report](https://covid19.min-saude.pt/relatorio-de-situacao/) from DGS
-and stores this in data-friendly format under `/data` directory.
+and stores this in data-friendly format under `/data` directory. It also
+retrieves age data from the DGS’ [ESRI
+dashboard](https://covid19.min-saude.pt/ponto-de-situacao-atual-em-portugal/)
 
 If you are here just for the data, this is what you want:
 
   - [dgs\_pt.csv](raw/master/data/dgs_pt.csv) *(raw data from Portugal’s
     DGS)*
 
-The EU CDC data has been removed as the daily reports from EU have been
-discontinued in favor of weekly counts.
+note: The EU CDC data has been removed as the daily reports from EU have
+been discontinued in favor of weekly counts.
 
 A mortality analysis of Portugal is [available
 here](https://averissimo.github.io/covid19-analysis/mortality.html)
