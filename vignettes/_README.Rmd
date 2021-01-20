@@ -315,5 +315,43 @@ Only showing last 20 days
 dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% knitr::kable()
 ```
 
+## Future deaths prediction
 
+Based on the daily new confirmed cases and current _'mortality rate'_ per age group _(see plots above)_
+
+_Only shows last 20 days_
+
+```{r, echo=FALSE}
+age.data.all %>% 
+  dplyr::mutate(rate = if_else(death == 0 | is.nan(death) | is.nan(confirmed), 0, abs(death) / abs(confirmed))) %>% 
+  dplyr::select(type, gender, rate) %>% 
+  dplyr::right_join(age.data, by = c('type', 'gender')) %>% 
+  dplyr::filter(age_type == 'confirmed') %>% 
+  dplyr::select(-age_type) %>% 
+  dplyr::group_by(country, type, gender) %>%
+  dplyr::arrange(desc(date)) %>%
+  dplyr::mutate(value = zoo::rollapply(value, 2, function(ix) { if(length(ix) <= 1) { return(ix) } else { ix[1] - sum(ix[-1]) } }, fill = c(0, 0, 0), align = 'left', partial = TRUE)) %>%
+  dplyr::filter(value != 0) %>%
+  dplyr::ungroup() %>% 
+  dplyr::mutate(value = abs(value),
+         predicted = value * rate) %>% 
+  dplyr::select(date, type, gender, predicted) %>% 
+#  top_n(10, predicted) %>% 
+  reshape2::dcast(date ~ type + gender, value.var = 'predicted') %>% 
+  tibble::tibble() %>% 
+  dplyr::filter(date != '2020-11-20') %>% # weird number
+  dplyr::filter(date != '2020-11-22') %>% # weird number
+  dplyr::mutate(across(!starts_with('date'), ~tidyr::replace_na(.x, 0))) %>% 
+  dplyr::mutate(across(!starts_with('date'), ~round(.x, 3))) %>% 
+  dplyr::rowwise() %>% 
+  dplyr::mutate(predicted_future_deaths = sum(across(!starts_with('date')))) %>% 
+  dplyr::relocate(predicted_future_deaths, .after = date) %>% 
+  dplyr::left_join(dgs.pt %>% select(date, confirmed), by = "date") %>% 
+  dplyr::mutate(confirmed = format(confirmed, big.mark = ' ')) %>% 
+  dplyr::relocate(confirmed, .after = date) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::top_n(20, date) %>% 
+  dplyr::arrange(desc(date)) #%>% 
+  #knitr::kable()
+```
 
