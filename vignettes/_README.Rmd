@@ -312,7 +312,7 @@ if(!is.null(age.data.all.new)) {
 Only showing last 20 days
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% knitr::kable()
+dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% select(-country, -tests) %>% knitr::kable()
 ```
 
 ## Future deaths prediction
@@ -346,7 +346,11 @@ age.data.all %>%
   dplyr::rowwise() %>% 
   dplyr::mutate(predicted_future_deaths = sum(across(!starts_with('date')))) %>% 
   dplyr::relocate(predicted_future_deaths, .after = date) %>% 
-  dplyr::left_join(dgs.pt %>% select(date, confirmed), by = "date") %>% 
+  dplyr::left_join(dgs.pt %>% 
+    arrange(desc(date)) %>% 
+    dplyr::mutate_if(is.integer, function(my.input) {return(zoo::rollapply(data = my.input, width = 2, FUN = function(a) {return(a[1] - mean(a[-1]))}, align = 'left', partial = TRUE))}) %>% 
+    dplyr::filter(!is.nan(confirmed)) %>% 
+    select(date, confirmed), by = "date") %>% 
   dplyr::mutate(confirmed = format(confirmed, big.mark = ' ')) %>% 
   dplyr::relocate(confirmed, .after = date) %>% 
   dplyr::ungroup() %>% 
