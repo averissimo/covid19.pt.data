@@ -351,7 +351,7 @@ age.data.all %>%
   dplyr::relocate(confirmed, .after = date) %>% 
   dplyr::ungroup() %>% 
   dplyr::top_n(20, date) %>% 
-  dplyr::arrange(desc(date)) #%>% 
-  #knitr::kable()
+  dplyr::arrange(desc(date)) %>% 
+  knitr::kable()
 ```
 
