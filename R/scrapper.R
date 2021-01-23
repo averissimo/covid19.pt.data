@@ -35,7 +35,7 @@ my.pattern_2020_12_22 <- function(index) {
   patterns <- list(hospitalized = list(xmin = 42, xmax = 54, ymin = 699, ymax = 699),
                    icu          = list(xmin = 156, xmax = 191, ymin = 698, ymax = 698),
                    cases        = list(xmin = 30, xmax = 66, ymin = 467, ymax = 481),
-                   deaths       = list(xmin = 39, xmax = 59, ymin = 343, ymax = 346),
+                   deaths       = list(xmin = 39, xmax = 62, ymin = 343, ymax = 346),
                    recoveries   = list(xmin = 30, xmax = 66, ymin = 273, ymax = 276))
   return(patterns[[index]])
 }
@@ -61,7 +61,7 @@ my.pattern_2020_12_22 <- function(index) {
 #' extract_generic_2020_12_22(page1, 'icu')
 extract_generic_2020_12_22 <- function(page, pattern.name, pattern.list.override = NULL) {
 
-  if (is.null(pattern.list.override)) {
+  if (!exists('pattern.list.override') || is.null(pattern.list.override)) {
     pattern.list <- my.pattern_2020_12_22(pattern.name)
   } else {
     pattern.list <- pattern.list.override
