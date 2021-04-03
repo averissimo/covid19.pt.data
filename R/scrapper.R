@@ -277,7 +277,7 @@ download_all_reports <- function() {
 
   what.to.search <- which(dates.valid %in% purrr::discard(dates.valid, dates.valid %in% dgs.pt$date))
 
-  dgs.pt.new <- dgs.pt
+  dgs.pt.new <- dgs.pt %>% arrange(desc(date))
   if (length(what.to.search) > 0) {
     for (x in seq_along(what.to.search)) {
       cat('Report being downloaded:',  paste0('(', x , '/', length(what.to.search),')'), '--', format.Date(dates.valid[what.to.search[x]]), '\n')
@@ -287,18 +287,38 @@ download_all_reports <- function() {
       } else {
         day <- extract_info(NULL, index)
       }
-      dgs.pt.new <- dgs.pt.new %>% bind_rows(day)
+      dgs.pt.new <- dgs.pt.new %>% dplyr::bind_rows(day)
     }
-  } else if (length(what.to.search) == 0) {
-    # will force the esri download and join per date (just in case esri is behind schedule when updating)
-    esri <- get_json_esri()
-    ages <- get_ages(esri)
-    if (ages %>% dplyr::pull(date) %>% purrr::pluck(1) == dgs.pt %>% pull(date) %>% max()) {
-      message('Updating age data from esri...')
-    }
-    #dgs.pt.new <-
-    dgs.pt.new <- rows_update(dgs.pt.new, ages, by = 'date')
   }
+
+  # will force the esri download and join per date (just in case esri is behind schedule when updating)
+  ages <- get_ages(get_json_esri())
+  max.ages.date <- ages %>% dplyr::pull(date) %>% purrr::pluck(1)
+  if (max.ages.date >= dgs.pt %>% dplyr::pull(date) %>% max()) {
+    message('Updating age data from esri...')
+  }
+  if (dgs.pt.new %>% dplyr::filter(date == max.ages.date) %>% nrow == 0) {
+    dgs.pt.new <- dgs.pt.new %>% tibble::add_row(country = 'Portugal', date = max.ages.date) %>%  dplyr::arrange(desc(date))
+  }
+  dgs.pt.new <- dplyr::rows_update(dgs.pt.new, ages, by = 'date')
+
+
+  vaccines <- get_vaccines()
+  max.vaccines.date <- vaccines %>% dplyr::pull(date) %>% purrr::pluck(1)
+  if (max.vaccines.date >= dgs.pt %>% dplyr::pull(date) %>% max()) {
+    message('Updating vaccines data from esri...')
+  }
+
+  if (!all(c('first_vaccine', 'second_vaccine') %in% colnames(dgs.pt.new))) {
+    dgs.pt.new <- dgs.pt.new %>% tibble::add_column(first_vaccine = NA_integer_, second_vaccine = NA_integer_)
+  }
+
+  if (dgs.pt.new %>% dplyr::filter(date == max.vaccines.date) %>% nrow == 0) {
+    dgs.pt.new <- dgs.pt.new %>% tibble::add_row(country = 'Portugal', date = max.vaccines.date) %>%  dplyr::arrange(desc(date))
+  }
+
+  dgs.pt.new <- dplyr::rows_update(dgs.pt.new, vaccines, by = 'date')
+
 
   return(dgs.pt.new)
 }
