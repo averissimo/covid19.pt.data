@@ -275,7 +275,7 @@ download_all_reports <- function() {
     purrr::compact() %>%
     purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
 
-  what.to.search <- which(dates.valid %in% purrr::discard(dates.valid, dates.valid %in% dgs.pt$date))
+  what.to.search <- which(dates.valid %in% purrr::discard(dates.valid, dates.valid %in% (dgs.pt %>% dplyr::filter(!is.na(confirmed)) %>% dplyr::pull(date))))
 
   dgs.pt.new <- dgs.pt %>% arrange(desc(date))
   if (length(what.to.search) > 0) {
@@ -287,7 +287,11 @@ download_all_reports <- function() {
       } else {
         day <- extract_info(NULL, index)
       }
-      dgs.pt.new <- dgs.pt.new %>% dplyr::bind_rows(day)
+      if (day$date %in% (dgs.pt %>% dplyr::pull(date))) {
+        dgs.pt.new <- dplyr::rows_update(dgs.pt.new, day, by = c('date', 'country'))
+      } else {
+        dgs.pt.new <- dgs.pt.new %>% dplyr::bind_rows(day) %>% dplyr::arrange(desc(date))
+      }
     }
   }
 
