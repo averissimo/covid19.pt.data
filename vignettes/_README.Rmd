@@ -207,7 +207,7 @@ plot.data %>%
          title = 'Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale',
          caption = "data from {format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
-    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
+    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "10 day", date_minor_breaks = "5 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
@@ -281,7 +281,7 @@ plot.data %>%
          title = '7-day average of Individuals that were Infected, Recovered and Died',
          subtitle = 'Showing in a (pseudo) logarithmic scale',
          caption = "{format(max(dgs.pt.new$date), '%A, %B %d, %Y')}\n Label points to the maximum point in time" %>% glue::glue()) +
-    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "3 day", date_minor_breaks = "1 day") +
+    scale_x_date(date_labels = '%B %d (%a)', date_breaks = "10 day", date_minor_breaks = "5 day") +
     scale_color_viridis_d(end = .7) +
     scale_fill_viridis_d(end = .7) +
     scale_y_continuous(trans = scales::pseudo_log_trans(sigma = 1, base = 10), 
