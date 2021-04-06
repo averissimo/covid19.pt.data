@@ -302,7 +302,6 @@ download_all_reports <- function() {
   }
   dgs.pt.new <- dplyr::rows_update(dgs.pt.new, ages, by = 'date')
 
-
   vaccines <- get_vaccines()
   max.vaccines.date <- vaccines %>% dplyr::pull(date) %>% purrr::pluck(1)
   if (max.vaccines.date >= dgs.pt %>% dplyr::pull(date) %>% max()) {
@@ -318,7 +317,6 @@ download_all_reports <- function() {
   }
 
   dgs.pt.new <- dplyr::rows_update(dgs.pt.new, vaccines, by = 'date')
-
 
   return(dgs.pt.new)
 }
