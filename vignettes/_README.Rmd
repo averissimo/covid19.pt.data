@@ -86,9 +86,12 @@ Last 5 days _(how each column is changing over these days)_
 
 ```{r, echo=FALSE}
 dgs.pt %>% arrange(desc(date)) %>% top_n(6, date) %>%
+  dplyr::relocate(second_vaccine, .after = in.icu) %>% 
+  dplyr::relocate(first_vaccine, .after = in.icu) %>% 
   dplyr::mutate_if(is.integer, function(my.input) {return(zoo::rollapply(data = my.input, width = 2, FUN = function(a) {return(a[1] - mean(a[-1]))}, align = 'left', partial = TRUE))}) %>% 
   dplyr::filter(!is.nan(confirmed)) %>% 
-  select(-tests) %>% 
+  dplyr::select(-tests, -country) %>% 
+  dplyr::rename_with(~gsub("_", " ", .x, fixed = TRUE)) %>% 
   knitr::kable()
 ```
 
@@ -338,7 +341,12 @@ if(!is.null(age.data.all.new)) {
 Only showing last 20 days
 
 ```{r, echo=FALSE}
-dgs.pt %>% arrange(desc(date)) %>% top_n(20, date) %>% select(-country, -tests) %>% knitr::kable()
+dgs.pt %>% 
+  arrange(desc(date)) %>% 
+  top_n(20, date) %>% 
+  select(-country, -tests) %>% 
+  dplyr::rename_with(~gsub("_", " ", .x, fixed = TRUE)) %>% 
+  knitr::kable()
 ```
 
 ## Future deaths prediction
@@ -382,6 +390,7 @@ age.data.all %>%
   dplyr::ungroup() %>% 
   dplyr::top_n(20, date) %>% 
   dplyr::arrange(desc(date)) %>% 
+  dplyr::rename_with(~gsub("_", " ", .x, fixed = TRUE)) %>% 
   knitr::kable()
 ```
 
