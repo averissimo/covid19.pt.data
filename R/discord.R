@@ -46,7 +46,9 @@ send.discord.msg <- function(new.dat, old.dat) {
         )
 
       }
+    } else {
+      message("Webhook is not defined. Discord msg not sent.")
     }
-  }, error = function(err) {})
+  }, error = function(err) { warning("Failed at sending message to discord", err)})
   # else do nothing
 }
