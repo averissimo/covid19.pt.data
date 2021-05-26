@@ -46,7 +46,8 @@ dgs.pt <- tibble()
 tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
 
 # DGS PT
-if (nrow(dgs.pt.new) != nrow(dgs.pt) || any(is.na(dgs.pt.new[1,]) != is.na(dgs.pt[1,]), na.rm = FALSE)) {
+if (digest::digest(dgs.pt.new, algo = "sha256") != digest::digest(dgs.pt, algo = "sha256")) {
+  send.discord.msg(dgs.pt.new, dgs.pt)
   dgs.pt <- dgs.pt.new 
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, file = '../data/dgs_pt.csv')

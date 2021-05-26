@@ -16,6 +16,7 @@ Suggests:
     usethis
 Imports:
     pdftools,
+    digest,
     rvest,
     anytime,
     dplyr,
