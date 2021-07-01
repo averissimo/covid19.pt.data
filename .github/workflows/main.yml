@@ -22,7 +22,6 @@ jobs:
       run: |
         pwd
         ls repo
-    - name: Create and populate .Renviron file
     - name: Build html
       id: hello
       uses: averissimo/buid-r-docker-action@master
