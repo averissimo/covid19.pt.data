@@ -18,6 +18,7 @@ send.discord.msg <- function(new.dat, old.dat) {
       message("Found Discord webhook!")
 
       cat("Found Discord webhook!")
+      futile.logger::flog.info("", Sys.getenv(), capture = TRUE)
 
       webhook <- strsplit(webhook.env, ';')
 

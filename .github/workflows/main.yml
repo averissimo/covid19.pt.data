@@ -22,9 +22,12 @@ jobs:
       run: |
         pwd
         ls repo
+    - name: Create and populate .Renviron file
     - name: Build html
       id: hello
       uses: averissimo/buid-r-docker-action@master
+      with:
+        webhook: "test"
     # Use the output from the `hello` step
     - name: Commit changes
       run: |
