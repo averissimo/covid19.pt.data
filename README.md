@@ -3,9 +3,6 @@ COVID-19 Portugal data
 
 ``` r
 dat <- download.updated.pt()
-#> Report being downloaded: (1/1) -- 2021-07-01
-#> Updating age data from esri...
-#> Updating vaccines data from esri...
 
 dgs.pt.new     <- dat$dgs.pt 
 
@@ -21,9 +18,6 @@ if (digest::digest(dgs.pt.new, algo = "sha256") != digest::digest(dgs.pt, algo =
   usethis::use_data(dgs.pt, overwrite = TRUE)
   readr::write_csv(dgs.pt, file = '../data/dgs_pt.csv')
 }
-#> ✔ Setting active project to '/github/workspace/repo'
-#> ✔ Saving 'dgs.pt' to 'data/dgs.pt.rda'
-#> • Document your data (see 'https://r-pkgs.org/data.html')
 ```
 
 > R package with latest data scrapped from official sources *(last data
