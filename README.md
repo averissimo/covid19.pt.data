@@ -1,6 +1,27 @@
 COVID-19 Portugal data
 ================
 
+``` r
+dat <- download.updated.pt()
+#> Updating age data from esri...
+#> Updating vaccines data from esri...
+
+dgs.pt.new     <- dat$dgs.pt 
+
+dgs.pt <- tibble()
+tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
+
+# DGS PT
+send.discord.msg(dgs.pt.new, dgs.pt)
+#> Discord webhook is not defined. Discord msg not sent.
+#> Discord webhook is not defined. Discord msg not sent.
+if (digest::digest(dgs.pt.new, algo = "sha256") != digest::digest(dgs.pt, algo = "sha256")) {
+  dgs.pt <- dgs.pt.new 
+  usethis::use_data(dgs.pt, overwrite = TRUE)
+  readr::write_csv(dgs.pt, file = '../data/dgs_pt.csv')
+}
+```
+
 > R package with latest data scrapped from official sources *(last data
 > from Wednesday, June 30, 2021)*
 
