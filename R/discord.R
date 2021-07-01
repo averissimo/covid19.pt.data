@@ -35,6 +35,9 @@ send.discord.msg <- function(new.dat, old.dat) {
           msg <- c(msg, glue::glue(' * {ix.col}: {cell.new}'))
         }
       }
+      if (length(msg) == 0) {
+        msg.header <- "Nothing changed in PT.COVID"
+      }
       msg.discord <- paste(c(msg.header, msg), collapse = '\n')
       for (el in webhook) {
         body <- list(content = msg.discord)
