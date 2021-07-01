@@ -37,7 +37,7 @@ library(plotly)
 Sys.setlocale('LC_TIME', 'en_GB.UTF-8')
 ```
 
-```{r, message=TRUE, include=FALSE}
+```{r download.it, message=TRUE, include=TRUE}
 dat <- download.updated.pt()
 
 dgs.pt.new     <- dat$dgs.pt 

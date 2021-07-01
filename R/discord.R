@@ -15,6 +15,9 @@ send.discord.msg <- function(new.dat, old.dat) {
   tryCatch({
     webhook.env <- Sys.getenv('DISCORD_WEBHOOK')
     if (webhook.env != "") {
+      message("Found Discord webhook!")
+      cat("Found Discord webhook!")
+
       webhook <- strsplit(webhook.env, ';')
 
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
@@ -50,7 +53,8 @@ send.discord.msg <- function(new.dat, old.dat) {
 
       }
     } else {
-      message("Webhook is not defined. Discord msg not sent.")
+      message("Discord webhook is not defined. Discord msg not sent.")
+      cat("Discord webhook is not defined. Discord msg not sent.")
     }
   }, error = function(err) { warning("Failed at sending message to discord", err)})
   # else do nothing
