@@ -36,7 +36,11 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
           cell.new <- format(cell.new, big.mark = ' ')
-          msg <- c(msg, glue::glue(' * {ix.col}: {cell.new}'))
+          if (!is.na(cell.new) && cell.old != cell.new) {
+            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new} {cell.new - cell.old}'))
+          } else {
+            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new}'))
+          }
         }
       }
       if (length(msg) == 0) {
