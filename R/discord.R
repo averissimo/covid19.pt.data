@@ -15,7 +15,7 @@ send.discord.msg <- function(new.dat, old.dat) {
   tryCatch({
     webhook.env <- Sys.getenv('DISCORD_WEBHOOK')
     if (webhook.env != "") {
-      message("Found Discord webhook!")
+      warning("Found Discord webhook!")
       cat("Found Discord webhook!")
       futile.logger::flog.info("", Sys.getenv(), capture = TRUE)
 
@@ -58,7 +58,7 @@ send.discord.msg <- function(new.dat, old.dat) {
 
       }
     } else {
-      message("Discord webhook is not defined. Discord msg not sent.")
+      warning("Discord webhook is not defined. Discord msg not sent.")
       cat("Discord webhook is not defined. Discord msg not sent.")
     }
   }, error = function(err) { warning("Failed at sending message to discord", err)})
