@@ -27,7 +27,7 @@ send.discord.msg <- function(new.dat, old.dat) {
 
       msg <- c()
       if (line1.new %>% dplyr::pull(date) != line1.old %>% dplyr::pull(date)) {
-        msg.header <- c(glue::glue("**PT.COVID -- New data**: {line1.new %>% dplyr::pull(date))"))
+        msg.header <- c(glue::glue("**PT.COVID -- New data**: {line1.new %>% dplyr::pull(date)}"))
       } else {
         msg.header <- c("**PT.COVID -- Data changed**")
       }
@@ -37,12 +37,16 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
-          cell.new <- format(cell.new, big.mark = ' ')
+          cell.new.f <- format(cell.new, big.mark = ' ')
           if (!is.na(cell.new) && cell.old != cell.new) {
             cell.diff <- cell.new - cell.old
-            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new} ({cell.diff})'))
+            cell.diff.f <- format(cell.diff, big.mark = ' ')
+            if (cell.diff > 0) {
+              cell.diff.f <- glue::glue('+{cell.diff.f}')
+            }
+            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
           } else {
-            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new}'))
+            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
       }
