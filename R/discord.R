@@ -22,6 +22,14 @@ send.discord.msg <- function(new.dat, old.dat) {
     tryCatch({
       webhook <- strsplit(webhook.env, ';')
 
+      for (el in webhook) {
+        res <- httr::POST(
+          el,
+          body = list(content = "Found webhook... updating"),
+          encode = "json"
+        )
+      }
+
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
       line1.old <- old.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
 
@@ -64,8 +72,25 @@ send.discord.msg <- function(new.dat, old.dat) {
         )
 
       }
-    }, error = function(err) { warning("Failed at sending message to discord", err)})
+    }, error = function(err) {
+      warning("Failed at sending message to discord", err)
+      for (el in webhook) {
+        res <- httr::POST(
+          el,
+          body = list(content = "error"),
+          encode = "json"
+        )
+      }
+      for (el in webhook) {
+        res <- httr::POST(
+          el,
+          body = list(content = err),
+          encode = "json"
+        )
+      }
+    })
   } else {
+
     warning("Discord webhook is not defined. Discord msg not sent.")
     cat("Discord webhook is not defined. Discord msg not sent.")
   }
