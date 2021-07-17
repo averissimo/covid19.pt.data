@@ -16,12 +16,11 @@ discord.send <- function(body) {
   }
 }
 
-#' Title
+#' Send message with differences in data
 #'
-#' @param new.dat
-#' @param old.dat
+#' @param new.dat new data
+#' @param old.dat old data, from previous day
 #'
-#' @return
 #' @export
 #'
 #' @examples
@@ -54,26 +53,26 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
-        msg.discord("Cell.old {length(cell.old)}" %>% glue::glue())
-        msg.discord(cell.old)
+        discord.send("Cell.old {length(cell.old)}" %>% glue::glue())
+        discord.send(cell.old)
 
-        msg.discord("Cell.new {length(cell.new)}" %>% glue::glue())
-        msg.discord(cell.new)
+        discord.send("Cell.new {length(cell.new)}" %>% glue::glue())
+        discord.send(cell.new)
 
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
-          msg.discord("Enter if")
+          discord.send("Enter if")
           cell.new.f <- format(cell.new, big.mark = ' ')
           if (!is.na(cell.new) && cell.old != cell.new) {
-            msg.discord("Enter 2nd if")
+            discord.send("Enter 2nd if")
             cell.diff <- cell.new - cell.old
             cell.diff.f <- format(cell.diff, big.mark = ' ')
             if (cell.diff > 0) {
-              msg.discord("Enter 3rd if")
+              discord.send("Enter 3rd if")
               cell.diff.f <- glue::glue('+{cell.diff.f}')
             }
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
           } else {
-            msg.discord("Enter 2nd else")
+            discord.send("Enter 2nd else")
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
@@ -85,8 +84,8 @@ send.discord.msg <- function(new.dat, old.dat) {
       discord.send(msg.discord)
     }, error = function(err) {
       warning("Failed at sending message to discord", err)
-      msg.discord("Error")
-      msg.discord("  :: {err$message}" %>% glue::glue())
+      discord.send("Error")
+      discord.send("  :: {err$message}" %>% glue::glue())
       stop("Stopping!")
     })
   } else {

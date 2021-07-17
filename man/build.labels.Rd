@@ -4,7 +4,7 @@
 \alias{build.labels}
 \title{Builds labels for plots}
 \usage{
-build.labels(input, order.by, name, digits = 2)
+build.labels(input, order.by, name, digits = 2, show_plus = FALSE)
 }
 \arguments{
 \item{input}{table}
@@ -16,7 +16,7 @@ build.labels(input, order.by, name, digits = 2)
 \item{digits}{digits on numbers}
 }
 \value{
-
+min: ',
 }
 \description{
 Builds labels for plots
