@@ -2,6 +2,7 @@
 #'
 #' @param body msg to be sent
 discord.send <- function(body) {
+  futile.logger::flog.info("Sending msg...", body, capture = TRUE)
   webhook.env <- Sys.getenv('DISCORD_WEBHOOK')
   if (webhook.env != "") {
     webhook <- strsplit(webhook.env, ';')
@@ -37,7 +38,7 @@ send.discord.msg <- function(new.dat, old.dat) {
     futile.logger::flog.info("", Sys.getenv(), capture = TRUE)
 
     tryCatch({
-      discord.send("Found webhook... updating")
+      futile.logger::flog.info("Found webhook... updating")
 
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
       line1.old <- old.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
@@ -53,26 +54,27 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
-        discord.send("Cell.old {length(cell.old)}" %>% glue::glue())
-        discord.send(cell.old)
+        futile.logger::flog.info("Colname: {ix.col}" %>% glue::glue())
+        futile.logger::flog.info("Cell.old {length(cell.old)}" %>% glue::glue())
+        futile.logger::flog.info(cell.old)
 
-        discord.send("Cell.new {length(cell.new)}" %>% glue::glue())
-        discord.send(cell.new)
+        futile.logger::flog.info("Cell.new {length(cell.new)}" %>% glue::glue())
+        futile.logger::flog.info(cell.new)
 
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
-          discord.send("Enter if")
+          futile.logger::flog.info("Enter if")
           cell.new.f <- format(cell.new, big.mark = ' ')
-          if (!is.na(cell.new) && cell.old != cell.new) {
-            discord.send("Enter 2nd if")
+          if (!is.na(cell.new) && !is.na(cell.old) && cell.old != cell.new) {
+            futile.logger::flog.info("Enter 2nd if")
             cell.diff <- cell.new - cell.old
             cell.diff.f <- format(cell.diff, big.mark = ' ')
             if (cell.diff > 0) {
-              discord.send("Enter 3rd if")
+              futile.logger::flog.info("Enter 3rd if")
               cell.diff.f <- glue::glue('+{cell.diff.f}')
             }
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
           } else {
-            discord.send("Enter 2nd else")
+            futile.logger::flog.info("Enter 2nd else")
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
