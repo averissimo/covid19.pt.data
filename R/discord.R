@@ -10,9 +10,10 @@ discord.send <- function(body) {
     for (el in webhook) {
       res <- httr::POST(
         el,
-        body = paste(body, collapse = "\n"),
+        body = list(content = paste(body, collapse = "\n")),
         encode = "json"
       )
+
     }
   }
 }
