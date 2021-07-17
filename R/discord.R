@@ -41,7 +41,7 @@ send.discord.msg <- function(new.dat, old.dat) {
       futile.logger::flog.info("Found webhook... updating")
 
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
-      line1.old <- old.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
+      line1.old <- old.dat %>% filter(!(date %in% line1.new)) %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
 
       msg <- c()
       if (line1.new %>% dplyr::pull(date) != line1.old %>% dplyr::pull(date)) {
@@ -54,27 +54,16 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
-        futile.logger::flog.info("Colname: {ix.col}" %>% glue::glue())
-        futile.logger::flog.info("Cell.old {length(cell.old)}" %>% glue::glue())
-        futile.logger::flog.info(cell.old)
-
-        futile.logger::flog.info("Cell.new {length(cell.new)}" %>% glue::glue())
-        futile.logger::flog.info(cell.new)
-
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
-          futile.logger::flog.info("Enter if")
           cell.new.f <- format(cell.new, big.mark = ' ')
           if (!is.na(cell.new) && !is.na(cell.old) && cell.old != cell.new) {
-            futile.logger::flog.info("Enter 2nd if")
             cell.diff <- cell.new - cell.old
             cell.diff.f <- format(cell.diff, big.mark = ' ')
             if (cell.diff > 0) {
-              futile.logger::flog.info("Enter 3rd if")
               cell.diff.f <- glue::glue('+{cell.diff.f}')
             }
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
           } else {
-            futile.logger::flog.info("Enter 2nd else")
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
