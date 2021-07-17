@@ -84,9 +84,10 @@ send.discord.msg <- function(new.dat, old.dat) {
       for (el in webhook) {
         res <- httr::POST(
           el,
-          body = list(content = err),
+          body = list(content = err$message),
           encode = "json"
         )
+        stop("Stopping!")
       }
     })
   } else {
