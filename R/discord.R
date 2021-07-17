@@ -53,7 +53,7 @@ send.discord.msg <- function(new.dat, old.dat) {
       }
 
       for (ix.col in colnames(line1.old  %>% dplyr::select(-date))) {
-        cell.new.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
+        cell.new.old <- line1.new.old[1, ix.col] %>% purrr::pluck(1)
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
