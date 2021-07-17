@@ -1,3 +1,21 @@
+#' Send message to discord
+#'
+#' @param body msg to be sent
+discord.send <- function(body) {
+  webhook.env <- Sys.getenv('DISCORD_WEBHOOK')
+  if (webhook.env != "") {
+    webhook <- strsplit(webhook.env, ';')
+
+    for (el in webhook) {
+      res <- httr::POST(
+        el,
+        body = paste(body, collapse = "\n"),
+        encode = "json"
+      )
+    }
+  }
+}
+
 #' Title
 #'
 #' @param new.dat
@@ -20,15 +38,7 @@ send.discord.msg <- function(new.dat, old.dat) {
     futile.logger::flog.info("", Sys.getenv(), capture = TRUE)
 
     tryCatch({
-      webhook <- strsplit(webhook.env, ';')
-
-      for (el in webhook) {
-        res <- httr::POST(
-          el,
-          body = list(content = "Found webhook... updating"),
-          encode = "json"
-        )
-      }
+      discord.send("Found webhook... updating")
 
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
       line1.old <- old.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
@@ -44,16 +54,26 @@ send.discord.msg <- function(new.dat, old.dat) {
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
+        msg.discord("Cell.old {length(cell.old)}" %>% glue::glue())
+        msg.discord(cell.old)
+
+        msg.discord("Cell.new {length(cell.new)}" %>% glue::glue())
+        msg.discord(cell.new)
+
         if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
+          msg.discord("Enter if")
           cell.new.f <- format(cell.new, big.mark = ' ')
           if (!is.na(cell.new) && cell.old != cell.new) {
+            msg.discord("Enter 2nd if")
             cell.diff <- cell.new - cell.old
             cell.diff.f <- format(cell.diff, big.mark = ' ')
             if (cell.diff > 0) {
+              msg.discord("Enter 3rd if")
               cell.diff.f <- glue::glue('+{cell.diff.f}')
             }
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
           } else {
+            msg.discord("Enter 2nd else")
             msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
@@ -62,33 +82,12 @@ send.discord.msg <- function(new.dat, old.dat) {
         msg.header <- "Nothing changed in PT.COVID"
       }
       msg.discord <- paste(c(msg.header, msg), collapse = '\n')
-      for (el in webhook) {
-        body <- list(content = msg.discord)
-
-        res <- httr::POST(
-          el,
-          body = body,
-          encode = "json"
-        )
-
-      }
+      discord.send(msg.discord)
     }, error = function(err) {
       warning("Failed at sending message to discord", err)
-      for (el in webhook) {
-        res <- httr::POST(
-          el,
-          body = list(content = "error"),
-          encode = "json"
-        )
-      }
-      for (el in webhook) {
-        res <- httr::POST(
-          el,
-          body = list(content = err$message),
-          encode = "json"
-        )
-        stop("Stopping!")
-      }
+      msg.discord("Error")
+      msg.discord("  :: {err$message}" %>% glue::glue())
+      stop("Stopping!")
     })
   } else {
 
