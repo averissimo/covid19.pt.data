@@ -41,6 +41,8 @@ send.discord.msg <- function(new.dat, old.dat) {
       futile.logger::flog.info("Found webhook... updating")
 
       line1.new <- new.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
+
+      line1.new.old <- old.dat %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
       line1.old <- old.dat %>% filter(!(date %in% line1.new)) %>% dplyr::top_n(1, date) %>% dplyr::select(-country)
 
       msg <- c()
@@ -51,20 +53,25 @@ send.discord.msg <- function(new.dat, old.dat) {
       }
 
       for (ix.col in colnames(line1.old  %>% dplyr::select(-date))) {
+        cell.new.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.old <- line1.old[1, ix.col] %>% purrr::pluck(1)
         cell.new <- line1.new[1, ix.col] %>% purrr::pluck(1)
 
-        if ((is.na(cell.old) && !is.na(cell.new)) || (!is.na(cell.new) && cell.old != cell.new)) {
-          cell.new.f <- format(cell.new, big.mark = ' ')
-          if (!is.na(cell.new) && !is.na(cell.old) && cell.old != cell.new) {
-            cell.diff <- cell.new - cell.old
-            cell.diff.f <- format(cell.diff, big.mark = ' ')
-            if (cell.diff > 0) {
-              cell.diff.f <- glue::glue('+{cell.diff.f}')
+        # If there's new data and is different from old data
+        if (!is.na(cell.new) && (is.na(cell.old) || cell.old != cell.new)) {
+          # BUT check first if that data has already been saved
+          if (is.na(cell.new.old) || cell.new.old != cell.new) {
+            cell.new.f <- format(cell.new, big.mark = ' ')
+            if (!is.na(cell.new) && !is.na(cell.old) && cell.old != cell.new) {
+              cell.diff <- cell.new - cell.old
+              cell.diff.f <- format(cell.diff, big.mark = ' ')
+              if (cell.diff > 0) {
+                cell.diff.f <- glue::glue('+{cell.diff.f}')
+              }
+              msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
+            } else {
+              msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
             }
-            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f} ({cell.diff.f})'))
-          } else {
-            msg <- c(msg, glue::glue(' * {ix.col}: {cell.new.f}'))
           }
         }
       }
