@@ -296,7 +296,7 @@ download_all_reports <- function() {
   }
 
   # will force the esri download and join per date (just in case esri is behind schedule when updating)
-  ages <- get_ages(get_json_esri())
+  ages <- get_json_esri2() %>% get_ages()
   max.ages.date <- ages %>% dplyr::pull(date) %>% purrr::pluck(1)
   if (max.ages.date >= dgs.pt %>% dplyr::pull(date) %>% max()) {
     message('Updating age data from esri...')

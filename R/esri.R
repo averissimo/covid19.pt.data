@@ -8,6 +8,17 @@ get_json_esri <- function() {
   return(json$features$attributes)
 }
 
+get_json_esri2 <- function() {
+  url <- 'https://services.arcgis.com/CCZiGSEQbAxxFVh3/arcgis/rest/services/COVID_ARS_PT_view/FeatureServer/0/query?f=json&where=1%3D1&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&resultOffset=0&resultRecordCount=50&resultType=standard&cacheHint=true'
+  #Reading the HTML code from the website
+  json <- httr::GET(url) %>%
+    httr::content('text', encoding = 'UTF-8') %>%
+    jsonlite::fromJSON()
+
+  return(json$features$attributes %>% dplyr::filter(ARSNome == "Nacional"))
+}
+
+
 get_vaccines <- function() {
   url <- 'https://services5.arcgis.com/eoFbezv6KiXqcnKq/arcgis/rest/services/Covid19_Total_Vacinados/FeatureServer/0/query?f=json&where=1%3D1&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=*&resultType=standard&cacheHint=true'
   json <- httr::GET(url) %>%
@@ -32,10 +43,13 @@ get_ages <- function(features) {
   age.ranges.input <- c('0009', '1019', '2029', '3039', '4049', '5059', '6069', '7079', '80')
 
   find_index <- function(dat, prefix, suffix, ix.cols) {
-    out.ix <- list(conf = 'confirmed', obitos = 'death', m_ARS = 'm', f_ARS = 'w')
+    out.ix <- list(casos = 'confirmed', obitos = 'death', h = 'm', m = 'w')
 
-    raw.ix <- paste(prefix, age.ranges.input, suffix, sep = '')
-    raw.tibble <- dat[raw.ix] %>% tibble::tibble()
+    raw.ix <- paste(prefix, age.ranges.input, sep = '_') %>%
+      paste(suffix, sep = '_') %>%
+      sort() %>%
+      gsub('^(.+)_(.+)_(.+)$', '\\1_\\3_\\2', .)
+    raw.tibble <- dat[,raw.ix] %>% tibble::tibble()
     colnames(raw.tibble) <- paste(out.ix[[prefix]], out.ix[[suffix]], ix.cols, sep = '_')
     return(raw.tibble)
   }
@@ -43,10 +57,10 @@ get_ages <- function(features) {
   my.date <- (features$Data_ARS / 1000) %>% anytime::anydate()
 
   out <- cbind(date = my.date,
-               find_index(features, 'conf', 'm_ARS', age.ranges),
-               find_index(features, 'conf', 'f_ARS', age.ranges),
-               find_index(features, 'obitos', 'm_ARS', age.ranges),
-               find_index(features, 'obitos', 'f_ARS', age.ranges)) %>%
+               find_index(features, 'casos', 'h', age.ranges),
+               find_index(features, 'casos', 'm', age.ranges),
+               find_index(features, 'obitos', 'h', age.ranges),
+               find_index(features, 'obitos', 'm', age.ranges)) %>%
     tibble::tibble() %>%
     dplyr::select(
       "date",
