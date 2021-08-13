@@ -149,7 +149,7 @@ extract_info2 <- function(only.date = NULL, index = 1) {
 
   info <- tibble::tibble()
 
-  esri <- get_json_esri()
+  esri <- get_json_esri2()
   ages <- get_ages(esri)
   if (!is.null(report.pdf)) {
 
