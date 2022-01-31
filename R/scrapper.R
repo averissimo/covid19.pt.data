@@ -259,52 +259,60 @@ download_all_reports <- function() {
   dgs.pt <- tibble::tibble()
   tryCatch(dgs.pt <- covid19.pt.data::dgs.pt, error = function(err) { })
 
-  url <- 'https://covid19.min-saude.pt/relatorio-de-situacao/'
+  # url <- 'https://covid19.min-saude.pt/relatorio-de-situacao/'
 
-  #Reading the HTML code from the website
-  webpage <- xml2::read_html(url)
+  # #Reading the HTML code from the website
+  # webpage <- xml2::read_html(url)
 
   anytime::addFormats('%d/%m/%Y')
 
-  dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
-    rvest::html_text() %>%
-    stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
-    anytime::anydate()
+  # dates.raw <- rvest::html_nodes(webpage, '#MBV_Main .single_main .single_content ul li') %>%
+  #   rvest::html_text() %>%
+  #   stringr::str_replace('.*([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9])', '\\1') %>%
+  #   anytime::anydate()
 
-  dates.valid <- dates.raw %>%
-    purrr::compact() %>%
-    purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
+  # dates.valid <- dates.raw %>%
+  #   purrr::compact() %>%
+  #   purrr::discard(function(x) {difftime(x, '2020/03/24', units = 'day') < 0})
 
-  what.to.search <- which(dates.valid %in% purrr::discard(dates.valid, dates.valid %in% (dgs.pt %>% dplyr::filter(!is.na(confirmed)) %>% dplyr::pull(date))))
+  # what.to.search <- which(dates.valid %in% purrr::discard(dates.valid, dates.valid %in% (dgs.pt %>% dplyr::filter(!is.na(confirmed)) %>% dplyr::pull(date))))
 
-  dgs.pt.new <- dgs.pt %>% arrange(desc(date))
-  if (length(what.to.search) > 0) {
-    for (x in seq_along(what.to.search)) {
-      cat('Report being downloaded:',  paste0('(', x , '/', length(what.to.search),')'), '--', format.Date(dates.valid[what.to.search[x]]), '\n')
-      index <- what.to.search[x]
-      if (dates.valid[what.to.search[x]] >= '2020-08-17') {
-        day <- extract_info2(NULL, index)
-      } else {
-        day <- extract_info(NULL, index)
-      }
-      if (day$date %in% (dgs.pt %>% dplyr::pull(date))) {
-        dgs.pt.new <- dplyr::rows_update(dgs.pt.new, day, by = c('date', 'country'))
-      } else {
-        dgs.pt.new <- dgs.pt.new %>% dplyr::bind_rows(day) %>% dplyr::arrange(desc(date))
-      }
-    }
-  }
+  dgs.pt.new <- dgs.pt %>% dplyr::arrange(desc(date))
+  # if (length(what.to.search) > 0) {
+  #   for (x in seq_along(what.to.search)) {
+  #     cat('Report being downloaded:',  paste0('(', x , '/', length(what.to.search),')'), '--', format.Date(dates.valid[what.to.search[x]]), '\n')
+  #     index <- what.to.search[x]
+  #     if (dates.valid[what.to.search[x]] >= '2020-08-17') {
+  #       day <- extract_info2(NULL, index)
+  #     } else {
+  #       day <- extract_info(NULL, index)
+  #     }
+  #     if (day$date %in% (dgs.pt %>% dplyr::pull(date))) {
+  #       dgs.pt.new <- dplyr::rows_update(dgs.pt.new, day, by = c('date', 'country'))
+  #     } else {
+  #       dgs.pt.new <- dgs.pt.new %>% dplyr::bind_rows(day) %>% dplyr::arrange(desc(date))
+  #     }
+  #   }
+  # }
 
   # will force the esri download and join per date (just in case esri is behind schedule when updating)
-  ages <- get_json_esri2() %>% get_ages()
-  max.ages.date <- ages %>% dplyr::pull(date) %>% purrr::pluck(1)
+  esri <- get_json_esri2()
+  ages <- esri %>% get_ages()
+  report_data <- esri %>% get_report_data()
+
+  new_data <- dplyr::inner_join(report_data, ages, by = c('date'))
+
+  max.ages.date <- new_data %>% dplyr::pull(date) %>% purrr::pluck(1)
   if (max.ages.date >= dgs.pt %>% dplyr::pull(date) %>% max()) {
     message('Updating age data from esri...')
   }
   if (dgs.pt.new %>% dplyr::filter(date == max.ages.date) %>% nrow == 0) {
-    dgs.pt.new <- dgs.pt.new %>% tibble::add_row(country = 'Portugal', date = max.ages.date) %>%  dplyr::arrange(desc(date))
+    dgs.pt.new <- dgs.pt.new %>% tibble::add_row(country = 'Portugal', date = max.ages.date) %>%  dplyr::arrange(desc(date), contacts = NA_integer_)
   }
-  dgs.pt.new <- dplyr::rows_update(dgs.pt.new, ages, by = 'date')
+  if (!c("contacts") %in% (dgs.pt.new %>% colnames())) {
+    dgs.pt.new <- dgs.pt.new %>% dplyr::mutate(contacts = NA_integer_)
+  }
+  dgs.pt.new <- dplyr::rows_update(dgs.pt.new, new_data, by = 'date')
 
   vaccines <- get_vaccines()
   max.vaccines.date <- vaccines %>% dplyr::pull(date) %>% purrr::pluck(1)

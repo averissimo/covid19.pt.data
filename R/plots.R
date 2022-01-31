@@ -22,7 +22,7 @@ build.labels <- function(input, order.by, name, digits = 2, show_plus = FALSE) {
                   state.data.val.last = first(!!as.name(order.by), default = 0)) %>%
     dplyr::mutate(state.data.label = paste0(state.data,
                                             ' (last: ',
-                                            if_else(show_plus && state.data.val.last > 0, '+', ''),
+                                            if_else(show_plus & state.data.val.last > 0, '+', ''),
                                             state.data.val.last %>% my.format,
                                             ' max: ',
                                             if_else(show_plus && max(!!as.name(order.by), na.rm = TRUE) > 0, '+', ''),

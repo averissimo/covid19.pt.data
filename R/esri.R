@@ -31,7 +31,31 @@ get_vaccines <- function() {
   return(out)
 }
 
-
+get_report_data <- function(features) {
+  return(
+    features %>% dplyr::select(
+      Data_ARS,
+      casos,
+      obitos,
+      ativos,
+      recuperados,
+      internamento,
+      uci,
+      contactos
+      ) %>%
+      dplyr::mutate(Data_ARS = (Data_ARS / 1000) %>% anytime::anydate(),
+                    tests = NA_integer_) %>%
+      dplyr::select(date = Data_ARS,
+                    confirmed = casos,
+                    recovered = recuperados,
+                    tests,
+                    deaths = obitos,
+                    hospitalized = internamento,
+                    in.icu = uci,
+                    contacts = contactos) %>%
+      dplyr::as_tibble()
+  )
+}
 
 get_ages <- function(features) {
   age.ranges <- c('00-09 anos', '10-19 anos', '20-29 anos', '30-39 anos',
