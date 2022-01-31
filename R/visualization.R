@@ -9,18 +9,19 @@
 #' @examples
 #' get.age.data(covid19.pt.data::dgs.pt)
 get.age.data <- function(input.data) {
-  return(input.data %>%
-    reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>%
-    group_by(country, type) %>%
-    filter(grepl('(confirmed_|death_)', type)) %>%
-    tidyr::fill(value, .direction = 'up') %>%
-    mutate(value = if_else(!is.na(value), value, as.integer(0))) %>%
-    arrange(date) %>%
-    ungroup() %>%
-    mutate(gender = if_else(grepl('.*_m_*', type), 'men', 'women'),
-           age_type = if_else(grepl('confirmed_', type), 'confirmed', 'death'),
-           type = gsub('.*_(m|w)_', '', type),
-           value = if_else(gender == 'men', value * -1, value %>% as.double)))
+  return(
+    input.data %>%
+      reshape2::melt(id.vars = c('country', 'date'), variable.name = 'type') %>%
+      dplyr::group_by(country, type) %>%
+      dplyr::filter(grepl('(confirmed_|death_)', type)) %>%
+      tidyr::fill(value, .direction = 'up') %>%
+      dplyr::mutate(value = if_else(!is.na(value), as.integer(value), as.integer(0))) %>%
+      dplyr::arrange(date) %>%
+      dplyr::ungroup() %>%
+      dplyr::mutate(gender = if_else(grepl('.*_m_*', type), 'men', 'women'),
+                    age_type = if_else(grepl('confirmed_', type), 'confirmed', 'death'),
+                    type = gsub('.*_(m|w)_', '', type),
+                    value = if_else(gender == 'men', value * -1, value %>% as.double)))
 }
 
 #' Get age data tibble with readable labels
